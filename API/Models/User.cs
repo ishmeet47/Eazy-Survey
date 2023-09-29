@@ -3,19 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 public class User : BaseEntity
 {
-    [Required]
-    public string Username { get; set; }
-
-    [Required]
-    [StringLength(20, MinimumLength = 8)]
-    public byte[] Password { get; set; }
-
-    [Required]
-    public byte[] PasswordKey { get; set; }
-
-    [Required]
-    public string UserType { get; set; }
-
     public User
     (
         string username,
@@ -29,4 +16,17 @@ public class User : BaseEntity
         PasswordKey = passwordKey;
         UserType = userType;
     }
+
+    [Required]
+    public string Username { get; set; }
+
+    [Required]
+    [StringLength(20, MinimumLength = 8)]
+    public byte[] Password { get; set; }
+
+    [Required]
+    public byte[] PasswordKey { get; set; }
+
+    [Required]
+    public string UserType { get; set; }
 }

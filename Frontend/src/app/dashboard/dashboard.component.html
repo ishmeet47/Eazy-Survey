@@ -1,0 +1,6 @@
+<h2>Dashboard</h2>
+<div *ngIf="isAdmin">
+  <input [(ngModel)]="newUsername" placeholder="Username">
+  <input [(ngModel)]="newPassword" placeholder="Password">
+  <button (click)="createUser()">Create User</button>
+</div>

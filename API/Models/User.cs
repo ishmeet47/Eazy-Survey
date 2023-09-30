@@ -15,6 +15,8 @@ public class User : BaseEntity
         Password = password;
         PasswordKey = passwordKey;
         UserType = userType;
+        Groups = new HashSet<Group>();
+        SurveysCompleted = new HashSet<Survey>();
     }
 
     [Required]
@@ -29,4 +31,8 @@ public class User : BaseEntity
 
     [Required]
     public string UserType { get; set; }
+
+    public ICollection<Group> Groups { get; set; }
+
+    public ICollection<Survey> SurveysCompleted { get; set; }
 }

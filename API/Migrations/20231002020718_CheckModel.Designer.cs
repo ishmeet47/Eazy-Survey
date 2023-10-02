@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231002020718_CheckModel")]
+    partial class CheckModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,11 +176,11 @@ namespace API.Migrations
                     b.Property<byte[]>("Password")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("varbinary(MAX)");
+                        .HasColumnType("varbinary(20)");
 
                     b.Property<byte[]>("PasswordKey")
                         .IsRequired()
-                        .HasColumnType("varbinary(MAX)");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("UserType")
                         .IsRequired()

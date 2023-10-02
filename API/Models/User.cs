@@ -19,6 +19,7 @@ public class User : BaseEntity
         SurveysCompleted = new HashSet<Survey>();
     }
 
+
     [Required]
     public string Username { get; set; }
 

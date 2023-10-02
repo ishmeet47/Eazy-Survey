@@ -9,11 +9,15 @@ import { AuthService } from '../services/auth.service';
 })
 export class DashboardComponent implements OnInit {
 
+  public isAuthenticated!: boolean;
+
   constructor(private userService: UserService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    const userRoles = this.authService.getUserRoles();  // This is just an example method. You'll need to define how you get user roles in your application.
-    this.isAdmin = userRoles.includes('ADMIN');
+    const userRoles = this.authService.getUserType();  // This is just an example method. You'll need to define how you get user roles in your application.
+    this.isAdmin = userRoles.includes('Admin');// change this
+    this.isAuthenticated = this.authService.isAuthenticated();
+
   }
 
   isAdmin: boolean = false;  // You can initialize it to false or true based on your logic

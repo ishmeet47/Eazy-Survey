@@ -60,6 +60,16 @@ namespace API.Data
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Groups)
                 .WithMany(g => g.Users);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Password)
+                .HasColumnType("varbinary(MAX)");
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.PasswordKey)
+                .HasColumnType("varbinary(MAX)");
+
+
         }
     }
 }

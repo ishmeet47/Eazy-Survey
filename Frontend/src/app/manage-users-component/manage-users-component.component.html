@@ -1,0 +1,13 @@
+<h2>Manage Users</h2>
+<form (submit)="addUser()">
+    <!-- <input type="text" [(ngModel)]="newUsername" placeholder="Username"> -->
+    <input type="text" [ngModel]="newUsername" (ngModelChange)="newUsername = $event.target.value" placeholder="Username">
+
+    <button type="submit">Add User</button>
+</form>
+<ul>
+    <li *ngFor="let user of users">
+        {{ user.username }}
+        <button (click)="deleteUser(user.id)">Delete</button>
+    </li>
+</ul>

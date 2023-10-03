@@ -1,0 +1,25 @@
+#login-page {
+  /* Set background image to login-b */
+  background-image: url("/assets/images/login-background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-color: black; */
+}
+
+#login-form {
+  padding-left: 7rem;
+  padding-right: 10rem;
+}
+
+#form-inputs {
+  padding-right: 10rem;
+}
+
+.login-input {
+  border-radius: 1rem;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 3.5rem;
+}

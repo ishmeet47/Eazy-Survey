@@ -9,10 +9,11 @@
 #login-form {
   padding-left: 7rem;
   padding-right: 10rem;
+  min-width: 30rem;
 }
 
 #form-inputs {
-  padding-right: 10rem;
+  min-width: 30rem;
 }
 
 .login-input {

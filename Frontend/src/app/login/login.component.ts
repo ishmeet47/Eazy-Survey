@@ -12,11 +12,17 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = ''; // To display error messages to the user
 
+  passwordVisibility: boolean = false; // To toggle password visibility
+
   constructor(private authService: AuthService, private router: Router) {}
 
   // This will be triggered by the form submission
   onSubmit(): void {
     this.login();
+  }
+
+  togglePasswordVisibility(): void {
+    this.passwordVisibility = !this.passwordVisibility;
   }
 
   // The login method handles the actual authentication logic

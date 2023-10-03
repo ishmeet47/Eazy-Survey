@@ -10,6 +10,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ManageUsersComponent } from './manage-users-component/manage-users-component.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ButtonComponent } from './components/button/button.component';
+import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,13 @@ import { ButtonComponent } from './components/button/button.component';
     ManageUsersComponent,
     ButtonComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    NgxBootstrapIconsModule.pick(allIcons),
+  ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],

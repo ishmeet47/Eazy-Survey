@@ -11,6 +11,7 @@ import { ManageUsersComponent } from './manage-users-component/manage-users-comp
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ButtonComponent } from './components/button/button.component';
 import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
     FormsModule,
     HttpClientModule,
     NgxBootstrapIconsModule.pick(allIcons),
+    AlertModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

@@ -9,6 +9,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ManageUsersComponent } from './manage-users-component/manage-users-component.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { SurveyService } from './services/survey.service';
+import { SurveyComponent } from './survey/survey.component'; // adjust path accordingly
+
 import { ButtonComponent } from './components/button/button.component';
 import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
 import { AlertModule } from 'ngx-bootstrap/alert';
@@ -19,6 +22,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     DashboardComponent,
     LoginComponent,
     ManageUsersComponent,
+    SurveyComponent,
     ButtonComponent,
   ],
   imports: [
@@ -29,9 +33,9 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     NgxBootstrapIconsModule.pick(allIcons),
     AlertModule,
   ],
-  providers: [
+  providers: [SurveyService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

@@ -5,6 +5,10 @@ namespace API.Models
 {
     public class Survey : BaseEntity
     {
+        public Survey()
+        {
+            // initialization logic, if any
+        }
         public Survey(string title, DateTime? dueDate = null)
         {
             Title = title;
@@ -18,10 +22,10 @@ namespace API.Models
         public string Title { get; set; }
         public DateTime? DueDate { get; set; }
 
-        public ICollection<Group> AssignedTo { get; set; }
+        public virtual ICollection<Group> AssignedTo { get; set; }
 
-        public ICollection<User> CompletedBy { get; set; }
+        public virtual ICollection<User> CompletedBy { get; set; }
 
-        public ICollection<SurveyQuestion> Questions { get; set; }
+        public virtual ICollection<SurveyQuestion> Questions { get; set; }
     }
 }

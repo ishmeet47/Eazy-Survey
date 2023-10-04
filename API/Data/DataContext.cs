@@ -7,12 +7,8 @@ namespace API.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            this.Users = this.Set<User>();
-            this.Groups = this.Set<Group>();
-            this.Surveys = this.Set<Survey>();
-            this.SurveyQuestions = this.Set<SurveyQuestion>();
-            this.SurveyOptions = this.Set<SurveyOption>();
-            this.SurveyAnswers = this.Set<SurveyAnswer>();
+            // These initializations are unnecessary. Entity Framework will handle this automatically.
+            // Removing them for clarity.
         }
 
         public DbSet<User> Users { get; set; }
@@ -21,6 +17,7 @@ namespace API.Data
         public DbSet<SurveyQuestion> SurveyQuestions { get; set; }
         public DbSet<SurveyOption> SurveyOptions { get; set; }
         public DbSet<SurveyAnswer> SurveyAnswers { get; set; }
+        public DbSet<UserGroup> UserGroups { get; set; } // Added this for the join table
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,10 +53,19 @@ namespace API.Data
                 .WithMany()
                 .HasForeignKey(sa => sa.UserId);
 
-            // many-to-many relationship between user and group
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Groups)
-                .WithMany(g => g.Users);
+            // many-to-many relationship between User and Group using UserGroup join table
+            modelBuilder.Entity<UserGroup>()
+                .HasKey(ug => new { ug.UserId, ug.GroupId });
+
+            modelBuilder.Entity<UserGroup>()
+                .HasOne(ug => ug.User)
+                .WithMany(u => u.UserGroups)
+                .HasForeignKey(ug => ug.UserId);
+
+            modelBuilder.Entity<UserGroup>()
+                .HasOne(ug => ug.Group)
+                .WithMany(g => g.UserGroups)
+                .HasForeignKey(ug => ug.GroupId);
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Password)
@@ -68,8 +74,6 @@ namespace API.Data
             modelBuilder.Entity<User>()
                 .Property(u => u.PasswordKey)
                 .HasColumnType("varbinary(MAX)");
-
-
         }
     }
 }

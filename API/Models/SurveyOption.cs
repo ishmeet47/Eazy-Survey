@@ -6,6 +6,6 @@ namespace API.Models
         public string Label { get; set; }
 
         public int QuestionId { get; set; }
-        public SurveyQuestion Question { get; set; }
+        public virtual SurveyQuestion Question { get; set; }
     }
 }

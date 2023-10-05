@@ -1,24 +1,37 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit {
+  @ViewChild('loginForm') loginForm!: NgForm;
+
+
   username: string = '';
   password: string = '';
   errorMessage: string = ''; // To display error messages to the user
 
   passwordVisibility: boolean = false; // To toggle password visibility
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
+
+  ngAfterViewInit() {
+    console.log(this.loginForm); // This should log the NgForm instance
+  }
   // This will be triggered by the form submission
   onSubmit(): void {
-    this.login();
+    if (this.loginForm?.valid) {
+      this.username = this.loginForm.value.username;
+      this.password = this.loginForm.value.password;
+
+      this.login(); // You can now call your login method here
+    }
   }
 
   togglePasswordVisibility(): void {

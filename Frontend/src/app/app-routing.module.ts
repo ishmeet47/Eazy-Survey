@@ -21,4 +21,6 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+// imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })
+
 export class AppRoutingModule { }

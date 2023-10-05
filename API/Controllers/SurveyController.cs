@@ -3,8 +3,9 @@ using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using API.Models.Requests;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class SurveyController : ControllerBase
 {
@@ -16,12 +17,25 @@ public class SurveyController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<ActionResult<Survey>> CreateSurvey([FromBody] SurveyRequest request)
+    public async Task<ActionResult<Survey>> CreateSurvey([FromBody] ExtendedSurveyRequest request)
     {
-        var survey = await _repository.CreateSurvey(request.Title, request.DueDate);
+        var questions = request.QuestionsWithOptions.Select(q => (q.QuestionText, q.Options)).ToList();
+
+        var survey = await _repository.CreateSurvey(request.Title, request.DueDate, questions, request.UserGroupIds);
         if (survey == null) return BadRequest("Failed to create survey.");
 
         return CreatedAtAction(nameof(GetSurvey), new { id = survey.Id }, survey);
+    }
+
+
+
+
+    [HttpPut("publishsurvey/{id}")]
+    public async Task<IActionResult> PublishSurvey(int id)
+    {
+        var success = await _repository.PublishSurvey(id);
+        if (success) return NoContent();
+        else return NotFound("Survey not found or already published.");
     }
 
     [HttpGet("getsurvey/{id}")]
@@ -40,6 +54,15 @@ public class SurveyController : ControllerBase
         return Ok(surveys);
     }
 
+
+    [HttpPut("assign/{surveyId}")]
+    public async Task<IActionResult> AssignSurveyToGroups(int surveyId, [FromBody] AssignSurveyRequest request)
+    {
+        var success = await _repository.AssignSurveyToGroups(surveyId, request.GroupIds);
+        if (success) return NoContent();
+        else return NotFound("Survey not found or already published.");
+    }
+
     [HttpPut("updatesurvey/{id}")]
     public async Task<ActionResult<Survey>> UpdateSurvey(int id, [FromBody] SurveyRequest request)
     {
@@ -52,9 +75,25 @@ public class SurveyController : ControllerBase
     [HttpDelete("deletesurvey/{id}")]
     public async Task<IActionResult> DeleteSurvey(int id)
     {
-        await _repository.DeleteSurvey(id);
-        return NoContent();
+        var success = await _repository.DeleteSurvey(id);
+        if (success)
+            return NoContent();
+        else
+            return NotFound("Survey not found.");
     }
+
+
+
+    // public class ExtendedSurveyRequest : SurveyRequest
+    // {
+    //     public List<(string QuestionText, List<string> Options)> QuestionsWithOptions { get; set; }
+    // }
+
+    public class AssignSurveyRequest
+    {
+        public List<int> GroupIds { get; set; }
+    }
+
 }
 
 public class SurveyRequest

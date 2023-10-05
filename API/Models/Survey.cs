@@ -13,10 +13,15 @@ namespace API.Models
         {
             Title = title;
             DueDate = dueDate;
+            IsPublished = false;  // Set default valu
             AssignedTo = new HashSet<Group>();
             CompletedBy = new HashSet<User>();
-            Questions = new HashSet<SurveyQuestion>();
+            // Questions = new HashSet<SurveyQuestion>();
+            this.Questions = new List<SurveyQuestion>();
+
         }
+
+        public bool IsPublished { get; set; } = false;
 
         [Required]
         public string Title { get; set; }
@@ -26,6 +31,6 @@ namespace API.Models
 
         public virtual ICollection<User> CompletedBy { get; set; }
 
-        public virtual ICollection<SurveyQuestion> Questions { get; set; }
+        public virtual ICollection<SurveyQuestion> Questions { get; set; } = new List<SurveyQuestion>();
     }
 }

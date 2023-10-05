@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ManageUsersComponent } from './manage-users-component/manage-users-component.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
@@ -29,6 +29,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     NgxBootstrapIconsModule.pick(allIcons),
     AlertModule,

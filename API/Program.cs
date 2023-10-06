@@ -6,18 +6,34 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using API.Models;  // If your User model is located here
 using System.Linq;
+using API.Interfaces;
+using API.Repositories;
+using API.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors();
-builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SQLExpress")));
+// builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SQLExpress")));
+
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SQLExpress"));
+});
+
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISurveyRepository, SurveyRepositoryService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -37,10 +53,9 @@ var app = builder.Build();
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-// var adminUser = context.Users.FirstOrDefault(u => u.Username == "admin");
 var adminUser = context.Users
     .Where(u => u.Username == "admin")
-    .Select(u => new 
+    .Select(u => new
     {
         u.Id,
         u.Username,
@@ -72,6 +87,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(m => m.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
+// Routing should be placed before Authentication and Authorization.
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();

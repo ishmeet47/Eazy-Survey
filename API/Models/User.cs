@@ -1,39 +1,37 @@
-﻿namespace API.Models;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-public class User : BaseEntity
+namespace API.Models
 {
-    public User
-    (
-        string username,
-        byte[] password,
-        byte[] passwordKey,
-        string userType = "User"
-    )
+    public class User : BaseEntity
     {
-        Username = username;
-        Password = password;
-        PasswordKey = passwordKey;
-        UserType = userType;
-        Groups = new HashSet<Group>();
-        SurveysCompleted = new HashSet<Survey>();
+        public User(string username, byte[] password, byte[] passwordKey, string userType = "User")
+        {
+            Username = username;
+            Password = password;
+            PasswordKey = passwordKey;
+            UserType = userType;
+            UserGroups = new HashSet<UserGroup>();
+            SurveysCompleted = new HashSet<Survey>();
+        }
+
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        [StringLength(20, MinimumLength = 8)]
+        public byte[] Password { get; set; }
+
+        [Required]
+        public byte[] PasswordKey { get; set; }
+
+        [Required]
+        public string UserType { get; set; }
+
+
+        public ICollection<UserGroup> UserGroups { get; set; }
+
+        public virtual ICollection<Survey> SurveysCompleted { get; set; }
     }
-
-
-    [Required]
-    public string Username { get; set; }
-
-    [Required]
-    [StringLength(20, MinimumLength = 8)]
-    public byte[] Password { get; set; }
-
-    [Required]
-    public byte[] PasswordKey { get; set; }
-
-    [Required]
-    public string UserType { get; set; }
-
-    public ICollection<Group> Groups { get; set; }
-
-    public ICollection<Survey> SurveysCompleted { get; set; }
 }

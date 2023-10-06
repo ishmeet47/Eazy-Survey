@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231003035343_AddUserGroups")]
+    partial class AddUserGroups
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +33,6 @@ namespace API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
-
                     b.Property<int>("LastUpdatedBy")
                         .HasColumnType("int");
 
@@ -49,21 +48,6 @@ namespace API.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("API.Models.GroupSurvey", b =>
-                {
-                    b.Property<int>("SurveyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SurveyId", "GroupId");
-
-                    b.HasIndex("GroupId");
-
-                    b.ToTable("GroupSurveys");
-                });
-
             modelBuilder.Entity("API.Models.Survey", b =>
                 {
                     b.Property<int>("Id")
@@ -75,9 +59,6 @@ namespace API.Migrations
 
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
 
                     b.Property<int>("LastUpdatedBy")
                         .HasColumnType("int");
@@ -103,10 +84,8 @@ namespace API.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
 
                     b.Property<int>("LastUpdatedBy")
                         .HasColumnType("int");
@@ -114,21 +93,40 @@ namespace API.Migrations
                     b.Property<DateTime>("LastUpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SurveyOptionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SurveyQuestionId")
-                        .HasColumnType("int");
-
                     b.HasKey("OptionId", "UserId");
-
-                    b.HasIndex("SurveyOptionId");
-
-                    b.HasIndex("SurveyQuestionId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("SurveyAnswers");
+                });
+
+            modelBuilder.Entity("API.Models.SurveyOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LastUpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastUpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("SurveyOptions");
                 });
 
             modelBuilder.Entity("API.Models.SurveyQuestion", b =>
@@ -143,9 +141,6 @@ namespace API.Migrations
                     b.Property<string>("Heading")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
 
                     b.Property<int>("LastUpdatedBy")
                         .HasColumnType("int");
@@ -171,9 +166,6 @@ namespace API.Migrations
                         .HasColumnOrder(0);
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
 
                     b.Property<int>("LastUpdatedBy")
                         .HasColumnType("int");
@@ -233,28 +225,6 @@ namespace API.Migrations
                     b.ToTable("GroupSurvey");
                 });
 
-            modelBuilder.Entity("SurveyOption", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Label")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("SurveyOptions");
-                });
-
             modelBuilder.Entity("SurveyUser", b =>
                 {
                     b.Property<int>("CompletedById")
@@ -270,54 +240,34 @@ namespace API.Migrations
                     b.ToTable("SurveyUser");
                 });
 
-            modelBuilder.Entity("API.Models.GroupSurvey", b =>
-                {
-                    b.HasOne("API.Models.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Models.Survey", "Survey")
-                        .WithMany()
-                        .HasForeignKey("SurveyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("Survey");
-                });
-
             modelBuilder.Entity("API.Models.SurveyAnswer", b =>
                 {
-                    b.HasOne("SurveyOption", "Option")
+                    b.HasOne("API.Models.SurveyOption", "Option")
                         .WithMany()
                         .HasForeignKey("OptionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SurveyOption", null)
-                        .WithMany("Answers")
-                        .HasForeignKey("SurveyOptionId");
-
-                    b.HasOne("API.Models.SurveyQuestion", "SurveyQuestion")
-                        .WithMany("SurveyAnswers")
-                        .HasForeignKey("SurveyQuestionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("API.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Option");
 
-                    b.Navigation("SurveyQuestion");
-
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("API.Models.SurveyOption", b =>
+                {
+                    b.HasOne("API.Models.SurveyQuestion", "Question")
+                        .WithMany("Options")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("API.Models.SurveyQuestion", b =>
@@ -365,17 +315,6 @@ namespace API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SurveyOption", b =>
-                {
-                    b.HasOne("API.Models.SurveyQuestion", "Question")
-                        .WithMany("Options")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-                });
-
             modelBuilder.Entity("SurveyUser", b =>
                 {
                     b.HasOne("API.Models.User", null)
@@ -404,18 +343,11 @@ namespace API.Migrations
             modelBuilder.Entity("API.Models.SurveyQuestion", b =>
                 {
                     b.Navigation("Options");
-
-                    b.Navigation("SurveyAnswers");
                 });
 
             modelBuilder.Entity("API.Models.User", b =>
                 {
                     b.Navigation("UserGroups");
-                });
-
-            modelBuilder.Entity("SurveyOption", b =>
-                {
-                    b.Navigation("Answers");
                 });
 #pragma warning restore 612, 618
         }

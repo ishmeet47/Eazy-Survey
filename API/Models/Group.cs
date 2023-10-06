@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace API.Models
 {
@@ -7,14 +9,16 @@ namespace API.Models
         public Group(string name)
         {
             Name = name;
-            Users = new List<User>();
+            UserGroups = new HashSet<UserGroup>();
             SurveysAssigned = new HashSet<Survey>();
         }
 
+        [Required]
         public string Name { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        [JsonIgnore]
+        public ICollection<UserGroup> UserGroups { get; set; }
 
-        public ICollection<Survey> SurveysAssigned { get; set; }
+        public virtual ICollection<Survey> SurveysAssigned { get; set; }
     }
 }

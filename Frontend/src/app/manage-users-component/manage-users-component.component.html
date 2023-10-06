@@ -1,13 +1,155 @@
-<h2>Manage Users</h2>
-<form (submit)="addUser()">
-    <!-- <input type="text" [(ngModel)]="newUsername" placeholder="Username"> -->
-    <input type="text" [ngModel]="newUsername" (ngModelChange)="newUsername = $event.target.value" placeholder="Username">
+<!-- Create New User Form -->
+<!-- Create New User Form -->
+<div class="card">
+    <div class="card-header">Create New User</div>
+    <div class="card-body">
+        <form (submit)="addUser()" autocomplete="off">
+            <input type="text" placeholder="Username" [(ngModel)]="newUsername" name="newUsername" autocomplete="off">
+            <input type="password" placeholder="Password" [(ngModel)]="newPassword" name="newPassword" autocomplete="off">
 
-    <button type="submit">Add User</button>
-</form>
-<ul>
-    <li *ngFor="let user of users">
-        {{ user.username }}
-        <button (click)="deleteUser(user.id)">Delete</button>
-    </li>
-</ul>
+            <!-- Add this in your component template for debugging purposes -->
+<!-- <pre>{{ groups | json }}</pre> -->
+
+            <!-- Checkboxes to select multiple user groups -->
+            <div *ngFor="let group of groups">
+                <input type="checkbox" [(ngModel)]="group.selected" name="group-{{group.id}}">{{ group.name }}
+            </div>
+
+
+
+
+            <button type="submit">Create</button>
+        </form>
+    </div>
+  </div>
+
+
+
+<!-- Create New User Group Form -->
+<div class="card">
+  <div class="card-header">Create New User Group</div>
+  <div class="card-body">
+      <form (submit)="createGroup()">
+          <input type="text" placeholder="Group Name" [(ngModel)]="newGroupName" name="newGroupName">
+          <button type="submit">Create</button>
+          <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+          <p class="validation-message" *ngIf="validationMessage">{{ validationMessage }}</p>
+      </form>
+  </div>
+</div>
+
+<!-- Add User to Group Form -->
+<!-- <div class="card">
+    <div class="card-header">Add User to Group</div>
+    <div class="card-body">
+        <form (submit)="addUserToGroup()">
+            <select [(ngModel)]="selectedUser" name="selectedUser">
+                <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
+            </select>
+        -->
+            <!--  Checkboxes to select multiple groups -->
+            <!-- <div *ngFor="let group of groups">
+                <input type="checkbox" [(ngModel)]="group.selected" [value]="group.id">{{ group.name }}
+            </div>
+
+            <button type="submit">Add to Group(s)</button>
+        </form>
+    </div>
+  </div>
+-->
+
+
+<!-- User List with Edit and Delete Options -->
+<!-- User List with Edit and Delete Options -->
+<div class="card">
+  <div class="card-header">All Users</div>
+  <div class="card-body">
+      <table>
+          <thead>
+              <tr>
+                  <th>Username</th>
+                  <th>Actions</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let user of users">
+                  <td>{{ user.username }}</td>
+                  <td>
+                      <button (click)="editUser(user)">Edit</button>
+                      <button (click)="deleteUser(user.id)">Delete</button>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div *ngIf="editingUser" class="modal" (click)="closeEditModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <span (click)="closeEditModal()" class="close">&times;</span>
+      <form (submit)="updateUser($event)">
+          <input type="text" [(ngModel)]="editingUser.username" name="username">
+
+          <!-- Checkboxes to select multiple user groups -->
+          <!-- <div *ngFor="let group of groups">
+            <input type="checkbox" [value]="group.id" [(ngModel)]="group.selected" name="group-{{group.id}}"> {{group.name}}
+        </div> -->
+
+        <div *ngFor="let group of editingGroups">
+            <input
+              type="checkbox"
+              [checked]="isGroupSelected(group.id)"
+              (change)="toggleGroupSelection(group.id)"
+              name="group-{{group.id}}">
+            {{group.name}}
+          </div>
+
+
+          <button type="submit">Update</button>
+      </form>
+    </div>
+</div>
+
+
+<!-- Optional: Group List. It can also have edit/delete features if needed -->
+<div class="card">
+    <div class="card-header">All User Groups</div>
+    <div class="card-body">
+        <table>
+            <thead>
+                <tr>
+                    <th>Group Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let group of groups">
+                  <td>{{ group.name }}</td>
+                  <td>
+                      <!-- Add delete button for each group -->
+                      <button (click)="deleteGroup(group)">Delete</button>
+                  </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+  </div>
+
+
+
+<button (click)="navigateToSurveyComponent()">Manage Surveys</button>
+
+<!-- Create New Survey Form -->
+<!-- <div class="card">
+  <div class="card-header">Create New Survey</div>
+  <div class="card-body">
+      <form (submit)="createSurvey()">
+          <input type="text" placeholder="Survey Title" [(ngModel)]="newSurveyTitle" name="newSurveyTitle">
+          <input type="date" placeholder="Due Date" [(ngModel)]="newSurveyDueDate" name="newSurveyDueDate">
+
+          <textarea placeholder="Enter Questions, one per line" [(ngModel)]="newSurveyQuestions" name="newSurveyQuestions"></textarea>
+          <button type="submit">Create Survey</button>
+      </form>
+  </div>
+</div> -->

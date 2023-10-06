@@ -1,0 +1,76 @@
+ <!-- <div *ngFor="let group of groups">
+                <input
+                    type="checkbox"
+                    [(ngModel)]="group.selected"
+                    [value]="group.id"
+                    [id]="'group-' + group.id"
+                    [name]="'group-' + group.id">
+                <label [for]="'group-' + group.id">{{ group.name }}</label>
+              </div>
+              <p *ngIf="message">{{ message }}</p> -->
+
+
+
+              <!-- <div *ngFor="let group of groups">
+                {{ group.id }}
+            </div> -->
+
+
+
+            <div class="container mt-5">
+
+              <!-- Message for Success or Error -->
+              <div *ngIf="message" class="alert alert-info">
+                  {{ message }}
+              </div>
+
+              <!-- Survey Form -->
+              <div class="card mb-4">
+                  <div class="card-header">
+                      {{ editMode ? 'Edit Survey' : 'Create a New Survey' }}
+                  </div>
+                  <div class="card-body">
+                      <form (ngSubmit)="editMode ? updateSurvey() : createSurvey()">
+                          <div class="mb-3">
+                              <label for="title" class="form-label">Survey Title</label>
+                              <input type="text" class="form-control" id="title" [(ngModel)]="title" name="title" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="dueDate" class="form-label">Due Date</label>
+                              <input type="date" class="form-control" id="dueDate" [(ngModel)]="dueDate" name="dueDate" required>
+                            </div>
+                          <div class="mb-3">
+                              <label for="questions" class="form-label">Questions</label>
+                              <textarea class="form-control" rows="5" id="questions" name="questions" [(ngModel)]="questionsText"></textarea>
+                            </div>
+                          <!-- Assume you have a list of user groups -->
+                          <!-- <div class="mb-3">
+                              <label for="groups" class="form-label">Select User Groups</label>
+                              <select class="form-control" id="groups" multiple> -->
+                                  <!-- Assuming you have a list of groups -->
+                                  <!-- <option *ngFor="let group of groups">{{ group.name }}</option>
+                              </select>
+                          </div> -->
+
+                          <div *ngFor="let group of groups">
+                            <input
+                                type="checkbox"
+                                [(ngModel)]="group.selected"
+                                [value]="group.id"
+                                [id]="'group-' + group.id"
+                                [name]="'group-' + group.id">
+                            <label [for]="'group-' + group.id">{{ group.name }}</label>
+                          </div>
+                          <p *ngIf="message">{{ message }}</p>
+
+
+<!--
+                         <div *ngFor="let group of groups">
+                          {{ group.id }}
+                      </div> -->
+
+                          <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
+                          <button *ngIf="editMode" type="button" class="btn btn-secondary ml-2" (click)="editMode = false">Cancel</button>
+                      </form>
+                  </div>
+              </div>

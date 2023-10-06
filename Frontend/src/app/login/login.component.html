@@ -19,7 +19,7 @@
       class="w-50 pt-5"
     >
       <div class="login-input input-group mb-3 overflow-hidden border">
-        <input
+        <input name="username"
           required
           type="username"
           [(ngModel)]="username"
@@ -36,7 +36,7 @@
         </span>
       </div>
       <div class="login-input input-group mb-3 overflow-hidden border">
-        <input
+        <input name="password"
           required
           [type]="passwordVisibility ? 'text' : 'password'"
           [(ngModel)]="password"

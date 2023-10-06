@@ -1,0 +1,70 @@
+<app-admin-layout>
+  <div class="d-flex flex-column gap-4">
+    <app-admin-card title="Create New User">
+      <form #loginForm="ngForm" id="form-inputs">
+        <div class="d-flex flex-row gap-4">
+          <div
+            class="login-input rounded-3 input-group mb-3 overflow-hidden border"
+          >
+            <input
+              required
+              type="username"
+              class="form-control hide-focus border-0 py-2 px-4 bg-dark text-white"
+              placeholder="Username"
+              aria-label="Username"
+              aria-describedby="login-username-icon"
+            />
+            <span
+              class="input-group-text border-0 ps-1 px-4 bg-dark text-white"
+              id="login-username-icon"
+            >
+              <i-bs name="person-fill" width="20" height="20"></i-bs>
+            </span>
+          </div>
+          <div
+            class="login-input rounded-3 input-group mb-3 overflow-hidden border"
+          >
+            <input
+              required
+              [type]="passwordVisibility ? 'text' : 'password'"
+              class="form-control hide-focus border-0 py-2 px-4 bg-dark text-white"
+              placeholder="Password"
+              aria-label="Password"
+              aria-describedby="login-password-icon"
+            />
+            <span
+              class="pointer input-group-text border-0 ps-1 px-4 bg-dark text-white"
+              id="login-password-icon"
+              (click)="togglePasswordVisibility()"
+            >
+              <i-bs
+                name="eye"
+                width="20"
+                height="20"
+                *ngIf="!passwordVisibility"
+              ></i-bs>
+              <i-bs
+                name="eye-slash"
+                width="20"
+                height="20"
+                *ngIf="passwordVisibility"
+              ></i-bs>
+            </span>
+          </div>
+          <button
+            type="submit"
+            id="create-new-user-submit"
+            class="btn btn-sm btn-primary rounded-3"
+            [disabled]="!loginForm.valid"
+          >
+            Create
+          </button>
+        </div>
+      </form>
+      <!-- <app-filterable-dropdown [data]="users"></app-filterable-dropdown> -->
+    </app-admin-card>
+    <app-admin-card
+      ><app-filterable-table></app-filterable-table>
+    </app-admin-card>
+  </div>
+</app-admin-layout>

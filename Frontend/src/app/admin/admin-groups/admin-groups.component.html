@@ -1,3 +1,36 @@
-<app-admin-layout>
+<app-admin-layout class="d-flex flex-column gap-4">
   <app-admin-card title="Groups"></app-admin-card>
+  <app-admin-card title="Create New Group">
+    <form #loginForm="ngForm" id="form-inputs">
+      <div class="d-flex flex-row gap-4">
+        <div
+          class="new-group-input rounded-3 input-group mb-3 overflow-hidden border"
+        >
+          <input
+            required
+            type="text"
+            class="form-control hide-focus border-0 py-2 px-4 bg-dark text-white"
+            placeholder="Group Name"
+            aria-label="Group"
+            aria-describedby="new-group-icon"
+          />
+          <span
+            class="input-group-text border-0 ps-1 px-4 bg-dark text-white"
+            id="new-group-icon"
+          >
+            <i-bs name="people-fill" width="20" height="20"></i-bs>
+          </span>
+        </div>
+        <button
+          type="submit"
+          id="create-new-user-submit"
+          class="btn btn-sm btn-primary rounded-3"
+          [disabled]="!loginForm.valid"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+    <!-- <app-filterable-dropdown [data]="users"></app-filterable-dropdown> -->
+  </app-admin-card>
 </app-admin-layout>

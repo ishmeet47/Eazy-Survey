@@ -63,8 +63,33 @@
       </form>
       <!-- <app-filterable-dropdown [data]="users"></app-filterable-dropdown> -->
     </app-admin-card>
-    <app-admin-card
-      ><app-filterable-table></app-filterable-table>
+    <app-admin-card title="Users">
+      <div class="container">
+        <input
+          class="form-control"
+          id="myInput"
+          type="text"
+          placeholder="Search.."
+        />
+        <br />
+        <table class="table table-bordered table-striped text-white">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Password</th>
+              <th>Groups</th>
+            </tr>
+          </thead>
+          <tbody id="myTable">
+            <tr *ngFor="let d of users">
+              <!-- <td>{{ d.id }}</td> -->
+              <td>{{ d.username }}</td>
+              <td>{{ d.password }}</td>
+              <!-- <td>{{ d.userGroups }}</td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </app-admin-card>
   </div>
 </app-admin-layout>

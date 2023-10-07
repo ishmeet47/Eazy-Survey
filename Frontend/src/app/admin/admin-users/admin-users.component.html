@@ -96,10 +96,12 @@
           </thead>
           <tbody id="myTable">
             <tr *ngFor="let user of users">
-              <!-- <td>{{ d.id }}</td> -->
-              <td>{{ user.username }}</td>
-              <!-- <td>{{ d.password }}</td> -->
-              <td>{{ user.userGroups?.groups }}</td>
+              <td>
+                <span class="text-white">{{ user.username }}</span>
+              </td>
+              <td>
+                <span class="text-white">{{ user.userGroups?.groups }}</span>
+              </td>
               <td>
                 <button class="btn btn-primary me-2" (click)="editUser(user)">
                   Edit

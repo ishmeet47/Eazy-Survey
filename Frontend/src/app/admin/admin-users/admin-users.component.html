@@ -101,8 +101,12 @@
               <!-- <td>{{ d.password }}</td> -->
               <td>{{ user.userGroups?.groups }}</td>
               <td>
-                <button (click)="editUser(user)">Edit</button>
-                <button (click)="deleteUser(user.id)">Delete</button>
+                <button class="btn btn-primary me-2" (click)="editUser(user)">
+                  Edit
+                </button>
+                <button class="btn btn-secondary" (click)="deleteUser(user.id)">
+                  Delete
+                </button>
               </td>
             </tr>
           </tbody>

@@ -91,14 +91,19 @@
               <th>Username</th>
               <!-- <th>Password</th> -->
               <th>Groups</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody id="myTable">
-            <tr *ngFor="let d of users">
+            <tr *ngFor="let user of users">
               <!-- <td>{{ d.id }}</td> -->
-              <td>{{ d.username }}</td>
+              <td>{{ user.username }}</td>
               <!-- <td>{{ d.password }}</td> -->
-              <td>{{ d.userGroups?.groups }}</td>
+              <td>{{ user.userGroups?.groups }}</td>
+              <td>
+                <button (click)="editUser(user)">Edit</button>
+                <button (click)="deleteUser(user.id)">Delete</button>
+              </td>
             </tr>
           </tbody>
         </table>

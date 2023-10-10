@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent implements AfterViewInit, OnInit {
   @ViewChild('loginForm') loginForm!: NgForm;
-
 
   username: string = '';
   password: string = '';
@@ -18,8 +18,31 @@ export class LoginComponent implements AfterViewInit {
 
   passwordVisibility: boolean = false; // To toggle password visibility
 
+
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute
   ) { }
+
+
+
+  ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    const userType = localStorage.getItem('user_type');
+
+    if (token) {
+      if (userType === 'Admin') {
+        this.handleRedirectWithShareId(userType);
+        // this.router.navigate(['/admin-dashboard']);
+        return;
+      } else if (userType === 'User') {
+
+        this.handleRedirectWithShareId(userType);
+        // this.router.navigate(['/user-dashboard']);
+        return;
+      }
+    } else {
+      this.login();
+    }
+  }
 
 
   ngAfterViewInit() {

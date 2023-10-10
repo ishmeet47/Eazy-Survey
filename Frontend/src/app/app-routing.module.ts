@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './old-dashboard/dashboard.component';
 import { ManageUsersComponent } from './manage-users-component/manage-users-component.component';
-import { SurveyComponent } from './survey/survey.component';
 import { UserDashboardComponent } from './UserDashboard/UserDashboard.component';
 import { SurveyFillingComponent } from './SurveyFilling/SurveyFilling.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
@@ -15,17 +14,12 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'admin-dashboard', component: ManageUsersComponent },
   { path: 'user-dashboard', component: UserDashboardComponent },
-  { path: 'surveys', component: SurveyComponent },
   { path: 'answer-survey/:surveyId', component: SurveyFillingComponent },
   { path: 'admin/dashboard', component: AdminDashboardComponent },
   { path: 'admin/surveys', component: AdminSurveysComponent },
   { path: 'admin/groups', component: AdminGroupsComponent },
   { path: 'admin/users', component: AdminUsersComponent },
   { path: 'user-dashboard', component: DashboardComponent },
-  {
-    path: 'surveys',
-    component: SurveyComponent,
-  },
 ];
 
 @NgModule({

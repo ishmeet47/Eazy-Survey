@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -9,8 +8,6 @@ import { ManageUsersComponent } from './manage-users-component/manage-users-comp
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
 import { SurveyService } from './services/survey.service';
-import { SurveyComponent } from './survey/survey.component'; // adjust path accordingly
-
 import { ButtonComponent } from './components/button/button.component';
 import { AlertModule } from 'ngx-bootstrap/alert';
 // import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
@@ -42,10 +39,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
-    // DashboardComponent,
     LoginComponent,
     ManageUsersComponent,
-    SurveyComponent,
     ButtonComponent,
     SurveyResultsChartComponent,
     ClickOutsideDirective,

@@ -73,7 +73,7 @@
                           Due date should be greater than or equal to today's date.
                        </div> -->
                         <!-- Validation for Empty Due Date -->
-        <div *ngIf="dueDateField.errors?.['required'] && ((dueDateField.touched && !titleField.dirty) || showValidationDateMessage)" class="alert alert-danger">
+        <div *ngIf="dueDateField.errors?.['required'] && ((dueDateField.touched && !dueDateField.dirty) || showValidationDateMessage)" class="alert alert-danger">
         Due date is required.
         </div>
 
@@ -131,8 +131,8 @@
                             {{ question.heading }}
 
 
-                            <button type="button" (click)="startEditingQuestion(i)" class="btn btn-sm btn-warning ml-2">Edit Question</button>
-                            <button type="button" (click)="resetQuestionValidationStateNew(); showOptionInput(i)" class="btn btn-sm btn-primary ml-2">Add Option</button>
+                            <button type="button" (click)="startEditingQuestion(i)" class="btn btn-sm btn-warning ml-2 button-spacing">Edit Question</button>
+                            <button type="button" (click)="resetQuestionValidationStateNew(); showOptionInput(i)" class="btn btn-sm btn-primary ml-2 button-spacing">Add Option</button>
                             <button type="button" (click)="deleteQuestion(i)" class="btn btn-sm btn-danger ml-2">Delete Question</button>
 
 
@@ -141,7 +141,7 @@
                                  <li *ngIf="option.label && option.label.trim() != ''">
                                     {{ option.label }}
 
-                                    <button type="button" (click)="startEditingOption(i, j)" class="btn btn-sm btn-warning ml-2">Edit Option</button>
+                                    <button type="button" (click)="startEditingOption(i, j)" class="btn btn-sm btn-warning ml-2 button-spacing">Edit Option</button>
                                     <button type="button" (click)="deleteOption(i, j)" class="btn btn-sm btn-danger ml-2">Delete Option</button>
                                  </li>
                               </ng-container>

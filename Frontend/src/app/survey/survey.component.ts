@@ -700,7 +700,7 @@ export class SurveyComponent implements OnInit {
 
     const surveyData = {
       title: this.title,
-      dueDate: this.dueDate,
+      dueDate: this.dueDateString,
       QuestionsWithOptions: questionsWithOptions,
       userGroupIds: selectedGroups  // Add the selected user group ids here
     };
@@ -829,7 +829,7 @@ export class SurveyComponent implements OnInit {
     const surveyData = {
       title: this.title,
       Description: this.description || "",
-      dueDate: this.dueDate,
+      dueDate: this.dueDateString,
       // QuestionsWithOptions: this.questionsNew,  // Using the new property directly
       QuestionsWithOptions: transformedQuestions,  // Using the new property directly
 
@@ -944,7 +944,7 @@ export class SurveyComponent implements OnInit {
       id: this.surveyId,
       title: this.title,
       Description: this.description || "",
-      dueDate: this.dueDate,
+      dueDate: this.dueDateString,
       // QuestionsWithOptions: this.questionsNew,  // Using the new property directly
       QuestionsWithOptions: transformedQuestions,  // Using the new property directly
 

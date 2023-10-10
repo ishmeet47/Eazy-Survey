@@ -113,5 +113,34 @@ namespace API.Data.Repo
         }
 
 
+        public Task<IEnumerable<SurveyOption>> GetAnswerOptions(int QuestionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> SubmitSurvey(int userId, int surveyId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Survey>> GetAllowedSurveys(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<UserGroup>> GetAllMyGroups(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SurveyQuestion> CreateSurveyQuestion(int surveyId, string questionText, List<string> options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SurveyQuestion> UpdateSurveyQuestion(int questionId, string questionText, List<string> options = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

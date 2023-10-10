@@ -480,7 +480,73 @@ namespace API.Repositories
             return true;
         }
 
+        public async Task<IEnumerable<SurveyOption>> GetAnswerOptions(int QuestionId)
+        {
+            return await _context.SurveyOptions.Where(q => q.QuestionId == QuestionId).ToListAsync();
+        }
 
+        public async Task<bool> SubmitSurvey(int userId, int surveyId)
+        {
+
+            // update all the questions in question list to be published
+
+            var answers = _context.SurveyAnswers.Where(ans => ans.UserId == userId && ans.SurveyQuestionId == surveyId);
+
+            foreach (var ans in answers)
+            {
+                Console.Write(ans.Id);
+                ans.IsPublished = true;
+            }
+
+            // add user complete to the UserSurvey DB
+
+            //
+
+            var result = await _context.SaveChangesAsync();
+            return result > 0;
+
+        }
+
+        public async Task<IEnumerable<Survey>> GetAllowedSurveys(int userId)
+        {
+            List<Survey> SurveyList = new List<Survey>();
+            List<int> groups = new List<int>();
+            List<int> surveyIds = new List<int>();
+
+            var belongToGroup = await _context.UserGroups.Where(user => user.UserId == userId).ToListAsync();
+            foreach (var userGroup in belongToGroup)
+            {
+                Console.Write(userGroup.GroupId);
+                int groupId = userGroup.GroupId;
+                groups.Add(groupId);
+            }
+
+            Console.Write(groups);
+            /// ok now I have groups I need to pull all the survey that concluded in these groups
+            foreach (var group in groups)
+            {
+                var _surveys = await _context.GroupSurveys.Where(gs => gs.GroupId == group).ToListAsync();
+                foreach (var survey in _surveys)
+                {
+                    surveyIds.Add(survey.SurveyId);
+                }
+            }
+
+            /// now I have all the survey allowed stored in surveys, call prev function and return
+            foreach (var id in surveyIds)
+            {
+                var Sur = await GetSurvey(id);
+                SurveyList.Add(Sur);
+            }
+
+            return SurveyList.ToArray();
+        }
+
+        public async Task<IEnumerable<UserGroup>> GetAllMyGroups(int userId)
+        {
+            var belongToGroup = await _context.UserGroups.Where(group => group.UserId == userId).ToListAsync();
+            return belongToGroup;
+        }
     }
 
 }

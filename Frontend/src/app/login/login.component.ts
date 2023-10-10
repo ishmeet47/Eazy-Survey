@@ -3,7 +3,6 @@ import { AuthService } from '../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,11 +17,11 @@ export class LoginComponent implements AfterViewInit, OnInit {
 
   passwordVisibility: boolean = false; // To toggle password visibility
 
-
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute
-  ) { }
-
-
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
@@ -34,7 +33,6 @@ export class LoginComponent implements AfterViewInit, OnInit {
         // this.router.navigate(['/admin-dashboard']);
         return;
       } else if (userType === 'User') {
-
         this.handleRedirectWithShareId(userType);
         // this.router.navigate(['/user-dashboard']);
         return;
@@ -43,7 +41,6 @@ export class LoginComponent implements AfterViewInit, OnInit {
       this.login();
     }
   }
-
 
   ngAfterViewInit() {
     console.log(this.loginForm); // This should log the NgForm instance
@@ -88,18 +85,18 @@ export class LoginComponent implements AfterViewInit, OnInit {
   //   });
   // }
 
-
-
-
-
   private login(): void {
-    if (!localStorage.getItem('token')) { // User is not logged in
+    if (!localStorage.getItem('token')) {
+      // User is not logged in
       this.authService.login(this.username, this.password).subscribe({
         next: (response) => {
           if (response && response.token) {
             localStorage.setItem('token', response.token);
             if (response.groupIds && response.groupIds.$values) {
-              localStorage.setItem('userGroups', JSON.stringify(response.groupIds.$values));
+              localStorage.setItem(
+                'userGroups',
+                JSON.stringify(response.groupIds.$values)
+              );
             }
             this.handleRedirectWithShareId(response.userType); // Handle redirect after login
           } else {
@@ -110,48 +107,48 @@ export class LoginComponent implements AfterViewInit, OnInit {
           this.errorMessage = 'Invalid login credentials';
         },
       });
-    } else { // User is already logged in
+    } else {
+      // User is already logged in
       this.handleRedirectWithShareId(localStorage.getItem('user_type'));
     }
   }
 
-
   private handleRedirectWithShareId(userType: any): void {
     var shareId = this.route.snapshot.queryParams['shareId'];
     shareId = parseInt(shareId);
-    console.log(typeof (shareId));
+    console.log(typeof shareId);
     if (shareId) {
-
-
       if (userType === 'Admin') {
         this.router.navigate(['/admin-dashboard']);
       } else if (userType === 'User') {
-
         // Make API call to get group IDs associated with the shareId
-        this.authService.getGroupsByShareId(shareId).subscribe(groupsFromShare => {
-          const groupIdsFromShare = groupsFromShare.map(group => group.id);
-          const userGroups: number[] = JSON.parse(localStorage.getItem('userGroups') || '[]');
-          const commonGroups = groupIdsFromShare.filter(id => userGroups.includes(id));
+        this.authService.getGroupsByShareId(shareId).subscribe(
+          (groupsFromShare) => {
+            const groupIdsFromShare = groupsFromShare.map((group) => group.id);
+            const userGroups: number[] = JSON.parse(
+              localStorage.getItem('userGroups') || '[]'
+            );
+            const commonGroups = groupIdsFromShare.filter((id) =>
+              userGroups.includes(id)
+            );
 
-          if (commonGroups.length > 0) {
-            this.router.navigate(['/user-dashboard'], { queryParams: { shareId: shareId } });
-          } else {
+            if (commonGroups.length > 0) {
+              this.router.navigate(['/user-dashboard'], {
+                queryParams: { shareId: shareId },
+              });
+            } else {
+              this.router.navigate(['/user-dashboard']);
+            }
+          },
+          (error) => {
+            console.error('Error fetching groups by shareId:', error);
             this.router.navigate(['/user-dashboard']);
           }
-        }, error => {
-          console.error("Error fetching groups by shareId:", error);
-          this.router.navigate(['/user-dashboard']);
-        });
-
-
+        );
       } else {
         this.errorMessage = 'Unexpected user type received'; // Default error message for unexpected UserType
       }
-
-    }
-
-
-    else {
+    } else {
       if (userType === 'Admin') {
         this.router.navigate(['/admin-dashboard']);
       } else if (userType === 'User') {
@@ -159,9 +156,6 @@ export class LoginComponent implements AfterViewInit, OnInit {
       } else {
         this.errorMessage = 'Unexpected user type received'; // Default error message for unexpected UserType
       }
-
     }
   }
-
-
 }

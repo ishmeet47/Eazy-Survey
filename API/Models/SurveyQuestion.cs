@@ -14,6 +14,9 @@ namespace API.Models
         [Required]
         public string Heading { get; set; }
         public int SurveyId { get; set; }
+
+        public bool IsPublished { get; set; }
+
         public virtual Survey Survey { get; set; }
         public virtual ICollection<SurveyOption> Options { get; set; } = new List<SurveyOption>();
         public virtual ICollection<SurveyAnswer> SurveyAnswers { get; set; }

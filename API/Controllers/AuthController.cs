@@ -37,7 +37,13 @@ namespace API.Controllers
 
             var token = GenerateJwtToken(user);
 
-            return Ok(new { token, UserType = user.UserType });
+            // Retrieve the group IDs associated with the user.
+            var groupIds = _context.UserGroups
+                                   .Where(ug => ug.UserId == user.Id)
+                                   .Select(ug => ug.GroupId)
+                                   .ToList();
+
+            return Ok(new { token, UserType = user.UserType, GroupIds = groupIds });
         }
 
         private bool VerifyPassword(string password, byte[] storedSalt, byte[] storedHash)
@@ -52,31 +58,31 @@ namespace API.Controllers
             return hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         }
 
-    private string GenerateJwtToken(User user)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:Secret").Value);
-        var currentTime = DateTime.UtcNow;
-
-        var tokenDescriptor = new SecurityTokenDescriptor
+        private string GenerateJwtToken(User user)
         {
-            Subject = new ClaimsIdentity(new Claim[]
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration.GetSection("AppSettings:Secret").Value);
+            var currentTime = DateTime.UtcNow;
+
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.UserType)
-            }),
-            NotBefore = currentTime.AddMinutes(-5), // Set to 5 minutes before current time
-            Expires = currentTime.AddHours(1), // Token expiry set to 1 hour from current time
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-        };
+                }),
+                NotBefore = currentTime.AddMinutes(-5), // Set to 5 minutes before current time
+                Expires = currentTime.AddHours(1), // Token expiry set to 1 hour from current time
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+            };
 
-        // Logging (Optional) - If you have a logging setup, you can uncomment and use this
-        // Console.WriteLine($"Token Generation - NotBefore: {tokenDescriptor.NotBefore}, Expires: {tokenDescriptor.Expires}");
+            // Logging (Optional) - If you have a logging setup, you can uncomment and use this
+            // Console.WriteLine($"Token Generation - NotBefore: {tokenDescriptor.NotBefore}, Expires: {tokenDescriptor.Expires}");
 
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
-    }
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
 
 
     }

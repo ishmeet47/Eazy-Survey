@@ -8,8 +8,13 @@ namespace API.Models
         public Survey()
         {
             // initialization logic, if any
+
+            AssignedTo = new HashSet<Group>();
+            CompletedBy = new HashSet<User>();
+            Questions = new List<SurveyQuestion>();
+            GroupSurveys = new List<GroupSurvey>();
         }
-        public Survey(string title, DateTime? dueDate = null)
+        public Survey(string title, DateTime? dueDate = null, String? description = "")
         {
             Title = title;
             DueDate = dueDate;
@@ -18,6 +23,7 @@ namespace API.Models
             CompletedBy = new HashSet<User>();
             // Questions = new HashSet<SurveyQuestion>();
             this.Questions = new List<SurveyQuestion>();
+            Description = description;
 
         }
 
@@ -25,6 +31,9 @@ namespace API.Models
 
         [Required]
         public string Title { get; set; }
+
+        public string? Description { get; set; }
+
         public DateTime? DueDate { get; set; }
 
         public virtual ICollection<Group> AssignedTo { get; set; }
@@ -32,5 +41,10 @@ namespace API.Models
         public virtual ICollection<User> CompletedBy { get; set; }
 
         public virtual ICollection<SurveyQuestion> Questions { get; set; } = new List<SurveyQuestion>();
+
+        public virtual ICollection<GroupSurvey> GroupSurveys { get; set; }
+
+
+
     }
 }

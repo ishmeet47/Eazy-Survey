@@ -7,7 +7,7 @@ public class SurveyOption
 
     // Navigation properties
     public int QuestionId { get; set; }
-    public SurveyQuestion Question { get; set; } // This is the missing navigation property.
+    public virtual SurveyQuestion Question { get; set; } // This is the missing navigation property. // here i put virtual
 
     public virtual ICollection<SurveyAnswer> Answers { get; set; } = new List<SurveyAnswer>();
 

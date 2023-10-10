@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -18,7 +18,8 @@ export class LoginComponent implements AfterViewInit {
 
   passwordVisibility: boolean = false; // To toggle password visibility
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute
+  ) { }
 
 
   ngAfterViewInit() {
@@ -39,28 +40,105 @@ export class LoginComponent implements AfterViewInit {
   }
 
   // The login method handles the actual authentication logic
-  private login(): void {
-    this.authService.login(this.username, this.password).subscribe({
-      next: (response) => {
-        if (response && response.token) {
-          // Storing the JWT token locally. This can be stored in other mechanisms like cookies or session storage based on requirements.
-          localStorage.setItem('token', response.token);
+  // private login(): void {
+  //   this.authService.login(this.username, this.password).subscribe({
+  //     next: (response) => {
+  //       if (response && response.token) {
+  //         // Storing the JWT token locally. This can be stored in other mechanisms like cookies or session storage based on requirements.
+  //         localStorage.setItem('token', response.token);
 
-          if (response.userType === 'Admin') {
-            this.router.navigate(['/admin-dashboard']);
-          } else if (response.userType === 'User') {
-            this.router.navigate(['/user-dashboard']);
+  //         if (response.userType === 'Admin') {
+  //           this.router.navigate(['/admin-dashboard']);
+  //         } else if (response.userType === 'User') {
+  //           this.router.navigate(['/user-dashboard']);
+  //         } else {
+  //           this.errorMessage = 'Unexpected user type received'; // Default error message for unexpected UserType
+  //         }
+  //       } else {
+  //         this.errorMessage = 'Invalid login response';
+  //       }
+  //     },
+  //     error: (err) => {
+  //       // Handle login errors here
+  //       this.errorMessage = 'Invalid login credentials';
+  //     },
+  //   });
+  // }
+
+
+
+
+
+  private login(): void {
+    if (!localStorage.getItem('token')) { // User is not logged in
+      this.authService.login(this.username, this.password).subscribe({
+        next: (response) => {
+          if (response && response.token) {
+            localStorage.setItem('token', response.token);
+            if (response.groupIds && response.groupIds.$values) {
+              localStorage.setItem('userGroups', JSON.stringify(response.groupIds.$values));
+            }
+            this.handleRedirectWithShareId(response.userType); // Handle redirect after login
           } else {
-            this.errorMessage = 'Unexpected user type received'; // Default error message for unexpected UserType
+            this.errorMessage = 'Invalid login response';
           }
-        } else {
-          this.errorMessage = 'Invalid login response';
-        }
-      },
-      error: (err) => {
-        // Handle login errors here
-        this.errorMessage = 'Invalid login credentials';
-      },
-    });
+        },
+        error: (err) => {
+          this.errorMessage = 'Invalid login credentials';
+        },
+      });
+    } else { // User is already logged in
+      this.handleRedirectWithShareId(localStorage.getItem('user_type'));
+    }
   }
+
+
+  private handleRedirectWithShareId(userType: any): void {
+    var shareId = this.route.snapshot.queryParams['shareId'];
+    shareId = parseInt(shareId);
+    console.log(typeof (shareId));
+    if (shareId) {
+
+
+      if (userType === 'Admin') {
+        this.router.navigate(['/admin-dashboard']);
+      } else if (userType === 'User') {
+
+        // Make API call to get group IDs associated with the shareId
+        this.authService.getGroupsByShareId(shareId).subscribe(groupsFromShare => {
+          const groupIdsFromShare = groupsFromShare.map(group => group.id);
+          const userGroups: number[] = JSON.parse(localStorage.getItem('userGroups') || '[]');
+          const commonGroups = groupIdsFromShare.filter(id => userGroups.includes(id));
+
+          if (commonGroups.length > 0) {
+            this.router.navigate(['/user-dashboard'], { queryParams: { shareId: shareId } });
+          } else {
+            this.router.navigate(['/user-dashboard']);
+          }
+        }, error => {
+          console.error("Error fetching groups by shareId:", error);
+          this.router.navigate(['/user-dashboard']);
+        });
+
+
+      } else {
+        this.errorMessage = 'Unexpected user type received'; // Default error message for unexpected UserType
+      }
+
+    }
+
+
+    else {
+      if (userType === 'Admin') {
+        this.router.navigate(['/admin-dashboard']);
+      } else if (userType === 'User') {
+        this.router.navigate(['/user-dashboard']);
+      } else {
+        this.errorMessage = 'Unexpected user type received'; // Default error message for unexpected UserType
+      }
+
+    }
+  }
+
+
 }

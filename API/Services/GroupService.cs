@@ -20,6 +20,16 @@ namespace API.Services
             return await _context.Groups.ToListAsync();
         }
 
+
+        public async Task<List<Group>> GetGroupsBySurveyIdAsync(int surveyId)
+        {
+            return await _context.GroupSurveys
+                .Where(gs => gs.SurveyId == surveyId)
+                .Select(gs => gs.Group)
+                .ToListAsync();
+        }
+
+
         public async Task<bool> CreateGroupAsync(string groupName)
         {
             var group = new Group(groupName);

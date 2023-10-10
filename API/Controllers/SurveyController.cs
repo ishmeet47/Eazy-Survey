@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Models.Requests;
+using static API.Models.Requests.ExtendedSurveyRequest.QuestionWithOptions;
 
 [Route("[controller]")]
 [ApiController]
@@ -16,13 +17,49 @@ public class SurveyController : ControllerBase
         _repository = repository;
     }
 
+    // [HttpPost("create")]
+    // public async Task<ActionResult<Survey>> CreateSurvey([FromBody] ExtendedSurveyRequest request)
+    // {
+
+    //     if (!ModelState.IsValid)
+    //     {
+    //         return BadRequest(ModelState);
+    //     }
+    //     var questions = request.QuestionsWithOptions.Select(q => (q.QuestionText, q.Options)).ToList();
+
+    //     var survey = await _repository.CreateSurvey(request.Title, request.DueDate, questions, request.UserGroupIds, request.Description);
+    //     if (survey == null) return BadRequest("Failed to create survey.");
+
+    //     return CreatedAtAction(nameof(GetSurvey), new { id = survey.Id }, survey);
+    // }
+
     [HttpPost("create")]
     public async Task<ActionResult<Survey>> CreateSurvey([FromBody] ExtendedSurveyRequest request)
     {
-        var questions = request.QuestionsWithOptions.Select(q => (q.QuestionText, q.Options)).ToList();
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState); // You can simplify the logging if needed.
+        }
 
-        var survey = await _repository.CreateSurvey(request.Title, request.DueDate, questions, request.UserGroupIds);
-        if (survey == null) return BadRequest("Failed to create survey.");
+        var questions = request.QuestionsWithOptions.Select(q =>
+      (
+          q.Heading,
+          q.Id, // This is the questionId
+          q.Options.Select(o => new Option { Label = o.Label }).ToList()
+      )
+  ).ToList();
+
+
+        var survey = await _repository.CreateSurvey(
+            request.Title,
+            request.DueDate,
+            questions,
+            request.UserGroupIds,
+            request.Description
+        );
+
+        if (survey == null)
+            return BadRequest("Failed to create survey.");
 
         return CreatedAtAction(nameof(GetSurvey), new { id = survey.Id }, survey);
     }
@@ -30,13 +67,13 @@ public class SurveyController : ControllerBase
 
 
 
-    [HttpPut("publishsurvey/{id}")]
-    public async Task<IActionResult> PublishSurvey(int id)
-    {
-        var success = await _repository.PublishSurvey(id);
-        if (success) return NoContent();
-        else return NotFound("Survey not found or already published.");
-    }
+    // [HttpPut("publishsurvey/{id}")]
+    // public async Task<IActionResult> PublishSurvey(int id)
+    // {
+    //     var success = await _repository.PublishSurvey(id);
+    //     if (success) return NoContent();
+    //     else return NotFound("Survey not found or already published.");
+    // }
 
     [HttpGet("getsurvey/{id}")]
     public async Task<ActionResult<Survey>> GetSurvey(int id)
@@ -64,13 +101,65 @@ public class SurveyController : ControllerBase
     }
 
     [HttpPut("updatesurvey/{id}")]
-    public async Task<ActionResult<Survey>> UpdateSurvey(int id, [FromBody] SurveyRequest request)
+    public async Task<IActionResult> UpdateSurvey(int id, [FromBody] ExtendedSurveyRequest request)
     {
-        var survey = await _repository.UpdateSurvey(id, request.Title, request.DueDate);
-        if (survey == null) return NotFound("Survey not found.");
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
 
+        if (id != request.Id)
+        {
+            return BadRequest("Mismatched survey ID.");
+        }
+
+        var questions = request.QuestionsWithOptions.Select(q =>
+            (
+                q.Heading,
+                q.Id,
+                q.Options
+            )).ToList();
+
+        var survey = await _repository.UpdateSurvey(
+            id,
+            request.Title,
+            request.DueDate,
+            request.Description,
+            questions,
+            request.UserGroupIds
+        );
+
+        if (survey == null)
+        {
+            return NotFound("Survey not found or already published.");
+        }
+
+        // If you decide to send back the entire survey
         return Ok(survey);
+
+        // Or if you decide to send a success message
+        // return Ok(new { message = "Survey updated successfully." });
     }
+
+
+
+
+    [HttpPut("publish/{surveyId}")]
+    public async Task<IActionResult> PublishSurvey(int surveyId)
+    {
+        if (string.IsNullOrEmpty(surveyId.ToString()))
+        {
+            return BadRequest(new { success = false, message = "SurveyId is required" });
+        }
+        bool result = await _repository.PublishSurvey(surveyId);
+        if (result)
+        {
+            return Ok(new { success = true, message = "Survey published successfully" });
+        }
+        return NotFound(new { success = false, message = "Survey not found" });
+    }
+
+
 
     [HttpDelete("deletesurvey/{id}")]
     public async Task<IActionResult> DeleteSurvey(int id)

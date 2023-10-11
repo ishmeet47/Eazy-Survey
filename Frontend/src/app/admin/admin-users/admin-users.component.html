@@ -1,6 +1,6 @@
 <app-admin-layout>
   <div class="d-flex flex-column gap-4">
-    <app-admin-card title="Create New User">
+    <app-card title="Create New User">
       <form #loginForm="ngForm" id="form-inputs" (submit)="addUser()">
         <div class="d-flex flex-column">
           <div class="d-flex flex-row gap-4">
@@ -75,8 +75,8 @@
         </div>
       </form>
       <!-- <app-filterable-dropdown [data]="users"></app-filterable-dropdown> -->
-    </app-admin-card>
-    <app-admin-card title="Users">
+    </app-card>
+    <app-card title="Users">
       <div class="container">
         <!-- <input
           class="form-control"
@@ -114,6 +114,6 @@
           </tbody>
         </table>
       </div>
-    </app-admin-card>
+    </app-card>
   </div>
 </app-admin-layout>

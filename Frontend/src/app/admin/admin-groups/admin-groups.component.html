@@ -1,5 +1,5 @@
 <app-admin-layout class="d-flex flex-column gap-4">
-  <app-admin-card title="Create New Group" class="me-4">
+  <app-card title="Create New Group" class="me-4">
     <form #loginForm="ngForm" id="form-inputs" (submit)="createGroup()">
       <div class="d-flex flex-row gap-4">
         <div
@@ -35,8 +35,8 @@
         </p>
       </div>
     </form>
-  </app-admin-card>
-  <app-admin-card title="Groups">
+  </app-card>
+  <app-card title="Groups">
     <table class="table table-bordered table-striped text-white">
       <thead>
         <tr>
@@ -56,6 +56,6 @@
           </td>
         </tr>
       </tbody>
-    </table></app-admin-card
+    </table></app-card
   >
 </app-admin-layout>

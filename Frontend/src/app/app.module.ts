@@ -19,8 +19,6 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { ClickOutsideDirective } from './directives/ClickOutsideDirective';
 
 import { DateValidatorDirective } from './directives/date-validator.directive';
-
-import { UserDashboardComponent } from './UserDashboard/UserDashboard.component';
 import { UserAnswerService } from './services/userAnswer.service';
 import { SurveyFillingComponent } from './SurveyFilling/SurveyFilling.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
@@ -35,6 +33,10 @@ import { FilterableDropdownComponent } from './components/filterable-dropdown/fi
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
+import { UserLayoutComponent } from './user-dashboard/user-layout/user-layout.component';
+import { UserNavbarComponent } from './user-dashboard/user-layout/user-navbar/user-navbar.component';
+import { CardComponent } from './components/card/card.component';
 
 @NgModule({
   declarations: [
@@ -53,9 +55,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AdminSurveysComponent,
     AdminUsersComponent,
     AdminLayoutComponent,
-    AdminCardComponent,
     FilterableTableComponent,
     FilterableDropdownComponent,
+    UserDashboardComponent,
+    UserLayoutComponent,
+    UserNavbarComponent,
+    CardComponent,
   ],
   imports: [
     BrowserModule,

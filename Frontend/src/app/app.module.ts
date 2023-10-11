@@ -27,16 +27,16 @@ import { AdminSurveysComponent } from './admin/admin-surveys/admin-surveys.compo
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 import { AdminNavbarComponent } from './admin/admin-layout/admin-navbar/admin-navbar.component';
 import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.component';
-import { AdminCardComponent } from './admin/admin-layout/admin-card/admin-card.component';
 import { FilterableTableComponent } from './components/filterable-table/filterable-table.component';
 import { FilterableDropdownComponent } from './components/filterable-dropdown/filterable-dropdown.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
-import { UserLayoutComponent } from './user-dashboard/user-layout/user-layout.component';
-import { UserNavbarComponent } from './user-dashboard/user-layout/user-navbar/user-navbar.component';
+import { UserLayoutComponent } from './user/user-dashboard/user-layout/user-layout.component';
+import { UserNavbarComponent } from './user/user-dashboard/user-layout/user-navbar/user-navbar.component';
 import { CardComponent } from './components/card/card.component';
+import { UserSurveyComponent } from './user/user-survey/user-survey.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +60,7 @@ import { CardComponent } from './components/card/card.component';
     UserDashboardComponent,
     UserLayoutComponent,
     UserNavbarComponent,
+    UserSurveyComponent,
     CardComponent,
   ],
   imports: [

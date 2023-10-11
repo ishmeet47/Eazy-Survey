@@ -1,7 +1,10 @@
 <!-- This page is where users will fill out their survey -->
 <app-user-layout>
   <app-card title="Survey Title Here" class="survey-card">
-    <div class="d-flex flex-column align-items-center">
+    <div
+      id="survey-question-info"
+      class="d-flex flex-column align-items-center my-5"
+    >
       <div
         id="survey-description"
         class="mb-4 d-flex flex-column align-items-center"
@@ -13,7 +16,7 @@
       </div>
       <div
         id="survey-options-container"
-        class="row gap-4 justify-content-center"
+        class="row gap-4 justify-content-center mt-5"
       >
         <div
           *ngFor="let option of options"
@@ -35,6 +38,20 @@
             <span>{{ option.value }}</span>
           </div>
         </div>
+      </div>
+      <div id="survey-continue-button">
+        <button
+          class="btn btn-primary rounded-pill px-4 py-3 d-flex flex-row align-items-center mt-5"
+          [disabled]="selectedOption === -1"
+        >
+          <span>Continue</span>
+          <i-bs
+            name="caret-right-fill"
+            width="10"
+            height="10"
+            class="ms-3"
+          ></i-bs>
+        </button>
       </div>
     </div>
   </app-card>

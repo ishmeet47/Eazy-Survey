@@ -332,10 +332,30 @@
 
         <button
     type="button"
-    class="btn btn-success"
+    class="btn btn-success button-spacing"
     (click)="showPublishPopup(survey.id)">
     Get Sharable Link
 </button>
+
+
+<!-- <button (click)="checkResults(survey)" type="button"
+class="btn btn-success">Check Results</button> -->
+
+<!-- parent.component.html for apex chart -->
+<!-- <button (click)="showResults = true" type="button" class="btn btn-success">Check Results</button>
+
+<app-survey-results-chart *ngIf="showResults"
+                         [surveyResults]="myStructure"
+                         [totalNumberOfUsers]="totalNumberOfUsers"
+                         (clickOutside)="onChartClickOutside()"></app-survey-results-chart> -->
+
+
+                         <button (click)="showResults = true" type="button" class="btn btn-success">Check Results</button>
+
+<div *ngIf="showResults" clickOutside (clickOutside)="onChartClickOutside()">
+    <app-survey-results-chart [surveyResults]="myStructure" [totalNumberOfUsers]="totalNumberOfUsers"></app-survey-results-chart>
+</div>
+
 
     </div>
   </div>

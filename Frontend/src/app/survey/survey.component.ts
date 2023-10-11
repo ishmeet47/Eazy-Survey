@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 import { UserService } from '../services/user.service';
 import { Survey } from '../modules/survey.module';
 import { Group } from '../modules/group.module';
@@ -13,9 +13,53 @@ import * as bootstrap from 'bootstrap';
 import { AbstractControl, NgForm } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { of } from 'rxjs';
+import { ClickOutsideDirective } from '../directives/ClickOutsideDirective';
 
 declare var $: any; // if you're not using the jQuery type definition
 
+
+// First, declare your types or interfaces outside the class
+type NewSurvey = {
+  questions: {
+    $values: Array<{
+      heading: string,
+      options: {
+        $values: Array<{
+          id: number,
+          label: string
+        }>
+      }
+    }>
+  }
+};
+
+type Option = {
+  id: number,
+  label: string
+};
+
+type ParsedResult = {
+  [questionHeading: string]: Option[]
+};
+
+
+
+type CountResponse = {
+  $values: Array<{
+    optionId: number,
+    count: number
+  }>
+};
+
+type OptionWithCount = {
+  id: number,
+  label: string,
+  count?: number
+};
+
+type ParsedResultWithCount = {
+  [questionHeading: string]: OptionWithCount[]
+};
 
 @Component({
   selector: 'app-survey',
@@ -730,6 +774,215 @@ export class SurveyComponent implements OnInit {
     this.cd.detectChanges();
 
   }
+
+
+
+  // checkResults(surveyId: number) {
+
+
+  //   this.surveyService.getSurveyById(surveyId).subscribe(surveyData => {
+  //     this.showResults(surveyData);
+  //   });
+  // }
+
+
+
+  extractQuestionsAndOptions(survey: NewSurvey): ParsedResult {
+    let resultMap: ParsedResult = {};
+
+    const questionsArray = survey.questions['$values'];
+
+    for (const question of questionsArray) {
+      const heading: string = question.heading;
+      const optionsArray = question.options['$values'];
+
+      let optionsList: Option[] = [];
+
+      for (const option of optionsArray) {
+        optionsList.push({
+          id: option.id,
+          label: option.label
+        });
+      }
+
+      resultMap[heading] = optionsList;
+    }
+
+    return resultMap;
+  }
+  // Example usage:
+  // const survey: Survey = { /* your survey object here */ };
+  // const result = extractQuestionsAndOptions(survey);
+  // console.log(result);
+
+  updateCountInResultMap(countResponse: CountResponse, resultMap: ParsedResult): ParsedResultWithCount {
+    let updatedResultMap: ParsedResultWithCount = {};
+
+    for (const [question, options] of Object.entries(resultMap)) {
+      updatedResultMap[question] = options.map(opt => {
+        // Find matching count data
+        const matchingCountData = countResponse.$values.find(item => item.optionId === opt.id);
+        // If found, add the count to the result option
+        if (matchingCountData) {
+          return {
+            ...opt,
+            count: matchingCountData.count
+          };
+        }
+        // Otherwise, return the option as is
+        return opt;
+      });
+    }
+
+    return updatedResultMap;
+  }
+
+
+  onChartClickOutside(): void {
+    this.showResults = false;
+  }
+
+
+  showResults = false;
+  // ng - apex chart fields :
+
+  // parent.component.ts
+  myStructure: { [key: string]: { id: number, label: string, count?: number }[] } = {};
+
+  totalNumberOfUsers!: number;  // total number of users
+
+  checkResults(survey: any) {
+    // Extract option IDs
+    const optionIds = this.getOptionIdsFromSurvey(survey);
+
+    const result = this.extractQuestionsAndOptions(survey);
+
+
+    console.log(result);
+
+    const groupIds = this.getGroupIdsFromSurvey(survey);
+    // Call the service method
+
+    var data1, data2;
+    var totalnoofusers = 0;
+
+    this.getAnswersByOptionIds(optionIds).subscribe((response: any) => {
+      // Handle the response, display data, or any other operations you want to perform.
+
+      data1 = response;
+      console.log(response);
+
+      var finalParsedData = this.updateCountInResultMap(response, result);
+
+      console.log("final parsed structure is ", finalParsedData);
+      this.myStructure = finalParsedData;
+
+      this.getAllUsersToWhichTheSurveyisAssigned(groupIds).subscribe((response: any) => {
+        data2 = response;
+        console.log(data2);
+        response.$values.forEach((x: any) => {
+          totalnoofusers += x.count;
+        });
+        console.log("total no of users ", totalnoofusers);
+        this.totalNumberOfUsers = totalnoofusers;
+
+
+      });
+
+
+    });
+
+    console.log("total no of users ", totalnoofusers);
+
+    // this.showResults(response);
+
+  }
+
+  getOptionIdsFromSurvey(survey: any): number[] {
+    let optionId: number[] = [];
+
+    survey.questions.$values.forEach((question: any) => {
+      question.options.$values.forEach((option: any) => {
+        optionId.push(option.id);
+      });
+    });
+
+    return optionId;
+  }
+
+
+  getGroupIdsFromSurvey(survey: any): number[] {
+    let groupId: number[] = [];
+
+    survey.groupSurveys.$values.forEach((group: any) => {
+      // question.options.$values.forEach((option: any) => {
+      groupId.push(group.groupId);
+      // });
+    });
+
+    return groupId;
+  }
+
+
+  // showResults(surveyData: any) {
+  //   const results: { optionId: number; userCount: number }[] = [];
+
+  //   surveyData.$values.forEach((question: any) => {
+  //     question.options.$values.forEach((option: any) => {
+  //       const optionId = option.id;
+  //       // This assumes that the answers in SurveyAnswers are linked to options by optionId.
+  //       const userCount = option.answers.$values.length;
+  //       results.push({ optionId, userCount });
+  //     });
+  //   });
+
+  //   // this.displayChart(results);
+  // }
+
+
+  onChartDisplayed(event: boolean) {
+    if (event) {
+      // Handle the event, e.g., show a message or perform other actions.
+    }
+  }
+
+
+
+
+
+
+  getAnswersByOptionIds(optionIds: number[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/survey/getAnswersByOptionIds`, optionIds)
+      .pipe(
+        catchError(error => {
+          // Handle the error here - perhaps send it to an error logging service, show a user notification, etc.
+          console.error("Error fetching answers by option IDs: ", error);
+          return throwError(error);
+        }),
+        map(response => {
+          // Process or transform the response if needed
+          return response;
+        })
+      );
+  }
+
+
+
+  getAllUsersToWhichTheSurveyisAssigned(groupIds: number[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/survey/getUsersByGroupIds`, groupIds)
+      .pipe(
+        catchError(error => {
+          // Handle the error here - perhaps send it to an error logging service, show a user notification, etc.
+          console.error("Error fetching answers by option IDs: ", error);
+          return throwError(error);
+        }),
+        map(response => {
+          // Process or transform the response if needed
+          return response;
+        })
+      );
+  }
+
 
 
 

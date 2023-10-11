@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static API.Models.Requests.ExtendedSurveyRequest.QuestionWithOptions;
+using static SurveyController;
 
 namespace API.Interfaces
 {
@@ -40,5 +41,13 @@ namespace API.Interfaces
     Task<SurveyAnswer> GetSurveyAnswer(int userId, int optionId);
     Task<IEnumerable<SurveyAnswer>> GetSurveyAnswersByUserId(int userId);
     Task<bool> DeleteSurveyAnswer(int userId, int optionId);
+
+
+    Task<List<OptionCount>> GetAnswerCountsByOptionIds(List<int> optionIds);
+
+    Task<IEnumerable<GroupCount>> getUsersByGroupIds(List<int> groupIds);
+
+
   }
+
 }

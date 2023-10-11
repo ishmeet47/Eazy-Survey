@@ -15,7 +15,11 @@ import { SurveyComponent } from './survey/survey.component'; // adjust path acco
 import { ButtonComponent } from './components/button/button.component';
 import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { SurveyResultsChartComponent } from './survey-results-chart/survey-results-chart.component';
 // import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgApexchartsModule } from 'ng-apexcharts';
+// import { NgXClickOutsideModule } from 'ngx-click-outside';
+import { ClickOutsideDirective } from './directives/ClickOutsideDirective';
 
 @NgModule({
   declarations: [
@@ -25,6 +29,8 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     ManageUsersComponent,
     SurveyComponent,
     ButtonComponent,
+    SurveyResultsChartComponent,
+    ClickOutsideDirective
   ],
   imports: [
     BrowserModule,
@@ -34,6 +40,8 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     HttpClientModule,
     NgxBootstrapIconsModule.pick(allIcons),
     AlertModule,
+    NgApexchartsModule,
+    // NgXClickOutsideModule
     // NgbModule
   ],
   providers: [SurveyService,

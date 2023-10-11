@@ -11,7 +11,9 @@ import { AdminSurveysComponent } from './admin/admin-surveys/admin-surveys.compo
 import { AdminGroupsComponent } from './admin/admin-groups/admin-groups.component';
 // TODO: Combine both dashboards into one component
 import { UserDashboardComponent } from './UserDashboard/UserDashboard.component';
-import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
+import { UserDashboardComponent } from './user/user-dashboard/user-dashboard.component';
+import { UserSurveyComponent } from './user/user-survey/user-survey.component';
+
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -23,6 +25,7 @@ const routes: Routes = [
   { path: 'admin/groups', component: AdminGroupsComponent },
   { path: 'admin/users', component: AdminUsersComponent },
   { path: 'dashboard', component: UserDashboardComponent },
+  { path: 'survey', component: UserSurveyComponent },
 ];
 
 @NgModule({

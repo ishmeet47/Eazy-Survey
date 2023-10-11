@@ -32,11 +32,11 @@ import { FilterableDropdownComponent } from './components/filterable-dropdown/fi
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
-import { UserLayoutComponent } from './user/user-dashboard/user-layout/user-layout.component';
-import { UserNavbarComponent } from './user/user-dashboard/user-layout/user-navbar/user-navbar.component';
 import { CardComponent } from './components/card/card.component';
 import { UserSurveyComponent } from './user/user-survey/user-survey.component';
+import { UserDashboardComponent } from './user/user-dashboard/user-dashboard.component';
+import { UserLayoutComponent } from './user/user-layout/user-layout.component';
+import { UserNavbarComponent } from './user/user-layout/user-navbar/user-navbar.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +57,6 @@ import { UserSurveyComponent } from './user/user-survey/user-survey.component';
     AdminLayoutComponent,
     FilterableTableComponent,
     FilterableDropdownComponent,
-    UserDashboardComponent,
     UserLayoutComponent,
     UserNavbarComponent,
     UserSurveyComponent,

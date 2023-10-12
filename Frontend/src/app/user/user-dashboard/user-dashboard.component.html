@@ -15,6 +15,7 @@
           type="button"
           routerLink="/survey/{{ survey.id }}"
           *ngIf="convertDateString(survey.dueDate) > today"
+          (click)="startAnswerSurvey(survey.id)"
         >
           Start
         </button>
@@ -24,6 +25,7 @@
           type="button"
           routerLink="/survey/{{ survey.id }}"
           *ngIf="convertDateString(survey.dueDate) > today"
+          (click)="startAnswerSurvey(survey.id)"
         >
           Resubmit
         </button> -->

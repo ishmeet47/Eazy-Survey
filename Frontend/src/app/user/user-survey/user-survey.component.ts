@@ -99,6 +99,7 @@ export class UserSurveyComponent implements OnInit {
       surveyId: Number(localStorage.getItem('surveyId')),
     };
     this.UAService.submitSurvey(Token);
+    localStorage.removeItem('surveyId');
   }
 
   // to update an answer
@@ -171,9 +172,5 @@ export class UserSurveyComponent implements OnInit {
       console.log('this.questions: ');
       console.log(this.questionsAndOptions);
     });
-  }
-
-  logout() {
-    localStorage.removeItem('surveyId');
   }
 }

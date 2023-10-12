@@ -24,11 +24,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors();
-// builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SQLExpress")));
 
+// Updated to include EnableRetryOnFailure
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SQLExpress"));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("SQLExpress"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure());
 });
 
 builder.Services.AddScoped<IUserService, UserService>();
@@ -53,29 +55,37 @@ var app = builder.Build();
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-var adminUser = context.Users
-    .Where(u => u.Username == "admin")
-    .Select(u => new
-    {
-        u.Id,
-        u.Username,
-        Password = (byte[])u.Password,
-        PasswordKey = (byte[])u.PasswordKey,
-        u.UserType,
-        // ... any other necessary fields
-    })
-    .AsNoTracking()
-    .FirstOrDefault();
-
-if (adminUser == null)
+try
 {
-    var utility = new PasswordUtility();
-    var (hashedPassword, salt) = utility.HashPassword("adminpassword");
+    var adminUser = context.Users
+        .Where(u => u.Username == "admin")
+        .Select(u => new
+        {
+            u.Id,
+            u.Username,
+            Password = (byte[])u.Password,
+            PasswordKey = (byte[])u.PasswordKey,
+            u.UserType,
+            // ... any other necessary fields
+        })
+        .AsNoTracking()
+        .FirstOrDefault();
 
-    var user = new User("admin", hashedPassword, salt, "Admin");
-    context.Users.Add(user);
+    if (adminUser == null)
+    {
+        var utility = new PasswordUtility();
+        var (hashedPassword, salt) = utility.HashPassword("adminpassword");
 
-    context.SaveChanges();
+        var user = new User("admin", hashedPassword, salt, "Admin");
+        context.Users.Add(user);
+
+        context.SaveChanges();
+    }
+}
+catch (Exception ex)
+{
+    // Log the exception or handle it as appropriate
+    Console.WriteLine($"Error seeding admin user: {ex.Message}");
 }
 
 // Configure the HTTP request pipeline.

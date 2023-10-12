@@ -52,6 +52,18 @@ namespace API.Controllers
         }
 
 
+        [HttpGet("getgroupsbysurvey/{surveyId}")]
+        public async Task<IActionResult> GetGroupsBySurveyId(int surveyId)
+        {
+            var groups = await _groupService.GetGroupsBySurveyIdAsync(surveyId);
+            if (groups == null || !groups.Any())
+            {
+                return NotFound("No groups found associated with the provided survey ID.");
+            }
+            return Ok(groups);
+        }
+
+
 
 
         // Add other necessary endpoints as needed

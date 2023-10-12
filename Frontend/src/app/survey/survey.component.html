@@ -1,76 +1,374 @@
- <!-- <div *ngFor="let group of groups">
-                <input
-                    type="checkbox"
-                    [(ngModel)]="group.selected"
-                    [value]="group.id"
-                    [id]="'group-' + group.id"
-                    [name]="'group-' + group.id">
-                <label [for]="'group-' + group.id">{{ group.name }}</label>
-              </div>
-              <p *ngIf="message">{{ message }}</p> -->
+
+<!-- ########################### working html for creating and updating the survey  #######################-->
+
+<!-- // converting popup modal -->
+
+<button (click)="resetFormAndHide();loadSurveys();openCreateForm();openModal()" class="btn btn-primary mb-4 fixed-button">Create a New Survey</button>
 
 
+<div class="modal fade" id="publishModal" tabindex="-1" aria-labelledby="publishModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
 
-              <!-- <div *ngFor="let group of groups">
-                {{ group.id }}
-            </div> -->
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="publishModalLabel">Manage Survey</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Your existing form content goes here -->
+
+        <div class="container mt-5">
+          <!-- <button (click)="resetFormAndHide();loadSurveys();openCreateForm();openModal()" class="btn btn-primary mb-4">Create a New Survey</button> -->
+
+          <div *ngIf="displayForm">
+            <!-- [INSERT YOUR FORM HTML HERE] -->
 
 
 
             <div class="container mt-5">
-
               <!-- Message for Success or Error -->
               <div *ngIf="message" class="alert alert-info">
-                  {{ message }}
+                 {{ message }}
               </div>
-
               <!-- Survey Form -->
               <div class="card mb-4">
-                  <div class="card-header">
-                      {{ editMode ? 'Edit Survey' : 'Create a New Survey' }}
-                  </div>
-                  <div class="card-body">
-                      <form (ngSubmit)="editMode ? updateSurvey() : createSurvey()">
-                          <div class="mb-3">
-                              <label for="title" class="form-label">Survey Title</label>
-                              <input type="text" class="form-control" id="title" [(ngModel)]="title" name="title" required>
+                 <div class="card-header">
+                    {{ editMode ? 'Edit Survey' : 'Create a New Survey' }}
+                 </div>
+                 <div class="card-body">
+                    <form (keydown.enter)="$event.preventDefault()" (ngSubmit)="submitted = true; editMode ? updateSurvey() : createSurvey()" #surveyForm="ngForm">
+                    <!-- ... other input fields ... -->
+                    <div class="mb-3">
+                       <label for="title" class="form-label">Survey Title <span class="text-danger">*</span></label>
+                       <!-- <input type="text" class="form-control" id="title" [(ngModel)]="title" name="title" required #titleField="ngModel" [ngModelOptions]="{updateOn: 'change'}"> -->
+
+                       <input type="text" class="form-control" id="title" [(ngModel)]="title" name="title" required #titleField="ngModel" (ngModelChange)="resetSubmittedTitle()">
+
+
+                       <!-- <div *ngIf="titleField.invalid && submitted" class="alert alert-danger">
+                          Title is required.
+                       </div> -->
+
+                       <div *ngIf="titleField.invalid && ((titleField.touched && !titleField.dirty) || showValidationTitleMessage)"
+                       class="alert alert-danger">
+                        Title is required.
+                    </div>
+
+                    <!-- <div *ngIf="titleField.invalid && (showValidationMessages)" class="alert alert-danger" >
+                      Title is required.
+                  </div> -->
+
+
+                    </div>
+                    <!-- Survey Description -->
+                    <div class="mb-3">
+                       <label for="description" class="form-label">Survey Description</label>
+                       <textarea class="form-control" rows="3" id="description" [(ngModel)]="description" name="description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                       <label for="dueDate" class="form-label">Due Date <span class="text-danger">*</span></label>
+                       <input type="date" class="form-control" id="dueDate" [(ngModel)]="dueDateString" name="dueDate" required #dueDateField="ngModel" (ngModelChange)="resetSubmittedDate()">
+                       <!-- <div *ngIf="dueDateField.invalid && submitted" class="alert alert-danger">
+                          Due date should be greater than or equal to today's date.
+                       </div> -->
+                        <!-- Validation for Empty Due Date -->
+        <div *ngIf="dueDateField.errors?.['required'] && ((dueDateField.touched && !dueDateField.dirty) || showValidationDateMessage)" class="alert alert-danger">
+        Due date is required.
+        </div>
+
+
+                       <!-- Validation for Due Date being earlier than today -->
+        <div *ngIf="dueDateField.errors?.['dateInvalid'] && (dueDateField.touched || showValidationDateMessage)" class="alert alert-danger">
+        Due date should be greater than or equal to today's date.
+        </div>
+
+                    </div>
+                    <!-- <div class="mb-3">
+                       <label for="questions" class="form-label">Questions <span class="text-danger">*</span></label>
+                       <textarea class="form-control" rows="5" id="questions" name="questions" required [(ngModel)]="questionsText" #questionsField="ngModel" (ngModelChange)="resetQuestionError()"></textarea> -->
+                    <!-- <div *ngIf="questionsField.invalid && submitted" class="alert alert-danger">
+                       Questions are required.
+                       </div> -->
+                    <!-- <div *ngIf="questionsError && submitted" class="alert alert-danger">
+                       {{ questionsError }}
+                       </div>
+                       </div> -->
+                    <!-- Questions Section -->
+                    <div class="mb-3">
+                       <label for="questions" class="form-label">Questions <span class="text-danger">*</span></label>
+                       <ul class="list-group">
+
+                        <div *ngIf="submitted && (questionsNew.length === 0 && noQuestionsError)" class="alert alert-danger">
+                          Please add at least one question before submitting.
+                      </div>
+
+
+                      <div *ngIf="noOptionsError" class="alert alert-danger">
+                        {{ optionsNewError }}
+                    </div>
+
+                      <!-- <div *ngIf="submitted && (questionsNew.lengt|| noQuestionsError)" class="alert alert-danger">
+                        Please add at least one question before submitting.
+                    </div> -->
+
+                          <!-- <li *ngFor="let question of questionsNew; let i = index" class="list-group-item">
+                             {{ question.QuestionText }}
+                             <button type="button" (click)="startEditingQuestion(i)" class="btn btn-sm btn-warning ml-2">Edit Question</button>
+                             <button type="button" (click)="resetQuestionValidationStateNew(); showOptionInput(i)" class="btn btn-sm btn-primary ml-2">Add Option</button>
+                             <ul>
+                                <li *ngFor="let option of question.Options; let j = index">{{ option }}
+                                   <button (click)="startEditingOption(i, j)" class="btn btn-sm btn-warning ml-2">Edit Option</button>
+                                </li>
+                             </ul>
+                          </li> -->
+
+
+                          <li *ngFor="let question of questions; let i = index" class="list-group-item">
+                            <!-- {{ question.QuestionText }} -->
+
+
+                            {{ question.heading }}
+
+
+                            <button type="button" (click)="startEditingQuestion(i)" class="btn btn-sm btn-warning ml-2 button-spacing">Edit Question</button>
+                            <button type="button" (click)="resetQuestionValidationStateNew(); showOptionInput(i)" class="btn btn-sm btn-primary ml-2 button-spacing">Add Option</button>
+                            <button type="button" (click)="deleteQuestion(i)" class="btn btn-sm btn-danger ml-2">Delete Question</button>
+
+
+                            <ul>
+                              <ng-container *ngFor="let option of question.options; let j = index">
+                                 <li *ngIf="option.label && option.label.trim() != ''">
+                                    {{ option.label }}
+
+                                    <button type="button" (click)="startEditingOption(i, j)" class="btn btn-sm btn-warning ml-2 button-spacing">Edit Option</button>
+                                    <button type="button" (click)="deleteOption(i, j)" class="btn btn-sm btn-danger ml-2">Delete Option</button>
+                                 </li>
+                              </ng-container>
+                           </ul>
+
+
+
+                         </li>
+
+
+
+                       </ul>
+                       <!-- Add Question Button -->
+                       <button type="button" *ngIf="!isEditing && !addingOptionToExistingQuestion" (click)="toggleAddQuestionForm()" class="btn btn-primary mt-3">Add Question</button>
+                       <!-- Add/Edit Question/Option Popup -->
+                       <div *ngIf="showAddQuestionFormFlag" class="mt-3">
+                          <h4>{{ editingOptionIndex !== null ? 'Edit Option' : (isEditing ? 'Edit Question' : (addingOptionToExistingQuestion ? 'Add New Option' : 'Add New Question and Options')) }}</h4>
+                          <!-- <textarea *ngIf="!addingOptionToExistingQuestion" [(ngModel)]="newQuestionText" class="form-control" rows="3" placeholder="{{ editingOptionIndex !== null ? 'Enter option' : 'Enter question...'}}" name="newQuestionText"></textarea> -->
+                          <!-- Question Textarea -->
+                          <textarea *ngIf="!addingOptionToExistingQuestion && editingOptionIndex === null"
+                          [(ngModel)]="newQuestionText"
+                          (ngModelChange)="noQuestionsError = false"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Enter question..."
+                          name="newQuestionText"></textarea>
+                          <!-- Option Textarea for Editing Option -->
+                          <!-- Option Textarea for Editing Option -->
+                          <textarea *ngIf="editingOptionIndex !== null"
+                          [(ngModel)]="newOptionText"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Enter option"
+                          name="newOptionText"></textarea>
+                          <!-- Option Input for Adding Option -->
+                          <!-- <input *ngIf="addingOptionToExistingQuestion && editingOptionIndex === null"
+                             [(ngModel)]="newOptionText"
+                             class="form-control"
+                             placeholder="Enter option"
+                             name="newOptionText"> -->
+
+
+                             <div *ngIf="showAddQuestionFormFlag && !newQuestionText && noQuestionsError" class="alert alert-danger">
+                              Please enter the question text before confirming.
                           </div>
-                          <div class="mb-3">
-                              <label for="dueDate" class="form-label">Due Date</label>
-                              <input type="date" class="form-control" id="dueDate" [(ngModel)]="dueDate" name="dueDate" required>
-                            </div>
-                          <div class="mb-3">
-                              <label for="questions" class="form-label">Questions</label>
-                              <textarea class="form-control" rows="5" id="questions" name="questions" [(ngModel)]="questionsText"></textarea>
-                            </div>
-                          <!-- Assume you have a list of user groups -->
-                          <!-- <div class="mb-3">
-                              <label for="groups" class="form-label">Select User Groups</label>
-                              <select class="form-control" id="groups" multiple> -->
-                                  <!-- Assuming you have a list of groups -->
-                                  <!-- <option *ngFor="let group of groups">{{ group.name }}</option>
-                              </select>
-                          </div> -->
 
-                          <div *ngFor="let group of groups">
-                            <input
-                                type="checkbox"
-                                [(ngModel)]="group.selected"
-                                [value]="group.id"
-                                [id]="'group-' + group.id"
-                                [name]="'group-' + group.id">
-                            <label [for]="'group-' + group.id">{{ group.name }}</label>
+
+                          <div *ngIf="questionsNewError" class="alert alert-danger">
+                            {{ questionsNewError }}
                           </div>
-                          <p *ngIf="message">{{ message }}</p>
 
 
-<!--
-                         <div *ngFor="let group of groups">
-                          {{ group.id }}
-                      </div> -->
+                          <!-- Confirm Question and Options button - Only visible when adding a new question -->
+                          <button *ngIf="showAddQuestionFormFlag && !isEditing && editingOptionIndex === null && !addingOptionToExistingQuestion" type="button" (click)="addOrUpdateQuestion()" class="btn btn-success mt-2">Confirm Question and Options</button>
+                          <!-- Options Section -->
+                          <div *ngIf="(!isEditing && editingOptionIndex === null && newQuestionText) || editingOptionIndex !== null || addingOptionToExistingQuestion" class="mt-3">
+                             <!-- Add Option Input and Button - Only visible when adding a new option or adding option to an existing question, NOT in edit option mode -->
+                             <!-- <input *ngIf="editingOptionIndex === null" [(ngModel)]="newOptionText" class="form-control" placeholder="Enter option" name="newOptionText"> -->
 
-                          <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
-                          <button *ngIf="editMode" type="button" class="btn btn-secondary ml-2" (click)="editMode = false">Cancel</button>
-                      </form>
-                  </div>
+                             <!-- @@@@@ amandeep -->
+                             <input *ngIf="editingOptionIndex === null" [(ngModel)]="newOptionText" (ngModelChange)="resetOptionError()" class="form-control" placeholder="Enter option" name="newOptionText">
+
+
+                             <button type="button" *ngIf="editingOptionIndex === null" (click)="addNewOption()" class="btn btn-primary mt-2">Add Option</button>
+                             <!-- Display confirm options button when adding options to an existing question -->
+
+                             <!-- <div *ngIf="noOptionsError" class="alert alert-danger">
+                              Please enter some options.
+                          </div>
+         -->
+
+                            <!-- @@@@@ jsut adjustment here @@@@@
+                            -->
+                            <div *ngIf="noOptionsSpecialError" class="alert alert-danger">
+                              Please enter some options.
+                          </div>
+
+
+
+
+                             <button type="button" *ngIf="addingOptionToExistingQuestion" (click)="confirmOptions()" class="btn btn-success mt-2">Confirm Options</button>
+                             <ul class="mt-2">
+                                <li *ngFor="let option of tempOptions">{{ option.label }}</li>
+                             </ul>
+                          </div>
+
+
+
+                          <!-- <div *ngIf="noOptionsError" class="alert alert-danger">
+                            {{ optionsNewError }}
+                        </div> -->
+                          <!-- Update button, shown only in edit mode (either for question or option) -->
+                          <button type="button" *ngIf="isEditing || editingOptionIndex !== null" type="button" (click)="updateQuestionOrOption()" class="btn btn-success mt-2">Update</button>
+                       </div>
+                    </div>
+
+
+
+
+                    <label class="form-label">Select User Groups</label>
+                    <div *ngFor="let group of groupSurveys">
+                       <input type="checkbox" [(ngModel)]="group.selected" [value]="group.id" [id]="'group-' + group.id" [name]="'group-' + group.id">
+                       <label [for]="'group-' + group.id">{{ group.name }}</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create' }}</button>
+                    <button *ngIf="editMode" type="button" class="btn btn-secondary ml-2" (click)="resetFormAndHide()">Cancel</button>
+                    <button *ngIf="!editMode" type="button" (click)="resetFormAndHide()" class="btn btn-secondary ml-2">Cancel</button>
+
+                  </form>
+                 </div>
+
+
+
               </div>
+           </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- Displaying Surveys older approach integrated with showing the group names -->
+
+  <!-- this isthe btter approach for displaying all surveys -->
+
+
+  <!-- Displaying Surveys older approach integrated with showing the group names -->
+
+  <div *ngFor="let survey of surveys; let i = index" class="card mb-4">
+    <div class="card-header">
+      <strong>Survey Title:</strong> {{ survey.title }}
+    </div>
+    <div class="card-body">
+      <p>
+        <strong>Due Date:</strong> {{ survey.dueDate | date }}
+      </p>
+
+      <p>
+        <strong>Assigned to Groups:</strong>
+        <ng-container *ngIf="assignedGroupsToSurvey[i] && assignedGroupsToSurvey[i].groupNames.length">
+          <ng-container *ngFor="let groupName of assignedGroupsToSurvey[i].groupNames; let isLast = last">
+            {{ groupName }}<span *ngIf="!isLast">, </span>
+          </ng-container>
+        </ng-container>
+        <span *ngIf="!assignedGroupsToSurvey[i] || !assignedGroupsToSurvey[i].groupNames.length">Not Assigned</span>
+      </p>
+
+      <p><strong>Questions:</strong></p>
+      <ul>
+        <li *ngFor="let question of survey.questions.$values">
+          <strong>Question Heading:</strong> {{ question.heading }}
+          <p><strong>Options:</strong></p>
+          <ul>
+            <li *ngFor="let option of question.options.$values">{{ option.label }}</li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Survey Management Buttons -->
+      <p><strong>Actions:</strong></p>
+      <!-- <button type="button" class="btn btn-primary" (click)="editSurvey(survey.id)">Edit</button> -->
+      <button
+      type="button"
+      (click)="nowSurevyisEdited();openEditForm(survey);openModal()"
+      [disabled]="survey.isPublished"
+      class="btn btn-sm btn-warning button-spacing">
+      Edit
+  </button>
+
+      <button
+      type="button"
+      class="btn btn-success button-spacing"
+      [disabled]="survey.isPublished"
+      (click)="showPublishPopup(survey.id);loadSurveys()">
+      {{ survey.isPublished ? 'Published' : 'Publish' }}
+  </button>
+
+        <button type="button" class="btn btn-danger button-spacing" (click)="deleteSurvey(survey.id)">Delete</button>
+
+
+        <button
+    type="button"
+    class="btn btn-success"
+    (click)="showPublishPopup(survey.id)">
+    Get Sharable Link
+</button>
+
+    </div>
+  </div>
+
+
+
+    <!-- The existing form for creating/editing surveys -->
+    <!-- ... your existing form code ... -->
+
+
+
+
+    <!-- Modal structure starts here -->
+<div class="modal fade" id="publishModalNew" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Published Survey Link</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Share this link:</p>
+        <a [href]="publishedSurveyLink" target="_blank">{{ publishedSurveyLink }}</a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

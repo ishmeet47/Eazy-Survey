@@ -15,6 +15,7 @@ import { SurveyComponent } from './survey/survey.component'; // adjust path acco
 import { ButtonComponent } from './components/button/button.component';
 import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
 import { AlertModule } from 'ngx-bootstrap/alert';
+// import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     HttpClientModule,
     NgxBootstrapIconsModule.pick(allIcons),
     AlertModule,
+    // NgbModule
   ],
   providers: [SurveyService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

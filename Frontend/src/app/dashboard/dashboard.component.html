@@ -18,5 +18,10 @@
     <h3>User Dashboard</h3>
     <p>Welcome! You're logged in as a regular user. Enjoy the features available to you.</p>
 
+
+
+    <p *ngIf="showSurvey" > You are allowed to view and complete the surevy</p>
+    <p *ngIf="!showSurvey" > You are not allowed to view and complete the surevy</p>
+
     <!-- Add more user-specific components or information here -->
 </div>

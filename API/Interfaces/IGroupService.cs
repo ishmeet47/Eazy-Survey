@@ -12,5 +12,8 @@ namespace API.Interfaces
 
         Task DeleteGroupAndAssociations(int groupId);
 
+        Task<List<Group>> GetGroupsBySurveyIdAsync(int surveyId);
+
+
     }
 }

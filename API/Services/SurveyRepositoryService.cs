@@ -12,6 +12,7 @@ using System.Linq;
 using System.Web;
 using System.Data;
 using System.Data.SqlClient;
+using static API.Models.Requests.ExtendedSurveyRequest.QuestionWithOptions;
 
 namespace API.Repositories
 {
@@ -24,60 +25,33 @@ namespace API.Repositories
             _context = context;
         }
 
-        async Task<Survey> ISurveyRepository.CreateSurvey(string title, DateTime? dueDate,
-     List<(string QuestionText, List<string> Options)> questionsWithOptions,
-     List<int> userGroupIds)
+
+        // public Task<Survey> CreateSurvey(string title, DateTime? dueDate, List<(string heading, int questionId, List<Option> Options)> questionsWithOptions, List<int> userGroupIds, string description)
+        // {
+        //     throw new NotImplementedException();
+        // }
+
+        public async Task<Survey> CreateSurvey(string title, DateTime? dueDate,
+      List<(string heading, int questionId, List<Option> Options)> questionsWithOptions,
+      List<int> userGroupIds, string description)
         {
-            if (questionsWithOptions == null)
-            {
-                throw new ArgumentNullException(nameof(questionsWithOptions));
-            }
-
-            if (_context == null)
-            {
-                throw new InvalidOperationException("Database context is not initialized.");
-            }
-
-            var survey = new Survey(title, dueDate)
+            var survey = new Survey(title, dueDate, description)
             {
                 IsPublished = false
             };
 
-            if (survey.Questions == null)
+            foreach (var (questionText, questionId, options) in questionsWithOptions)
             {
-                throw new InvalidOperationException("The Questions collection in the Survey class is not initialized.");
-            }
-
-            foreach (var (questionText, options) in questionsWithOptions)
-            {
-                if (string.IsNullOrEmpty(questionText))
-                {
-                    throw new ArgumentException("Question text cannot be null or empty.");
-                }
-
-                if (options == null)
-                {
-                    throw new ArgumentNullException($"Options for question: '{questionText}' is null.");
-                }
-
                 var question = new SurveyQuestion
                 {
                     Heading = questionText,
-                    IsPublished = false
+                    IsPublished = false,
+                    Id = questionId  // Assuming SurveyQuestion has an Id property, you can set it here.
                 };
 
-                if (question.Options == null)
+                foreach (var option in options)
                 {
-                    throw new InvalidOperationException("The Options collection in the SurveyQuestion class is not initialized.");
-                }
-
-                foreach (var optionText in options)
-                {
-                    if (string.IsNullOrEmpty(optionText))
-                    {
-                        throw new ArgumentException($"Option text for question: '{questionText}' cannot be null or empty.");
-                    }
-                    question.Options.Add(new SurveyOption { Label = optionText });
+                    question.Options.Add(new SurveyOption { Label = option.Label });
                 }
 
                 survey.Questions.Add(question);
@@ -86,7 +60,6 @@ namespace API.Repositories
             _context.Surveys.Add(survey);
             await _context.SaveChangesAsync();
 
-            // Associate the survey with user groups
             foreach (var groupId in userGroupIds)
             {
                 _context.GroupSurveys.Add(new GroupSurvey
@@ -100,6 +73,7 @@ namespace API.Repositories
 
             return survey;
         }
+
 
 
 
@@ -130,23 +104,198 @@ namespace API.Repositories
             return await _context.Surveys
                 .Include(s => s.Questions)
                     .ThenInclude(q => q.Options)
+                .Include(s => s.GroupSurveys)
                 .ToListAsync();
         }
 
 
-        public async Task<Survey> UpdateSurvey(int id, string title, DateTime? dueDate = null)
+        // public async Task<Survey> UpdateSurvey(int id, string title, DateTime? dueDate, string description, List<(string heading, int questionId, List<Option> Options)> questionsWithOptions, List<int> userGroupIds)
+        // {
+        //     var survey = await _context.Surveys
+        //                                .Include(s => s.Questions)
+        //                                .ThenInclude(q => q.Options)
+        //                                .FirstOrDefaultAsync(s => s.Id == id);
+        //     if (survey == null || survey.IsPublished) return null;
+
+        //     // 1. Update Survey details
+        //     survey.Title = title;
+        //     survey.DueDate = dueDate;
+        //     survey.Description = description;
+
+
+
+        //     // 2. Update questions
+        //     foreach (var incomingQuestion in questionsWithOptions)
+        //     {
+        //         var question = survey.Questions.FirstOrDefault(q => q.Id == incomingQuestion.questionId);
+
+        //         if (question == null) // Question does not exist in DB
+        //         {
+        //             question = new SurveyQuestion { Heading = incomingQuestion.heading };
+        //             survey.Questions.Add(question); // Use navigation property to add question
+        //         }
+        //         else
+        //         {
+        //             question.Heading = incomingQuestion.heading; // Update existing question heading
+        //         }
+
+        //         // Handle the options for this question.
+        //         foreach (var incomingOption in incomingQuestion.Options)
+        //         {
+        //             var option = question.Options.FirstOrDefault(o => o.Id == incomingOption.Id);
+
+        //             if (option == null) // Option does not exist in DB
+        //             {
+        //                 option = new SurveyOption { Label = incomingOption.Label };
+        //                 question.Options.Add(option); // Use navigation property to add option
+        //             }
+        //             else
+        //             {
+        //                 option.Label = incomingOption.Label; // Update existing option label
+        //             }
+        //         }
+
+        //         // Remove options not in the incoming request
+        //         var optionsToRemove = question.Options.Where(o => !incomingQuestion.Options.Any(io => io.Id == o.Id)).ToList();
+        //         foreach (var opt in optionsToRemove)
+        //         {
+        //             // _context.SurveyOptions.Remove(opt); // Remove from context
+
+        //             var optionToRemove = _context.SurveyOptions.Find(opt.Id);
+        //             if (optionToRemove != null)
+        //             {
+        //                 _context.SurveyOptions.Remove(optionToRemove);
+        //             }
+
+        //         }
+        //     }
+
+
+
+        //     // Remove questions not in the incoming request
+        //     var questionsToRemove = survey.Questions.Where(q => !questionsWithOptions.Any(iq => iq.questionId == q.Id)).ToList();
+        //     foreach (var qst in questionsToRemove)
+        //     {
+        //         _context.SurveyQuestions.Remove(qst); // Remove from context
+        //     }
+
+        //     // 3. Update GroupSurveys
+        //     var currentGroupSurveys = await _context.GroupSurveys.Where(gs => gs.SurveyId == id).ToListAsync();
+        //     foreach (var groupId in userGroupIds)
+        //     {
+        //         if (!currentGroupSurveys.Any(gs => gs.GroupId == groupId))
+        //         {
+        //             _context.GroupSurveys.Add(new GroupSurvey
+        //             {
+        //                 SurveyId = survey.Id,
+        //                 GroupId = groupId
+        //             });
+        //         }
+        //     }
+
+        //     // Remove group surveys not in the incoming request
+        //     _context.GroupSurveys.RemoveRange(currentGroupSurveys.Where(gs => !userGroupIds.Contains(gs.GroupId)));
+
+        //     await _context.SaveChangesAsync();
+
+        //     return survey;
+        // }
+
+
+
+
+        public async Task<Survey> UpdateSurvey(int id, string title, DateTime? dueDate, string description, List<(string heading, int questionId, List<Option> Options)> questionsWithOptions, List<int> userGroupIds)
         {
-            var survey = await _context.Surveys.FindAsync(id);
+            var survey = await _context.Surveys
+                                       .Include(s => s.Questions)
+                                       .ThenInclude(q => q.Options)
+                                       .FirstOrDefaultAsync(s => s.Id == id);
             if (survey == null || survey.IsPublished) return null;
 
+            // 1. Update Survey details
             survey.Title = title;
             survey.DueDate = dueDate;
+            survey.Description = description;
 
-            _context.Entry(survey).State = EntityState.Modified;
+            // 2. Update questions
+            foreach (var incomingQuestion in questionsWithOptions)
+            {
+                var question = survey.Questions.FirstOrDefault(q => q.Id == incomingQuestion.questionId);
+
+                if (question == null) // Question does not exist in DB
+                {
+                    question = new SurveyQuestion { Heading = incomingQuestion.heading };
+                    survey.Questions.Add(question); // Use navigation property to add question
+                }
+                else
+                {
+                    question.Heading = incomingQuestion.heading; // Update existing question heading
+                }
+
+                // Handle the options for this question.
+                foreach (var incomingOption in incomingQuestion.Options)
+                {
+                    var option = question.Options.FirstOrDefault(o => o.Id == incomingOption.Id);
+
+                    if (option == null) // Option does not exist in DB
+                    {
+                        option = new SurveyOption { Label = incomingOption.Label };
+                        question.Options.Add(option); // Use navigation property to add option
+                    }
+                    else
+                    {
+                        option.Label = incomingOption.Label; // Update existing option label
+                    }
+                }
+
+                // Remove options not in the incoming request
+                var optionsToRemove = question.Options.Where(o => !incomingQuestion.Options.Any(io => io.Id == o.Id)).ToList();
+                foreach (var opt in optionsToRemove)
+                {
+                    var optionToRemove = _context.SurveyOptions.Find(opt.Id);
+                    if (optionToRemove != null)
+                    {
+                        _context.SurveyOptions.Remove(optionToRemove);
+                    }
+                }
+            }
+
+            // Remove questions not in the incoming request
+            var questionsToRemove = survey.Questions.Where(q => !questionsWithOptions.Any(iq => iq.questionId == q.Id)).ToList();
+            foreach (var qst in questionsToRemove)
+            {
+                var questionToRemove = _context.SurveyQuestions.Find(qst.Id);
+                if (questionToRemove != null)
+                {
+                    _context.SurveyQuestions.Remove(questionToRemove);
+                }
+            }
+
+            // 3. Update GroupSurveys
+            var currentGroupSurveys = await _context.GroupSurveys.Where(gs => gs.SurveyId == id).ToListAsync();
+            foreach (var groupId in userGroupIds)
+            {
+                if (!currentGroupSurveys.Any(gs => gs.GroupId == groupId))
+                {
+                    _context.GroupSurveys.Add(new GroupSurvey
+                    {
+                        SurveyId = survey.Id,
+                        GroupId = groupId
+                    });
+                }
+            }
+
+            // Remove group surveys not in the incoming request
+            _context.GroupSurveys.RemoveRange(currentGroupSurveys.Where(gs => !userGroupIds.Contains(gs.GroupId)));
+
             await _context.SaveChangesAsync();
 
             return survey;
         }
+
+
+
+
 
         public async Task<bool> PublishSurvey(int id)
         {
@@ -179,8 +328,27 @@ namespace API.Repositories
 
         public async Task<bool> DeleteSurvey(int id)
         {
-            var survey = await _context.Surveys.FindAsync(id);
+            // Fetch the survey with all related entities
+            var survey = await _context.Surveys.Include(s => s.Questions)
+                                               .ThenInclude(q => q.Options)  // Assuming `Options` is the name of the navigation property in SurveyQuestion pointing to SurveyOption entities.
+                                               .Include(s => s.GroupSurveys)
+                                               .FirstOrDefaultAsync(s => s.Id == id);
+
             if (survey == null) return false;
+
+            // Delete related questions and their options
+            foreach (var question in survey.Questions)
+            {
+                // Delete options related to this question
+                _context.SurveyOptions.RemoveRange(question.Options);  // If `Options` isn't the correct name of the navigation property, replace it with the correct one.
+
+                _context.SurveyQuestions.Remove(question);
+            }
+
+            // Delete group associations
+            _context.GroupSurveys.RemoveRange(survey.GroupSurveys);
+
+            // If you need to remove user associations or anything else, do so here.
 
             _context.Surveys.Remove(survey);
             await _context.SaveChangesAsync();
@@ -190,24 +358,26 @@ namespace API.Repositories
 
 
 
+
+
         // Implementation for SurveyQuestion operations
-        public async Task<SurveyQuestion> CreateSurveyQuestion(int surveyId, string questionText, List<string> options)
-        {
-            var survey = await _context.Surveys.FindAsync(surveyId);
-            if (survey == null) return null;
+        // public async Task<SurveyQuestion> CreateSurveyQuestion(int surveyId, string questionText, List<string> options)
+        // {
+        //     var survey = await _context.Surveys.FindAsync(surveyId);
+        //     if (survey == null) return null;
 
-            var question = new SurveyQuestion { Heading = questionText };
+        //     var question = new SurveyQuestion { Heading = questionText };
 
-            foreach (var optionText in options)
-            {
-                question.Options.Add(new SurveyOption { Label = optionText });
-            }
+        //     foreach (var optionText in options)
+        //     {
+        //         question.Options.Add(new SurveyOption { Label = optionText });
+        //     }
 
-            survey.Questions.Add(question);
-            await _context.SaveChangesAsync();
+        //     survey.Questions.Add(question);
+        //     await _context.SaveChangesAsync();
 
-            return question;
-        }
+        //     return question;
+        // }
 
         public async Task<SurveyQuestion> GetSurveyQuestion(int questionId)
         {
@@ -219,21 +389,27 @@ namespace API.Repositories
             return await _context.SurveyQuestions.Where(q => q.SurveyId == surveyId).ToListAsync();
         }
 
-        public async Task<SurveyQuestion> UpdateSurveyQuestion(int questionId, string questionText, List<string> options = null)
+        public async Task<SurveyQuestion> UpdateSurveyQuestion(int questionId, string questionText, List<Option> Options)
         {
             var question = await _context.SurveyQuestions.FindAsync(questionId);
             if (question == null) return null;
 
             question.Heading = questionText;
 
-            if (options != null && options.Any())
+            if (Options != null && Options.Any())
             {
                 // This simple implementation will remove old options and add the new ones.
                 // You might need to adjust it based on your specific requirements.
                 question.Options.Clear();
-                foreach (var optionText in options)
+
+                // Note: Assuming `Option` has a property named `Label` which is a string
+                foreach (var option in Options)
                 {
-                    question.Options.Add(new SurveyOption { Label = optionText });
+                    if (string.IsNullOrEmpty(option.Label))
+                    {
+                        throw new ArgumentException("Option text cannot be null or empty.");
+                    }
+                    question.Options.Add(new SurveyOption { Label = option.Label });
                 }
             }
 
@@ -242,6 +418,7 @@ namespace API.Repositories
 
             return question;
         }
+
 
         // Implementation for SurveyAnswer operations
         public async Task<SurveyAnswer> CreateSurveyAnswer(int userId, int optionId)
@@ -278,6 +455,8 @@ namespace API.Repositories
 
             return true;
         }
+
+
     }
 
 }

@@ -27,6 +27,16 @@ namespace API.Data
             modelBuilder.Entity<GroupSurvey>()
        .HasKey(gs => new { gs.SurveyId, gs.GroupId });
 
+
+            // check for this relationship... 
+
+            modelBuilder.Entity<Survey>()
+                .HasMany(s => s.GroupSurveys)
+                .WithOne(gs => gs.Survey)
+                .HasForeignKey(gs => gs.SurveyId);
+
+
+
             // Composite key for SurveyAnswer
             modelBuilder.Entity<SurveyAnswer>()
                 .HasKey(sa => new { sa.OptionId, sa.UserId });

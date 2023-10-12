@@ -70,7 +70,7 @@ export class LoginComponent implements AfterViewInit, OnInit {
   //         if (response.userType === 'Admin') {
   //           this.router.navigate(['/admin-dashboard']);
   //         } else if (response.userType === 'User') {
-  //           this.router.navigate(['/user-dashboard']);
+  //           this.router.navigate(['/temp-user-dashboard']);
   //         } else {
   //           this.errorMessage = 'Unexpected user type received'; // Default error message for unexpected UserType
   //         }
@@ -133,16 +133,16 @@ export class LoginComponent implements AfterViewInit, OnInit {
             );
 
             if (commonGroups.length > 0) {
-              this.router.navigate(['/user-dashboard'], {
+              this.router.navigate(['/temp-user-dashboard'], {
                 queryParams: { shareId: shareId },
               });
             } else {
-              this.router.navigate(['/user-dashboard']);
+              this.router.navigate(['/temp-user-dashboard']);
             }
           },
           (error) => {
             console.error('Error fetching groups by shareId:', error);
-            this.router.navigate(['/user-dashboard']);
+            this.router.navigate(['/temp-user-dashboard']);
           }
         );
       } else {
@@ -152,7 +152,7 @@ export class LoginComponent implements AfterViewInit, OnInit {
       if (userType === 'Admin') {
         this.router.navigate(['/admin-dashboard']);
       } else if (userType === 'User') {
-        this.router.navigate(['/user-dashboard']);
+        this.router.navigate(['/temp-user-dashboard']);
       } else {
         this.errorMessage = 'Unexpected user type received'; // Default error message for unexpected UserType
       }

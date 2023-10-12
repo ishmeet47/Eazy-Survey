@@ -32,6 +32,7 @@ import { FilterableDropdownComponent } from './components/filterable-dropdown/fi
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TempUserDashboardComponent } from './UserDashboard/UserDashboard.component';
 import { UserDashboardComponent } from './user/user-dashboard/user-dashboard.component';
 import { UserLayoutComponent } from './user/user-layout/user-layout.component';
 import { UserNavbarComponent } from './user/user-layout/user-navbar/user-navbar.component';
@@ -48,6 +49,7 @@ import { UserSurveyComponent } from './user/user-survey/user-survey.component';
     ClickOutsideDirective,
     DateValidatorDirective,
     UserDashboardComponent,
+    TempUserDashboardComponent,
     SurveyFillingComponent,
     AdminNavbarComponent,
     AdminDashboardComponent,

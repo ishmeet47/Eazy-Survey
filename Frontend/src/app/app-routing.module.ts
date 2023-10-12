@@ -9,8 +9,7 @@ import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 import { AdminSurveysComponent } from './admin/admin-surveys/admin-surveys.component';
 import { AdminGroupsComponent } from './admin/admin-groups/admin-groups.component';
-// TODO: Combine both dashboards into one component
-import { UserDashboardComponent } from './UserDashboard/UserDashboard.component';
+import { TempUserDashboardComponent } from './UserDashboard/UserDashboard.component';
 import { UserDashboardComponent } from './user/user-dashboard/user-dashboard.component';
 import { UserSurveyComponent } from './user/user-survey/user-survey.component';
 
@@ -18,7 +17,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'admin-dashboard', component: ManageUsersComponent },
-  { path: 'user-dashboard', component: UserDashboardComponent },
+  { path: 'user-dashboard', component: TempUserDashboardComponent },
   { path: 'answer-survey/:surveyId', component: SurveyFillingComponent },
   { path: 'admin/dashboard', component: AdminDashboardComponent },
   { path: 'admin/surveys', component: AdminSurveysComponent },

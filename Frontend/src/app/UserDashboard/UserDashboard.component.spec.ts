@@ -3,21 +3,20 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { UserDashboardComponent } from './UserDashboard.component';
+import { TemppUserDashboardComponent } from './UserDashboard.component';
 
 describe('UserDashboardComponent', () => {
-  let component: UserDashboardComponent;
-  let fixture: ComponentFixture<UserDashboardComponent>;
+  let component: TemppUserDashboardComponent;
+  let fixture: ComponentFixture<TemppUserDashboardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserDashboardComponent ]
-    })
-    .compileComponents();
+      declarations: [TemppUserDashboardComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserDashboardComponent);
+    fixture = TestBed.createComponent(TemppUserDashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

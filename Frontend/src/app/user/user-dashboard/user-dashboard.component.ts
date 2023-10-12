@@ -10,6 +10,7 @@ import { UserAnswerService } from 'src/app/services/userAnswer.service';
 export class UserDashboardComponent implements OnInit {
   surveys = new Array<Survey>();
   surveyList$: any;
+  today = new Date();
 
   constructor(private UAService: UserAnswerService) {}
 
@@ -35,5 +36,9 @@ export class UserDashboardComponent implements OnInit {
   startAnswerSurvey(surveyId: number): void {
     console.log('I clicked survey Id ' + surveyId + ' changing to new board');
     localStorage.setItem('surveyId', surveyId.toString());
+  }
+
+  convertDateString(date: string): Date {
+    return new Date(date);
   }
 }

@@ -14,8 +14,18 @@
           class="btn btn-primary mt-4"
           type="button"
           routerLink="/answer-survey/{{ survey.id }}"
+          *ngIf="convertDateString(survey.dueDate) > today"
         >
           Start
+        </button>
+        <button
+          class="btn btn-primary mt-4"
+          type="button"
+          disabl
+          routerLink="/answer-survey/{{ survey.id }}"
+          *ngIf="convertDateString(survey.dueDate) <= today"
+        >
+          Expired
         </button>
       </div>
     </div>

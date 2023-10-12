@@ -8,24 +8,26 @@
     </button>
 
     <div
-      class="modal fade text-black"
+      class="modal fade"
       id="publishModal"
       tabindex="-1"
       aria-labelledby="publishModalLabel"
       aria-hidden="true"
+      div
+      *ngIf="displayForm"
     >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header">
+          <!-- <div class="modal-header">
             <h5 class="modal-title" id="publishModalLabel">Manage Survey</h5>
+          </div> -->
+          <div class="modal-body text-black">
             <button
               type="button"
-              class="btn-close"
+              class="btn-close btn-close-white"
               data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
-          </div>
-          <div class="modal-body">
             <!-- Your existing form content goes here -->
 
             <div class="container mt-5">
@@ -38,11 +40,11 @@
                     {{ message }}
                   </div>
                   <!-- Survey Form -->
-                  <div class="card mb-4">
-                    <div class="card-header">
+                  <div class="mb-4 text-white">
+                    <h4>
                       {{ editMode ? "Edit Survey" : "Create a New Survey" }}
-                    </div>
-                    <div class="card-body">
+                    </h4>
+                    <div>
                       <form
                         (keydown.enter)="$event.preventDefault()"
                         (ngSubmit)="
@@ -171,55 +173,47 @@
                               {{ optionsNewError }}
                             </div>
 
-                            <!-- <div *ngIf="submitted && (questionsNew.lengt|| noQuestionsError)" class="alert alert-danger">
-                        Please add at least one question before submitting.
-                    </div> -->
-
-                            <!-- <li *ngFor="let question of questionsNew; let i = index" class="list-group-item">
-                             {{ question.QuestionText }}
-                             <button type="button" (click)="startEditingQuestion(i)" class="btn btn-sm btn-warning ml-2">Edit Question</button>
-                             <button type="button" (click)="resetQuestionValidationStateNew(); showOptionInput(i)" class="btn btn-sm btn-primary ml-2">Add Option</button>
-                             <ul>
-                                <li *ngFor="let option of question.Options; let j = index">{{ option }}
-                                   <button (click)="startEditingOption(i, j)" class="btn btn-sm btn-warning ml-2">Edit Option</button>
-                                </li>
-                             </ul>
-                          </li> -->
-
                             <li
                               *ngFor="let question of questions; let i = index"
                               class="list-group-item"
                             >
                               <!-- {{ question.QuestionText }} -->
-
-                              {{ question.heading }}
-
-                              <button
-                                type="button"
-                                (click)="startEditingQuestion(i)"
-                                class="btn btn-sm btn-warning ml-2"
+                              <div
+                                class="d-flex flex-row justify-content-between"
                               >
-                                Edit Question
-                              </button>
-                              <button
-                                type="button"
-                                (click)="
-                                  resetQuestionValidationStateNew();
-                                  showOptionInput(i)
-                                "
-                                class="btn btn-sm btn-primary ml-2"
-                              >
-                                Add Option
-                              </button>
-                              <button
-                                type="button"
-                                (click)="deleteQuestion(i)"
-                                class="btn btn-sm btn-danger ml-2"
-                              >
-                                Delete Question
-                              </button>
+                                {{ question.heading }}
 
-                              <ul>
+                                <div class="d-flex flex-row gap-2">
+                                  <button
+                                    type="button"
+                                    (click)="startEditingQuestion(i)"
+                                    class="btn btn-sm btn-warning ml-2"
+                                  >
+                                    Edit Question
+                                  </button>
+                                  <button
+                                    type="button"
+                                    (click)="
+                                      resetQuestionValidationStateNew();
+                                      showOptionInput(i)
+                                    "
+                                    class="btn btn-sm btn-primary ml-2"
+                                  >
+                                    Add Option
+                                  </button>
+                                  <button
+                                    type="button"
+                                    (click)="deleteQuestion(i)"
+                                    class="btn btn-sm btn-danger ml-2"
+                                  >
+                                    Delete Question
+                                  </button>
+                                </div>
+                              </div>
+
+                              <h6 class="mt-3">Options:</h6>
+
+                              <ul class="mt-4 gap-2">
                                 <ng-container
                                   *ngFor="
                                     let option of question.options;
@@ -230,23 +224,30 @@
                                     *ngIf="
                                       option.label && option.label.trim() != ''
                                     "
+                                    class="mt-2"
                                   >
-                                    {{ option.label }}
+                                    <div
+                                      class="d-flex flex-row justify-content-between"
+                                    >
+                                      {{ option.label }}
 
-                                    <button
-                                      type="button"
-                                      (click)="startEditingOption(i, j)"
-                                      class="btn btn-sm btn-warning ml-2"
-                                    >
-                                      Edit Option
-                                    </button>
-                                    <button
-                                      type="button"
-                                      (click)="deleteOption(i, j)"
-                                      class="btn btn-sm btn-danger ml-2"
-                                    >
-                                      Delete Option
-                                    </button>
+                                      <div class="d-flex flex-row gap-2">
+                                        <button
+                                          type="button"
+                                          (click)="startEditingOption(i, j)"
+                                          class="btn btn-sm btn-warning ml-2"
+                                        >
+                                          Edit Option
+                                        </button>
+                                        <button
+                                          type="button"
+                                          (click)="deleteOption(i, j)"
+                                          class="btn btn-sm btn-danger ml-2"
+                                        >
+                                          Delete Option
+                                        </button>
+                                      </div>
+                                    </div>
                                   </li>
                                 </ng-container>
                               </ul>
@@ -265,7 +266,7 @@
                           </button>
                           <!-- Add/Edit Question/Option Popup -->
                           <div *ngIf="showAddQuestionFormFlag" class="mt-3">
-                            <h4>
+                            <h6>
                               {{
                                 editingOptionIndex !== null
                                   ? "Edit Option"
@@ -273,9 +274,9 @@
                                   ? "Edit Question"
                                   : addingOptionToExistingQuestion
                                   ? "Add New Option"
-                                  : "Add New Question and Options"
+                                  : "Add New Question"
                               }}
-                            </h4>
+                            </h6>
                             <!-- <textarea *ngIf="!addingOptionToExistingQuestion" [(ngModel)]="newQuestionText" class="form-control" rows="3" placeholder="{{ editingOptionIndex !== null ? 'Enter option' : 'Enter question...'}}" name="newQuestionText"></textarea> -->
                             <!-- Question Textarea -->
                             <textarea
@@ -325,20 +326,6 @@
                               {{ questionsNewError }}
                             </div>
 
-                            <!-- Confirm Question and Options button - Only visible when adding a new question -->
-                            <button
-                              *ngIf="
-                                showAddQuestionFormFlag &&
-                                !isEditing &&
-                                editingOptionIndex === null &&
-                                !addingOptionToExistingQuestion
-                              "
-                              type="button"
-                              (click)="addOrUpdateQuestion()"
-                              class="btn btn-success mt-2"
-                            >
-                              Confirm Question and Options
-                            </button>
                             <!-- Options Section -->
                             <div
                               *ngIf="
@@ -402,6 +389,21 @@
                               </ul>
                             </div>
 
+                            <!-- Confirm Question and Options button - Only visible when adding a new question -->
+                            <button
+                              *ngIf="
+                                showAddQuestionFormFlag &&
+                                !isEditing &&
+                                editingOptionIndex === null &&
+                                !addingOptionToExistingQuestion
+                              "
+                              type="button"
+                              (click)="addOrUpdateQuestion()"
+                              class="btn btn-success mt-2"
+                            >
+                              Confirm
+                            </button>
+
                             <!-- <div *ngIf="noOptionsError" class="alert alert-danger">
                             {{ optionsNewError }}
                         </div> -->
@@ -418,7 +420,7 @@
                           </div>
                         </div>
 
-                        <label class="form-label">Select User Groups</label>
+                        <label class="form-label">Assign Survey To:</label>
                         <div *ngFor="let group of groupSurveys">
                           <input
                             type="checkbox"
@@ -427,29 +429,31 @@
                             [id]="'group-' + group.id"
                             [name]="'group-' + group.id"
                           />
-                          <label [for]="'group-' + group.id">{{
+                          <label [for]="'group-' + group.id" class="ms-2">{{
                             group.name
                           }}</label>
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                          {{ editMode ? "Update" : "Create" }}
-                        </button>
-                        <button
-                          *ngIf="editMode"
-                          type="button"
-                          class="btn btn-secondary ml-2"
-                          (click)="resetFormAndHide()"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          *ngIf="!editMode"
-                          type="button"
-                          (click)="resetFormAndHide()"
-                          class="btn btn-secondary ml-2"
-                        >
-                          Cancel
-                        </button>
+                        <div class="d-flex flex-row gap-2 mt-4">
+                          <button type="submit" class="btn btn-primary">
+                            {{ editMode ? "Update" : "Create" }}
+                          </button>
+                          <button
+                            *ngIf="editMode"
+                            type="button"
+                            class="btn btn-secondary ml-2"
+                            (click)="resetFormAndHide()"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            *ngIf="!editMode"
+                            type="button"
+                            (click)="resetFormAndHide()"
+                            class="btn btn-secondary ml-2"
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </form>
                     </div>
                   </div>
@@ -457,7 +461,7 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer">
+          <!-- <div class="modal-footer">
             <button
               type="button"
               class="btn btn-secondary"
@@ -465,7 +469,7 @@
             >
               Close
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

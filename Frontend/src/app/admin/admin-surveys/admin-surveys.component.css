@@ -21,3 +21,26 @@
 .admin-survey-divider {
   border-top: 1px solid red;
 }
+
+/* .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+.modal-content {
+  background-color: #202c2d;
+  color: white;
+  padding: 20px;
+  /* width: 50%; */
+  /* max-width: 600px; */
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}

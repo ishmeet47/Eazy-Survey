@@ -9,8 +9,7 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { Survey } from 'src/app/modules/survey.module';
-import { Group } from 'src/app/modules/group.module';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 // import { bootstrap } from 'ngx-bootstrap-icons';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import * as bootstrap from 'bootstrap';
@@ -1123,8 +1122,6 @@ export class AdminSurveysComponent implements OnInit {
     this.editMode = false;
     this.resetForm();
     this.displayForm = true;
-
-    // $('#surveyModal').modal('show'); // for the jquery pop up
   }
 
   publishedSurveyLink!: string;

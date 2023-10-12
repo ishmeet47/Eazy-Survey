@@ -9,3 +9,15 @@
 .button-spacing {
   margin-right: 8px; /* or any other value you prefer */
 }
+
+.admin-survey-column {
+  width: 150px;
+}
+
+.admin-survey-title {
+  width: 250px;
+}
+
+.admin-survey-divider {
+  border-top: 1px solid red;
+}

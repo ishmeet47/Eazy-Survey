@@ -32,8 +32,6 @@
               <!-- <button (click)="resetFormAndHide();loadSurveys();openCreateForm();openModal()" class="btn btn-primary mb-4">Create a New Survey</button> -->
 
               <div *ngIf="displayForm">
-                <!-- [INSERT YOUR FORM HTML HERE] -->
-
                 <div class="container mt-5">
                   <!-- Message for Success or Error -->
                   <div *ngIf="message" class="alert alert-info">
@@ -478,91 +476,69 @@
 
     <!-- Displaying Surveys older approach integrated with showing the group names -->
 
-    <div
-      *ngFor="let survey of surveys; let i = index"
-      class="card mb-4 text-black"
-    >
-      <div class="card-header">
-        <strong>Survey Title:</strong> {{ survey.title }}
+    <div class="d-flex flex-column gap-3">
+      <div id="admin-survey-list-header">
+        <div class="d-flex flex-row">
+          <span class="admin-survey-title">Title</span>
+          <span class="admin-survey-due-date admin-survey-column"
+            >Due Date</span
+          >
+          <span class="admin-survey-assigned-groups admin-survey-column">
+            # Groups Assigned
+          </span>
+        </div>
       </div>
-      <div class="card-body">
-        <p><strong>Due Date:</strong> {{ survey.dueDate | date }}</p>
-
-        <p>
-          <strong>Assigned to Groups: </strong>
-          <ng-container
-            *ngIf="
-              assignedGroupsToSurvey[i] &&
-              assignedGroupsToSurvey[i].groupNames.length
-            "
+      <div
+        *ngFor="let survey of surveys; let i = index"
+        class="d-flex flex-row justify-content-between align-items-center"
+      >
+        <div class="d-flex flex-row">
+          <span class="admin-survey-title">
+            <b>{{ survey.title }}</b>
+          </span>
+          <span class="admin-survey-due-date admin-survey-column">
+            {{ survey.dueDate | date }}
+          </span>
+          <span class="admin-survey-assigned-groups admin-survey-column">
+            {{ assignedGroupsToSurvey[i].groupNames.length }}
+          </span>
+        </div>
+        <div class="admin-survey-actions d-flex flex-row">
+          <button
+            type="button"
+            (click)="nowSurevyisEdited(); openEditForm(survey); openModal()"
+            [disabled]="survey.isPublished"
+            *ngIf="!survey.isPublished"
+            class="btn btn-sm btn-warning button-spacing"
           >
-            <ng-container
-              *ngFor="
-                let groupName of assignedGroupsToSurvey[i].groupNames;
-                let isLast = last
-              "
-            >
-              {{ groupName }}<span *ngIf="!isLast">, </span>
-            </ng-container>
-          </ng-container>
-          <span
-            *ngIf="
-              !assignedGroupsToSurvey[i] ||
-              !assignedGroupsToSurvey[i].groupNames.length
-            "
-            >Not Assigned</span
+            Edit
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-success button-spacing"
+            [disabled]="survey.isPublished"
+            (click)="showPublishPopup(survey.id); loadSurveys()"
           >
-        </p>
+            {{ survey.isPublished ? "Published" : "Publish" }}
+          </button>
 
-        <p><strong>Questions:</strong></p>
-        <ul>
-          <li *ngFor="let question of survey.questions.$values">
-            <strong>Question Heading:</strong> {{ question.heading }}
-            <p><strong>Options:</strong></p>
-            <ul>
-              <li *ngFor="let option of question.options.$values">
-                {{ option.label }}
-              </li>
-            </ul>
-          </li>
-        </ul>
+          <button
+            type="button"
+            class="btn btn-danger button-spacing"
+            (click)="deleteSurvey(survey.id)"
+          >
+            Delete
+          </button>
 
-        <!-- Survey Management Buttons -->
-        <p><strong>Actions:</strong></p>
-        <!-- <button type="button" class="btn btn-primary" (click)="editSurvey(survey.id)">Edit</button> -->
-        <button
-          type="button"
-          (click)="nowSurevyisEdited(); openEditForm(survey); openModal()"
-          [disabled]="survey.isPublished"
-          class="btn btn-sm btn-warning button-spacing"
-        >
-          Edit
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-success button-spacing"
-          [disabled]="survey.isPublished"
-          (click)="showPublishPopup(survey.id); loadSurveys()"
-        >
-          {{ survey.isPublished ? "Published" : "Publish" }}
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-danger button-spacing"
-          (click)="deleteSurvey(survey.id)"
-        >
-          Delete
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-success"
-          (click)="showPublishPopup(survey.id)"
-        >
-          Get Sharable Link
-        </button>
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="showPublishPopup(survey.id)"
+          >
+            Get Sharable Link
+          </button>
+        </div>
       </div>
     </div>
 

@@ -1,7 +1,7 @@
 #user-layout {
   background-color: #1b2627;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   color: white;
 }
 

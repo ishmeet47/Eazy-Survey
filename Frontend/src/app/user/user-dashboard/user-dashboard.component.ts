@@ -12,10 +12,19 @@ export class UserDashboardComponent implements OnInit {
   surveyList$: any;
   today = new Date();
 
-  constructor(private UAService: UserAnswerService) {}
+  completedSurveys = new Array<Survey>();
+  uncompletedSurveys = new Array<Survey>();
+  expiredSurveys = new Array<Survey>();
+
+  constructor(private UAService: UserAnswerService) {
+    this.completedSurveys = [];
+    this.uncompletedSurveys = [];
+    this.expiredSurveys = [];
+  }
 
   ngOnInit() {
     this.loadSurveys();
+    // this.checkCompletedSurveys();
   }
 
   loadSurveys(): void {
@@ -29,8 +38,17 @@ export class UserDashboardComponent implements OnInit {
       } else {
         console.log('sorry no survey at this moment');
       }
-      console.log(this.surveys);
+      this.checkCompletedSurveys();
     });
+  }
+
+  checkCompletedSurveys(): void {
+    this.completedSurveys = [];
+    this.uncompletedSurveys = [];
+    for (let i = 0; i < this.surveys.length; i++) {
+      console.log('Completed By:');
+      console.log(this.surveys[i].completedBy.$values);
+    }
   }
 
   startAnswerSurvey(surveyId: number): void {

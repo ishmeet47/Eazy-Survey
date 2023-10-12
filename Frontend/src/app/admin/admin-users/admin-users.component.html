@@ -5,6 +5,7 @@
         #loginForm="ngForm"
         id="form-inputs"
         (submit)="addUser()"
+        autocomplete="off"
         class="mt-4"
       >
         <div class="d-flex flex-column">
@@ -19,6 +20,7 @@
                 placeholder="Username"
                 aria-label="Username"
                 aria-describedby="login-username-icon"
+                name="newUsername"
                 [(ngModel)]="newUsername"
               />
               <span
@@ -36,6 +38,7 @@
                 [type]="passwordVisibility ? 'text' : 'password'"
                 class="form-control hide-focus border-0 py-2 px-4 bg-dark text-white"
                 placeholder="Password"
+                name="newPassword"
                 aria-label="Password"
                 aria-describedby="login-password-icon"
                 [(ngModel)]="newPassword"

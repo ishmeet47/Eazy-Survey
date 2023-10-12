@@ -13,16 +13,24 @@
         <button
           class="btn btn-primary mt-4"
           type="button"
-          routerLink="/answer-survey/{{ survey.id }}"
+          routerLink="/survey/{{ survey.id }}"
           *ngIf="convertDateString(survey.dueDate) > today"
         >
           Start
         </button>
+        <!-- Add check for survey completed by user -->
+        <!-- <button
+          class="btn btn-warning mt-4"
+          type="button"
+          routerLink="/survey/{{ survey.id }}"
+          *ngIf="convertDateString(survey.dueDate) > today"
+        >
+          Resubmit
+        </button> -->
         <button
           class="btn btn-primary mt-4"
           type="button"
-          disabl
-          routerLink="/answer-survey/{{ survey.id }}"
+          disabled
           *ngIf="convertDateString(survey.dueDate) <= today"
         >
           Expired

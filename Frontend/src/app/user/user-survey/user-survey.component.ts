@@ -82,7 +82,7 @@ export class UserSurveyComponent implements OnInit {
           password: ans.optionId,
         };
         console.log('created');
-        // this.UAService.createAnswer(answer)
+        this.UAService.createAnswer(answer);
       });
     }
 

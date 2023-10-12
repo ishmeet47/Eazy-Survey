@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'admin/groups', component: AdminGroupsComponent },
   { path: 'admin/users', component: AdminUsersComponent },
   { path: 'dashboard', component: UserDashboardComponent },
-  { path: 'survey', component: UserSurveyComponent },
+  { path: 'survey/:surveyId', component: UserSurveyComponent },
   { path: 'temp-admin-dashboard', component: ManageUsersComponent },
   { path: 'temp-user-dashboard', component: TempUserDashboardComponent },
 ];

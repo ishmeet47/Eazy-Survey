@@ -14,6 +14,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class AdminUsersComponent implements OnInit {
   passwordVisibility: boolean = false; // To toggle password visibility
+
   users: User[] = [];
   groups: Group[] = [];
   dropdownGroups: IKeyValuePair[] = []; // For group dropdown
@@ -60,6 +61,8 @@ export class AdminUsersComponent implements OnInit {
   ngOnInit(): void {
     this.loadUsers();
     this.loadGroups();
+    this.newUsername = '';
+    this.newPassword = '';
   }
 
   togglePasswordVisibility(): void {
@@ -89,7 +92,8 @@ export class AdminUsersComponent implements OnInit {
 
   loadGroups(): void {
     this.userService.getGroups().subscribe((groups) => {
-      console.log(groups); // <-- check the main response here
+      console.log('Groups: ' + groups);
+      // console.log(groups); // <-- check the main response here
 
       if (groups && Array.isArray(groups)) {
         this.groups = groups.map((group) => ({ ...group, selected: false }));
@@ -141,6 +145,32 @@ export class AdminUsersComponent implements OnInit {
     });
   }
 
+  createGroup(): void {
+    this.errorMessage = ''; // Clear previous error messages
+    this.validationMessage = ''; // Clear previous validation messages
+
+    if (this.newGroupName && this.newGroupName.trim() !== '') {
+      this.userService.createGroup(this.newGroupName).subscribe(
+        () => {
+          // Handle successful creation
+          this.newGroupName = '';
+          // Refresh the list of groups after creating a new one
+          this.loadGroups();
+        },
+        (error) => {
+          // Handle server-side errors
+          this.errorMessage =
+            'There was an issue creating the group. Please try again later.';
+          // Optionally extract a more detailed message from the error object if your server provides one
+          // this.errorMessage = error.message || 'There was an issue creating the group. Please try again later.';
+        }
+      );
+    } else {
+      // Handle invalid input (like only spaces)
+      this.validationMessage = 'Group name cannot be empty or just whitespace.';
+    }
+  }
+
   addUserToGroup(): void {
     // Check if a user is selected
     if (this.selectedUser === undefined) {
@@ -173,6 +203,25 @@ export class AdminUsersComponent implements OnInit {
     this.userService.deleteUser(userId).subscribe(() => {
       this.loadUsers();
     });
+  }
+
+  deleteGroup(group: any): void {
+    // Logging details
+    console.log('Deleting group: ', group.name);
+    console.log('User details: ', this.editingUser);
+
+    // Call the service method to delete the group by its ID
+    this.userService.deleteGroupById(group.id).subscribe(
+      () => {
+        console.log('Group deleted successfully.');
+        // If the group is deleted successfully, load all the groups again.
+        this.loadGroups();
+      },
+      (error) => {
+        console.error('Error deleting group:', error);
+        // Handle any errors here, maybe show an error message to the user.
+      }
+    );
   }
 
   editUser(user: any): void {
@@ -227,6 +276,51 @@ export class AdminUsersComponent implements OnInit {
         this.selectedGroupIds.splice(index, 1);
       }
     }
+  }
+
+  navigateToSurveyComponent() {
+    // Navigate to the survey component. Assuming you use Angular's Router.
+    this.router.navigate(['/surveys']);
+  }
+
+  createSurvey(): void {
+    // Validation (you can extend this as per your requirements)
+    if (
+      !this.newSurveyTitle.trim() ||
+      !this.newSurveyDueDate ||
+      !this.newSurveyQuestions.trim()
+    ) {
+      this.errorMessage = 'Please fill out all the fields.';
+      return;
+    }
+
+    // Extract individual questions from the textarea content
+    const questionsArray = this.newSurveyQuestions
+      .split('\n')
+      .filter((question) => question.trim() !== '');
+
+    // Create the survey payload
+    const surveyPayload = {
+      title: this.newSurveyTitle,
+      dueDate: this.newSurveyDueDate,
+      questions: questionsArray,
+    };
+
+    this.surveyService.createSurvey(surveyPayload).subscribe(
+      (response) => {
+        // Handle successful creation (e.g., show a success message or refresh the list of surveys)
+        this.errorMessage = ''; // clear any previous error messages
+        this.newSurveyTitle = ''; // reset the fields
+        this.newSurveyDueDate = null;
+        this.newSurveyQuestions = '';
+
+        // Optionally, show a success message or redirect somewhere or reload surveys
+      },
+      (error) => {
+        // Handle error
+        this.errorMessage = 'Failed to create the survey. Please try again.';
+      }
+    );
   }
 
   closeEditModal(): void {

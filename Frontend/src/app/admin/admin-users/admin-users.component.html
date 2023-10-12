@@ -1,7 +1,12 @@
 <app-admin-layout>
   <div class="d-flex flex-column gap-4">
     <app-card title="Create New User">
-      <form #loginForm="ngForm" id="form-inputs" (submit)="addUser()">
+      <form
+        #loginForm="ngForm"
+        id="form-inputs"
+        (submit)="addUser()"
+        class="mt-4"
+      >
         <div class="d-flex flex-column">
           <div class="d-flex flex-row gap-4">
             <div
@@ -54,23 +59,34 @@
                 ></i-bs>
               </span>
             </div>
-
+          </div>
+          <div class="d-flex flex-row justify-content-between">
+            <!-- Group selection -->
+            <div
+              id="admin-user-group-selection"
+              class="d-flex flex-row gap-4 align-items-center"
+            >
+              <span><b>Select a group: </b></span>
+              <div
+                *ngFor="let group of groups"
+                class="d-flex flex-row align-items-center"
+              >
+                <input
+                  type="checkbox"
+                  [(ngModel)]="group.selected"
+                  name="group-{{ group.id }}"
+                />
+                <span class="ms-2">{{ group.name }}</span>
+              </div>
+            </div>
             <button
               type="submit"
               id="create-new-user-submit"
-              class="btn btn-sm btn-primary rounded-3"
+              class="btn btn-sm btn-primary rounded-3 px-4 py-2"
               [disabled]="!loginForm.valid"
             >
               Create
             </button>
-          </div>
-          <!-- Group selection -->
-          <div *ngFor="let group of groups">
-            <input
-              type="checkbox"
-              [(ngModel)]="group.selected"
-              name="group-{{ group.id }}"
-            />{{ group.name }}
           </div>
         </div>
       </form>
@@ -85,7 +101,7 @@
           placeholder="Search.."
         />
         <br /> -->
-        <table class="table table-bordered table-striped text-white">
+        <table class="table table-bordered table-striped text-white mt-4">
           <thead>
             <tr>
               <th>Username</th>
@@ -100,7 +116,18 @@
                 <span class="text-white">{{ user.username }}</span>
               </td>
               <td>
-                <span class="text-white">{{ user.userGroups?.groups }}</span>
+                <div
+                  class="row"
+                  *ngIf="
+                    !user.userGroups || user.userGroups.groups.length === 0
+                  "
+                >
+                  <span
+                    class="text-white col"
+                    *ngFor="let group of user.userGroups?.groups"
+                    >{{ group.name }}</span
+                  >
+                </div>
               </td>
               <td>
                 <button class="btn btn-primary me-2" (click)="editUser(user)">
@@ -113,6 +140,37 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- Edit User Modal -->
+        <div *ngIf="editingUser" class="modal" (click)="closeEditModal()">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <span (click)="closeEditModal()" class="close">&times;</span>
+            <form (submit)="updateUser($event)">
+              <input
+                type="text"
+                [(ngModel)]="editingUser.username"
+                name="username"
+              />
+
+              <!-- Checkboxes to select multiple user groups -->
+              <!-- <div *ngFor="let group of groups">
+                  <input type="checkbox" [value]="group.id" [(ngModel)]="group.selected" name="group-{{group.id}}"> {{group.name}}
+              </div> -->
+
+              <div *ngFor="let group of editingGroups">
+                <input
+                  type="checkbox"
+                  [checked]="isGroupSelected(group.id)"
+                  (change)="toggleGroupSelection(group.id)"
+                  name="group-{{ group.id }}"
+                />
+                {{ group.name }}
+              </div>
+
+              <button type="submit">Update</button>
+            </form>
+          </div>
+        </div>
       </div>
     </app-card>
   </div>

@@ -1,9 +1,9 @@
 <app-admin-layout class="d-flex flex-column gap-4">
   <app-card title="Create New Group" class="me-4">
     <form #loginForm="ngForm" id="form-inputs" (submit)="createGroup()">
-      <div class="d-flex flex-row gap-4">
+      <div class="d-flex flex-column gap-2">
         <div
-          class="new-group-input rounded-3 input-group mb-3 overflow-hidden border"
+          class="new-group-input rounded-3 input-group mb-3 overflow-hidden border mt-3"
         >
           <input
             required
@@ -25,7 +25,7 @@
         <button
           type="submit"
           id="create-new-user-submit"
-          class="btn btn-sm btn-primary rounded-3"
+          class="btn btn-primary rounded-3"
           [disabled]="newGroupName === ''"
         >
           Create

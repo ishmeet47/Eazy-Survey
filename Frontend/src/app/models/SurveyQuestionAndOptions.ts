@@ -1,6 +1,6 @@
 import { IKeyValuePair } from './IKeyValuePair';
 
 export interface SurveyQuestionAndOptions {
-  question: string;
+  question: IKeyValuePair;
   options: IKeyValuePair[];
 }

@@ -62,6 +62,10 @@ export class UserSurveyComponent implements OnInit {
 
   onContinue(): void {
     this.currentQuestionNumber++;
+    this.updateAnswer(
+      this.questions[this.currentQuestionNumber].question.key,
+      this.selectedOption
+    );
   }
 
   onSelect(option: number) {
@@ -69,7 +73,7 @@ export class UserSurveyComponent implements OnInit {
     console.log('Selected option: ' + this.selectedOption);
   }
 
-  // implimnet save draft function
+  // implement save draft function
   onSave(): void {}
 
   onSubmit(): void {
@@ -112,7 +116,12 @@ export class UserSurveyComponent implements OnInit {
     this.SAnsList.forEach((ans) => {
       if (ans.QuestionId == QuestionId) {
         ans.optionId = OptId;
-        console.log('UPDATEEEEEED');
+        console.log(
+          'Updated Answer with QuestionId: ' +
+            QuestionId +
+            ' and OptionId: ' +
+            OptId
+        );
       }
     });
   }
@@ -156,7 +165,10 @@ export class UserSurveyComponent implements OnInit {
           this.SQList.push(new_ques);
 
           this.questions.push({
-            question: new_ques.heading,
+            question: {
+              key: new_ques.id,
+              value: new_ques.heading,
+            },
             options: options,
           });
         });
@@ -168,24 +180,6 @@ export class UserSurveyComponent implements OnInit {
 
       console.log('this.questions: ');
       console.log(this.questions);
-
-      // Convert to SurveyQuestionAndOptions
-      // this.SQList.forEach((question) => {
-      //   console.log(question.heading);
-      // });
-
-      // console.log('this.SOptList: ');
-      // console.log(this.SOptList);
-
-      // console.log(this.SOptList.length);
-
-      // this.SOptList.forEach((option) => {
-      //   console.log('option: ')
-      //   console.log(option.label);
-      // });
-
-      // console.log('questions: ');
-      // console.log(this.questions);
     });
   }
 

@@ -109,8 +109,8 @@
             <tr>
               <th>Username</th>
               <!-- <th>Password</th> -->
-              <th>Groups</th>
-              <th>Action</th>
+              <!-- <th>Groups</th> -->
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="myTable">
@@ -118,7 +118,7 @@
               <td>
                 <span class="text-white">{{ user.username }}</span>
               </td>
-              <td>
+              <!-- <td>
                 <div
                   class="row"
                   *ngIf="
@@ -131,7 +131,7 @@
                     >{{ group.name }}</span
                   >
                 </div>
-              </td>
+              </td> -->
               <td>
                 <button class="btn btn-primary me-2" (click)="editUser(user)">
                   Edit

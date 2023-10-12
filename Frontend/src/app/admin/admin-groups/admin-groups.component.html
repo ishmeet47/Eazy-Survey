@@ -13,6 +13,7 @@
             aria-label="Group"
             aria-describedby="new-group-icon"
             [(ngModel)]="newGroupName"
+            name="newGroupName"
           />
           <span
             class="input-group-text border-0 ps-1 px-4 bg-dark text-white"
@@ -25,7 +26,7 @@
           type="submit"
           id="create-new-user-submit"
           class="btn btn-sm btn-primary rounded-3"
-          [disabled]="!loginForm.valid"
+          [disabled]="newGroupName === ''"
         >
           Create
         </button>

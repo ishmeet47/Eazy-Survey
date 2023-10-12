@@ -10,7 +10,7 @@
         class="mb-4 d-flex flex-column align-items-center"
       >
         <h3 class="survey-question">
-          Which of the following options apply to you?
+          {{ questions[currentQuestionNumber].question }}
         </h3>
         <h5 class="survey-subtitle mt-2">Choose one!</h5>
       </div>
@@ -19,7 +19,7 @@
         class="row gap-4 justify-content-center mt-5"
       >
         <div
-          *ngFor="let option of options"
+          *ngFor="let option of questions[currentQuestionNumber].options"
           class="col survey-options-container-item"
         >
           <div
@@ -43,6 +43,7 @@
         <button
           class="btn btn-primary rounded-pill px-4 py-3 d-flex flex-row align-items-center mt-5"
           [disabled]="selectedOption === -1"
+          (click)="onContinue()"
         >
           <span>Continue</span>
           <i-bs

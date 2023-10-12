@@ -12,30 +12,8 @@ import { SurveyQuestionAndOptions } from 'src/app/models/SurveyQuestionAndOption
   styleUrls: ['./user-survey.component.css'],
 })
 export class UserSurveyComponent implements OnInit {
-  testOptions: IKeyValuePair[] = [
-    {
-      key: 0,
-      value: 'Dental Implants',
-    },
-    {
-      key: 2,
-      value: 'Permanent Retainers',
-    },
-    {
-      key: 3,
-      value: 'False Teeth',
-    },
-    {
-      key: 4,
-      value: 'Veneers',
-    },
-    {
-      key: 5,
-      value: 'None of the above',
-    },
-  ];
-
-  questions: SurveyQuestionAndOptions[];
+  surveyTitle: string = '';
+  questionsAndOptions: SurveyQuestionAndOptions[];
 
   SQList = new Array<new_SQus>();
   // SQList: new_SQus[] = [];
@@ -53,17 +31,18 @@ export class UserSurveyComponent implements OnInit {
   constructor(private UAService: UserAnswerService) {
     this.selectedOption = -1;
     this.currentQuestionNumber = 0;
-    this.questions = [];
+    this.questionsAndOptions = [];
   }
 
   ngOnInit(): void {
     this.loadQuestionsAndOptions();
+    // TODO: Get survey title to display
   }
 
   onContinue(): void {
     this.currentQuestionNumber++;
     this.updateAnswer(
-      this.questions[this.currentQuestionNumber].question.key,
+      this.questionsAndOptions[this.currentQuestionNumber].question.key,
       this.selectedOption
     );
   }
@@ -77,6 +56,12 @@ export class UserSurveyComponent implements OnInit {
   onSave(): void {}
 
   onSubmit(): void {
+    // Submit the last question
+    this.updateAnswer(
+      this.questionsAndOptions[this.currentQuestionNumber].question.key,
+      this.selectedOption
+    );
+
     console.log('I CLICKED');
     console.log('len of SAnsList is ' + this.SAnsList.length);
 
@@ -164,7 +149,7 @@ export class UserSurveyComponent implements OnInit {
 
           this.SQList.push(new_ques);
 
-          this.questions.push({
+          this.questionsAndOptions.push({
             question: {
               key: new_ques.id,
               value: new_ques.heading,
@@ -179,7 +164,7 @@ export class UserSurveyComponent implements OnInit {
       console.log(this.SQList);
 
       console.log('this.questions: ');
-      console.log(this.questions);
+      console.log(this.questionsAndOptions);
     });
   }
 

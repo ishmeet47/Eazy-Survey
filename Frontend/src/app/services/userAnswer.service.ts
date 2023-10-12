@@ -6,20 +6,27 @@ import { SurveyOption, SurveyQuestion } from '../modules/surveyQ_A.module';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserAnswerService {
   private baseUrl: string = 'http://localhost:5225';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getSurveys(userId: number): Observable<any[]>{
-    console.log("I got some surveys the link is: ");
+  getSurveys(userId: number): Observable<any[]> {
+    console.log('I got some surveys the link is: ');
     console.log(`${this.baseUrl}/UserAnswer/getmysurvey/${userId}`);
-    console.log(this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getmysurvey/${userId}`))
-    return this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getmysurvey/${userId}`);
+    console.log(
+      this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getmysurvey/${userId}`)
+    );
+    return this.http.get<any[]>(
+      `${this.baseUrl}/UserAnswer/getmysurvey/${userId}`
+    );
   }
-  getQuestions_new(QId: number): Observable<any[]>{
-    return this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getquestion/${QId}`)
+
+  getQuestions_new(QId: number): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.baseUrl}/UserAnswer/getquestion/${QId}`
+    );
   }
 
   // getQuestions(SId: number): Observable<Question[]>{
@@ -55,16 +62,21 @@ export class UserAnswerService {
   //   )
   // }
 
-  getOptions(QId: number): Observable<any[]>{
-    return this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getoptions/${QId}`)
+  getOptions(QId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getoptions/${QId}`);
   }
 
-  createAnswer(answer: { userId: number, optionId: number}): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/UserAnswer/answerQuestion`, answer);
+  createAnswer(answer: { userId: number; optionId: number }): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/UserAnswer/answerQuestion`,
+      answer
+    );
   }
 
-  submitSurvey(token: {userId: number, surveyId: number}): Observable<any>{
-    return this.http.post<any>(`${this.baseUrl}/UserAnswer/submitsurvey`, token);
+  submitSurvey(token: { userId: number; surveyId: number }): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/UserAnswer/submitsurvey`,
+      token
+    );
   }
-
 }

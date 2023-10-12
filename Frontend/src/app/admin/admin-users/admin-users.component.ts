@@ -227,6 +227,9 @@ export class AdminUsersComponent implements OnInit {
   editUser(user: any): void {
     this.editingUser = { ...user }; // Create a copy of user to avoid direct mutations
 
+    console.log('Editing user:');
+    console.log(this.editingUser);
+
     // Clone the groups to editingGroups
     this.editingGroups = JSON.parse(JSON.stringify(this.groups));
 

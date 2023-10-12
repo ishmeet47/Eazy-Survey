@@ -147,10 +147,13 @@
         <!-- Edit User Modal -->
         <div *ngIf="editingUser" class="modal" (click)="closeEditModal()">
           <div class="modal-content" (click)="$event.stopPropagation()">
+            <h5>Editing User</h5>
             <span (click)="closeEditModal()" class="close">&times;</span>
-            <form (submit)="updateUser($event)">
+            <form (submit)="updateUser($event)" class="pt-4">
+              <label for="username" class="pb-2">Username</label>
               <input
                 type="text"
+                class="form-control hide-focus border-0 py-2 px-4 bg-light-subtle text-black"
                 [(ngModel)]="editingUser.username"
                 name="username"
               />
@@ -160,17 +163,25 @@
                   <input type="checkbox" [value]="group.id" [(ngModel)]="group.selected" name="group-{{group.id}}"> {{group.name}}
               </div> -->
 
-              <div *ngFor="let group of editingGroups">
-                <input
-                  type="checkbox"
-                  [checked]="isGroupSelected(group.id)"
-                  (change)="toggleGroupSelection(group.id)"
-                  name="group-{{ group.id }}"
-                />
-                {{ group.name }}
+              <label for="groups" class="pt-4 pb-2">Groups</label>
+              <div class="d-flex flex-column gap-2 pb-4">
+                <div *ngFor="let group of editingGroups">
+                  <input
+                    type="checkbox"
+                    [checked]="isGroupSelected(group.id)"
+                    (change)="toggleGroupSelection(group.id)"
+                    name="group-{{ group.id }}"
+                  />
+                  {{ group.name }}
+                </div>
               </div>
 
-              <button type="submit">Update</button>
+              <div class="d-flex flex-row gap-2">
+                <button class="btn btn-primary" type="submit">Update</button>
+                <button class="btn btn-secondary" (click)="closeEditModal()">
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         </div>

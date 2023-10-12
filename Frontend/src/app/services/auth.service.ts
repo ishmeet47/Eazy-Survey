@@ -34,6 +34,8 @@ export class AuthService {
         tap((response) => {
           localStorage.setItem(this.TOKEN_KEY, response.token);
           localStorage.setItem(this.USER_TYPE_KEY, response.userType);
+          localStorage.setItem(this.USER_ID, response.userId.toString());
+
           if (response.groupIds && response.groupIds.$values) {
             localStorage.setItem(
               'userGroups',

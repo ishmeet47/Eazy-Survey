@@ -1,0 +1,56 @@
+<div class="card">
+  <div class="card-header">Question List</div>
+  <div class="card-body">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>DueDate</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let question of SQList">
+            
+              <th>this is the question body{{question.heading}}</th>
+              <th>this is what this question belong to {{question.belongToS}}</th>
+              <th>this is the question id {{question.id}}</th>
+          </tr>
+
+      </tbody>
+  </table>
+  </div>
+
+  <div class = "card-header"> Option List </div>
+    
+  <div class = "card-body">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>DueDate</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let option of SOptList">
+      
+          <th>This is the option id {{option.id}} </th>
+          <th>This is the option label {{option.label}}</th>
+          <th>This question belong to question {{option.question}} id</th>
+      
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+
+<div class = "card">
+
+  <button (click) = "onSubmit()">
+    this is the submit button
+  </button>
+
+</div>

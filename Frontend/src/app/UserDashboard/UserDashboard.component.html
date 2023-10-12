@@ -1,3 +1,31 @@
-<p>
-  {{surveyList}}
-</p>
+<div class="card">
+  <div class="card-header">Create New User</div>
+  <div class="card-body">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>DueDate</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let survey of survey1">
+              <th scope="row">{{survey.title}}   </th>
+              <th scope="row">{{survey.dueDate}}   </th>
+              <th scope="row">
+                <button type = "button" routerLink="/answer-survey/{{survey.id}}" (click) = "startAnswerSurvey(survey.id)">
+                  Edit
+                  <!-- <button type="button" (click)="startEditingQuestion(i)" class="btn btn-sm btn-warning ml-2">Edit Question</button> -->
+                </button>
+              </th>
+          </tr>
+
+      </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- <tr *ngFor="let survey of survey1">
+  <td>{{survey.dueDate}}</td>
+</tr> -->

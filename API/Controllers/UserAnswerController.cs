@@ -21,7 +21,7 @@ namespace API.Controllers
         // find all questions with a survey Id equal to the input survey Id
         [HttpGet("getquestion/{surveyId}")]
         public async Task<IActionResult> GetAllQuestions (int surveyId){
-            var question = await _repository.GetSurveyQuestion(surveyId);
+            var question = await _repository.GetAllQuestionOfSurvey(surveyId);
             
             return Ok(question);
         }
@@ -41,28 +41,27 @@ namespace API.Controllers
             return Ok(options);
         }
 
-        [HttpPost("answerQuestion/{questionId}")]
+        [HttpPost("answerQuestion")]
         public async Task<IActionResult> AnswerQuestion (int userId, int optionId){
             var ans = await _repository.CreateSurveyAnswer(userId, optionId);
-
-            return Ok(ans);
+            return Ok();
         }
 
 
         // probably not working
-        [HttpPost("submit/{surveyId}")]
+        [HttpPost("submitsurvey")]
         public async Task<IActionResult> SubmitSurvey(int userId, int surveyId){
             var result = await _repository.SubmitSurvey(userId, surveyId);
-
             return Ok(result);
         }
 
         [HttpGet("getmysurvey/{userId}")]
         public async Task<IActionResult> GetMySurvey(int userId){
             var my_surveys = await _repository.GetAllowedSurveys(userId);
-            Console.Write(my_surveys + "this is my survey");
             return Ok(my_surveys);
         }
+
+
         [HttpGet("getmygroup/{userId}")]
         public async Task<int[]> GetMyGroup(int userId){
             var my_group = await _repository.GetAllMyGroups(userId);

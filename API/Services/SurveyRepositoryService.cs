@@ -516,22 +516,23 @@ namespace API.Repositories
             var belongToGroup = await _context.UserGroups.Where(user => user.UserId == userId).ToListAsync();
             foreach (var userGroup in belongToGroup)
             {
-                Console.Write(userGroup.GroupId);
+                //Console.Write(userGroup.GroupId);
                 int groupId = userGroup.GroupId;
                 groups.Add(groupId);
             }
-
-            Console.Write(groups);
+            //Console.WriteLine("size of this surveyIds is: " + groups.Count);
             /// ok now I have groups I need to pull all the survey that concluded in these groups
-            foreach (var group in groups)
+            foreach (int group in groups)
             {
+                // _surveys is a GroupSurvey elementd
                 var _surveys = await _context.GroupSurveys.Where(gs => gs.GroupId == group).ToListAsync();
+                //Console.WriteLine("size of this _survey is: " + _surveys.Count);
                 foreach (var survey in _surveys)
                 {
-                    surveyIds.Add(survey.SurveyId);
+                    if (!surveyIds.Contains(survey.SurveyId))
+                        surveyIds.Add(survey.SurveyId);
                 }
             }
-
             /// now I have all the survey allowed stored in surveys, call prev function and return
             foreach (var id in surveyIds)
             {
@@ -546,6 +547,11 @@ namespace API.Repositories
         {
             var belongToGroup = await _context.UserGroups.Where(group => group.UserId == userId).ToListAsync();
             return belongToGroup;
+        }
+
+        public async Task<IEnumerable<SurveyQuestion>> GetAllQuestionOfSurvey(int surveyId)
+        {
+            return await _context.SurveyQuestions.Where(Question => Question.SurveyId == surveyId).ToListAsync();
         }
     }
 

@@ -48,6 +48,7 @@ namespace API.Interfaces
     Task<IEnumerable<GroupCount>> getUsersByGroupIds(List<int> groupIds);
 
     // if all question are answered submit if not dont so return bool
+    Task<IEnumerable<SurveyQuestion>> GetAllQuestionOfSurvey(int surveyId);
     Task<bool> SubmitSurvey(int userId, int surveyId);
 
     // New methods for SurveyQuestion
@@ -70,5 +71,6 @@ namespace API.Interfaces
     Task<IEnumerable<Survey>> GetAllowedSurveys(int userId);
     Task<IEnumerable<UserGroup>> GetAllMyGroups(int userId);
     //Task<IEnumerable<Survey>> GetAllGroupSurveys(UserGroup[] userGroups);
+    //Task<IEnumerable<>>
   }
 }

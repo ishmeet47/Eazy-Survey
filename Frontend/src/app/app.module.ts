@@ -27,6 +27,7 @@ import { DateValidatorDirective } from './directives/date-validator.directive';
 
 import { UserDashboardComponent } from './UserDashboard/UserDashboard.component';
 import { UserAnswerService } from './services/userAnswer.service';
+import { SurveyFillingComponent } from './SurveyFilling/SurveyFilling.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { UserAnswerService } from './services/userAnswer.service';
     ClickOutsideDirective,
     DateValidatorDirective,
     UserDashboardComponent,
+    SurveyFillingComponent,
   ],
   imports: [
     BrowserModule,

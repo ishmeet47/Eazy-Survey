@@ -138,7 +138,8 @@ namespace API.Data.Repo
             throw new NotImplementedException();
         }
 
-        public Task<SurveyQuestion> UpdateSurveyQuestion(int questionId, string questionText, List<string> options = null)
+        // public Task<SurveyQuestion> UpdateSurveyQuestion(int questionId, string questionText, List<string> options = null)
+        public Task<IEnumerable<SurveyQuestion>> GetAllQuestionOfSurvey(int surveyId)
         {
             throw new NotImplementedException();
         }

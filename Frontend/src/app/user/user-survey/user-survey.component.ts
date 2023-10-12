@@ -1,10 +1,10 @@
 import { IKeyValuePair } from 'src/app/models/IKeyValuePair';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserAnswerService } from '../../services/userAnswer.service';
 import { new_SAns, new_SOpt, new_SQus } from '../../modules/surveyQ_A.module';
 import { Question } from '../../modules/survey.module';
-import { type } from 'os';
 import { SurveyQuestionAndOptions } from 'src/app/models/SurveyQuestionAndOptions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-survey',
@@ -28,7 +28,7 @@ export class UserSurveyComponent implements OnInit {
 
   selectedOption: number;
 
-  constructor(private UAService: UserAnswerService) {
+  constructor(private UAService: UserAnswerService, private router: Router) {
     this.selectedOption = -1;
     this.currentQuestionNumber = 0;
     this.questionsAndOptions = [];
@@ -40,11 +40,11 @@ export class UserSurveyComponent implements OnInit {
   }
 
   onContinue(): void {
-    this.currentQuestionNumber++;
     this.updateAnswer(
       this.questionsAndOptions[this.currentQuestionNumber].question.key,
       this.selectedOption
     );
+    this.currentQuestionNumber++;
   }
 
   onSelect(option: number) {
@@ -85,6 +85,11 @@ export class UserSurveyComponent implements OnInit {
         // this.UAService.createAnswer(answer)
       });
     }
+
+    console.log('this.SAnsList is: ');
+    console.log(this.SAnsList);
+
+    this.router.navigate(['/dashboard']);
   }
 
   // this function updates the SurveyUser DB add current user to the completed database

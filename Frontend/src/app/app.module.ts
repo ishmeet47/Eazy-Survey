@@ -20,7 +20,6 @@ import { ClickOutsideDirective } from './directives/ClickOutsideDirective';
 
 import { DateValidatorDirective } from './directives/date-validator.directive';
 import { UserAnswerService } from './services/userAnswer.service';
-import { SurveyFillingComponent } from './SurveyFilling/SurveyFilling.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminGroupsComponent } from './admin/admin-groups/admin-groups.component';
 import { AdminSurveysComponent } from './admin/admin-surveys/admin-surveys.component';
@@ -32,7 +31,6 @@ import { FilterableDropdownComponent } from './components/filterable-dropdown/fi
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TempUserDashboardComponent } from './UserDashboard/UserDashboard.component';
 import { UserDashboardComponent } from './user/user-dashboard/user-dashboard.component';
 import { UserLayoutComponent } from './user/user-layout/user-layout.component';
 import { UserNavbarComponent } from './user/user-layout/user-navbar/user-navbar.component';
@@ -49,8 +47,6 @@ import { UserSurveyComponent } from './user/user-survey/user-survey.component';
     ClickOutsideDirective,
     DateValidatorDirective,
     UserDashboardComponent,
-    TempUserDashboardComponent,
-    SurveyFillingComponent,
     AdminNavbarComponent,
     AdminDashboardComponent,
     AdminGroupsComponent,

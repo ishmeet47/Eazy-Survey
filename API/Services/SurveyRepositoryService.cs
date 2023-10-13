@@ -385,23 +385,23 @@ namespace API.Repositories
 
 
         // Implementation for SurveyQuestion operations
-        // public async Task<SurveyQuestion> CreateSurveyQuestion(int surveyId, string questionText, List<string> options)
-        // {
-        //     var survey = await _context.Surveys.FindAsync(surveyId);
-        //     if (survey == null) return null;
+        public async Task<SurveyQuestion> CreateSurveyQuestion(int surveyId, string questionText, List<string> options)
+        {
+            var survey = await _context.Surveys.FindAsync(surveyId);
+            if (survey == null) return null;
 
-        //     var question = new SurveyQuestion { Heading = questionText };
+            var question = new SurveyQuestion { Heading = questionText };
 
-        //     foreach (var optionText in options)
-        //     {
-        //         question.Options.Add(new SurveyOption { Label = optionText });
-        //     }
+            foreach (var optionText in options)
+            {
+                question.Options.Add(new SurveyOption { Label = optionText });
+            }
 
-        //     survey.Questions.Add(question);
-        //     await _context.SaveChangesAsync();
+            survey.Questions.Add(question);
+            await _context.SaveChangesAsync();
 
-        //     return question;
-        // }
+            return question;
+        }
 
         public async Task<SurveyQuestion> GetSurveyQuestion(int questionId)
         {

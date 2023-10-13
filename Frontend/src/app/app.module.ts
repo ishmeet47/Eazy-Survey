@@ -12,9 +12,9 @@ import { ButtonComponent } from './components/button/button.component';
 import { AlertModule } from 'ngx-bootstrap/alert';
 // import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { SurveyResultsChartComponent } from './survey-results-chart/survey-results-chart.component';
+// import { SurveyResultsChartComponent } from './survey-results-chart/survey-results-chart.component';
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgApexchartsModule } from 'ng-apexcharts';
+// import { NgApexchartsModule } from 'ng-apexcharts';
 // import { NgXClickOutsideModule } from 'ngx-click-outside';
 import { ClickOutsideDirective } from './directives/ClickOutsideDirective';
 
@@ -36,6 +36,7 @@ import { UserLayoutComponent } from './user/user-layout/user-layout.component';
 import { UserNavbarComponent } from './user/user-layout/user-navbar/user-navbar.component';
 import { CardComponent } from './components/card/card.component';
 import { UserSurveyComponent } from './user/user-survey/user-survey.component';
+import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,7 @@ import { UserSurveyComponent } from './user/user-survey/user-survey.component';
     LoginComponent,
     ManageUsersComponent,
     ButtonComponent,
-    SurveyResultsChartComponent,
+    // SurveyResultsChartComponent,
     ClickOutsideDirective,
     DateValidatorDirective,
     UserDashboardComponent,
@@ -70,8 +71,9 @@ import { UserSurveyComponent } from './user/user-survey/user-survey.component';
     NgxBootstrapIconsModule.pick(allIcons),
     AlertModule,
     BsDropdownModule.forRoot(),
-    // NgbModule
-    NgApexchartsModule,
+    NgbAlertModule,
+    NgbModule,
+    // NgApexchartsModule,
   ],
   providers: [
     SurveyService,

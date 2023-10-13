@@ -52,7 +52,7 @@ namespace API.Interfaces
     Task<bool> SubmitSurvey(int userId, int surveyId);
 
     // New methods for SurveyQuestion
-    // Task<SurveyQuestion> CreateSurveyQuestion(int surveyId, string questionText, List<string> options);
+    Task<SurveyQuestion> CreateSurveyQuestion(int surveyId, string questionText, List<string> options);
 
     // Task<SurveyQuestion> GetSurveyQuestion(int questionId);
     // Task<IEnumerable<SurveyQuestion>> GetSurveyQuestionsBySurveyId(int surveyId);

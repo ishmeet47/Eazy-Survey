@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { Observable, forkJoin, throwError } from 'rxjs';
 import { UserService } from '../services/user.service';
 import { Survey } from '../modules/survey.module';
 import { Group } from '../modules/group.module';
@@ -14,6 +14,7 @@ import { AbstractControl, NgForm } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { of } from 'rxjs';
 import { ClickOutsideDirective } from '../directives/ClickOutsideDirective';
+
 
 declare var $: any; // if you're not using the jQuery type definition
 
@@ -76,12 +77,22 @@ export class SurveyComponent implements OnInit {
   lastUpdatedBy: any;
   groupSurveys: any;
 
+  todayDate: string;
+
+  // constructor() {
+  // }
+
   constructor(private router: Router, private http: HttpClient, private userService: UserService, private cd: ChangeDetectorRef) {
     // router.events.subscribe((event) => {
     //   if (event instanceof NavigationEnd) {
     //     this.loadGroups();
     //   }
     // });
+
+
+    const today = new Date();
+    this.todayDate = today.toISOString().split('T')[0];
+
   }
   submitted: boolean = false;
   questionsError!: string;
@@ -843,7 +854,7 @@ export class SurveyComponent implements OnInit {
   }
 
 
-  showResults = false;
+  showResults: boolean = false;
   // ng - apex chart fields :
 
   // parent.component.ts
@@ -851,8 +862,11 @@ export class SurveyComponent implements OnInit {
 
   totalNumberOfUsers!: number;  // total number of users
 
+
+
+
   checkResults(survey: any) {
-    // Extract option IDs
+    // ... (the rest of your existing code for extracting IDs, etc.)
     const optionIds = this.getOptionIdsFromSurvey(survey);
 
     const result = this.extractQuestionsAndOptions(survey);
@@ -861,42 +875,93 @@ export class SurveyComponent implements OnInit {
     console.log(result);
 
     const groupIds = this.getGroupIdsFromSurvey(survey);
-    // Call the service method
+    // Both API calls
+    const answersObservable = this.getAnswersByOptionIds(optionIds);
+    const usersObservable = this.getAllUsersToWhichTheSurveyisAssigned(groupIds);
 
-    var data1, data2;
-    var totalnoofusers = 0;
+    // Using forkJoin to make concurrent API requests
+    forkJoin([answersObservable, usersObservable]).subscribe(
+      ([answersResponse, usersResponse]) => {
+        // Handle the response from getAnswersByOptionIds
+        const data1 = answersResponse;
+        console.log(data1);
+        var finalParsedData = this.updateCountInResultMap(data1, result);
+        this.myStructure = finalParsedData;
 
-    this.getAnswersByOptionIds(optionIds).subscribe((response: any) => {
-      // Handle the response, display data, or any other operations you want to perform.
-
-      data1 = response;
-      console.log(response);
-
-      var finalParsedData = this.updateCountInResultMap(response, result);
-
-      console.log("final parsed structure is ", finalParsedData);
-      this.myStructure = finalParsedData;
-
-      this.getAllUsersToWhichTheSurveyisAssigned(groupIds).subscribe((response: any) => {
-        data2 = response;
+        console.log("The structure send to the apex charts method is ", this.myStructure);
+        // Handle the response from getAllUsersToWhichTheSurveyisAssigned
+        const data2 = usersResponse;
         console.log(data2);
-        response.$values.forEach((x: any) => {
+        let totalnoofusers = 0;
+        data2.$values.forEach((x: any) => {
           totalnoofusers += x.count;
         });
         console.log("total no of users ", totalnoofusers);
         this.totalNumberOfUsers = totalnoofusers;
 
-
-      });
-
-
-    });
-
-    console.log("total no of users ", totalnoofusers);
-
-    // this.showResults(response);
-
+        // Finally, set showResults to true, as both API calls have returned
+        this.showResults = true;
+      },
+      error => {
+        console.error('Error fetching data:', error);
+      }
+    );
   }
+
+
+
+  // checkResults(survey: any) {
+  //   // Extract option IDs
+  //   const optionIds = this.getOptionIdsFromSurvey(survey);
+
+  //   const result = this.extractQuestionsAndOptions(survey);
+
+
+  //   console.log(result);
+
+  //   const groupIds = this.getGroupIdsFromSurvey(survey);
+  //   // Call the service method
+
+  //   var data1, data2;
+  //   var totalnoofusers = 0;
+
+  //   this.getAnswersByOptionIds(optionIds).subscribe((response: any) => {
+  //     // Handle the response, display data, or any other operations you want to perform.
+
+  //     data1 = response;
+  //     console.log(response);
+
+  //     var finalParsedData = this.updateCountInResultMap(response, result);
+
+  //     console.log("final parsed structure is ", finalParsedData);
+  //     this.myStructure = finalParsedData;
+
+  //     // this.getAllUsersToWhichTheSurveyisAssigned(groupIds).subscribe((response: any) => {
+  //     //   data2 = response;
+  //     //   console.log(data2);
+  //     //   response.$values.forEach((x: any) => {
+  //     //     totalnoofusers += x.count;
+  //     //   });
+  //     //   console.log("total no of users ", totalnoofusers);
+  //     //   this.totalNumberOfUsers = totalnoofusers;
+
+
+  //     // });
+
+  //     // this.totalNumberOfUsers = 5;
+
+
+  //   });
+
+
+  //   this.totalNumberOfUsers = 5;
+
+  //   this.showResults = true;
+  //   console.log("total no of users ", totalnoofusers);
+
+  //   // this.showResults(response);
+
+  // }
 
   getOptionIdsFromSurvey(survey: any): number[] {
     let optionId: number[] = [];

@@ -68,20 +68,38 @@
                     </div>
                     <div class="mb-3">
                        <label for="dueDate" class="form-label">Due Date <span class="text-danger">*</span></label>
-                       <input type="date" class="form-control" id="dueDate" [(ngModel)]="dueDateString" name="dueDate" required #dueDateField="ngModel" (ngModelChange)="resetSubmittedDate()">
+                       <!-- <input type="date" class="form-control" id="dueDate" [(ngModel)]="dueDateString" name="dueDate" required #dueDateField="ngModel" (ngModelChange)="resetSubmittedDate()" [min]="todayDate" > -->
                        <!-- <div *ngIf="dueDateField.invalid && submitted" class="alert alert-danger">
                           Due date should be greater than or equal to today's date.
                        </div> -->
                         <!-- Validation for Empty Due Date -->
-        <div *ngIf="dueDateField.errors?.['required'] && ((dueDateField.touched && !dueDateField.dirty) || showValidationDateMessage)" class="alert alert-danger">
+        <!-- <div *ngIf="dueDateField.errors?.['required'] && ((dueDateField.touched && !dueDateField.dirty) || showValidationDateMessage)" class="alert alert-danger">
         Due date is required.
-        </div>
+        </div> -->
 
 
                        <!-- Validation for Due Date being earlier than today -->
-        <div *ngIf="dueDateField.errors?.['dateInvalid'] && (dueDateField.touched || showValidationDateMessage)" class="alert alert-danger">
+        <!-- <div *ngIf="dueDateField.errors?.['dateInvalid'] && (dueDateField.touched || showValidationDateMessage)" class="alert alert-danger">
         Due date should be greater than or equal to today's date.
-        </div>
+        </div> -->
+
+        <input type="date" class="form-control" id="dueDate" [(ngModel)]="dueDateString" name="dueDate" required #dueDateField="ngModel" (ngModelChange)="resetSubmittedDate()" dateValidator >
+
+
+
+        <!-- last one time again for the date validations -->
+        <div *ngIf="dueDateField.errors?.['required'] && ((dueDateField.touched && !dueDateField.dirty) || showValidationDateMessage)" class="alert alert-danger">
+          Due date is required.
+          </div>
+
+
+                         <!-- Validation for Due Date being earlier than today -->
+          <div *ngIf="dueDateField.errors?.['dateInvalid'] && (dueDateField.touched || showValidationDateMessage)" class="alert alert-danger">
+          Due date should be greater than or equal to today's date.
+          </div>
+
+
+
 
                     </div>
                     <!-- <div class="mb-3">
@@ -330,7 +348,7 @@
         <button type="button" class="btn btn-danger button-spacing" (click)="deleteSurvey(survey.id)">Delete</button>
 
 
-        <button
+        <button *ngIf="survey.isPublished"
     type="button"
     class="btn btn-success button-spacing"
     (click)="showPublishPopup(survey.id)">
@@ -350,12 +368,15 @@ class="btn btn-success">Check Results</button> -->
                          (clickOutside)="onChartClickOutside()"></app-survey-results-chart> -->
 
 
-                         <button (click)="showResults = true" type="button" class="btn btn-success">Check Results</button>
+                         <button (click)="checkResults(survey);showResults = true" type="button" class="btn btn-success">Check Results</button>
+
+<!-- <div *ngIf="showResults" clickOutside (clickOutside)="onChartClickOutside()">
+    <app-survey-results-chart [surveyResults]="myStructure" [totalNumberOfUsers]="totalNumberOfUsers"></app-survey-results-chart>
+</div> -->
 
 <div *ngIf="showResults" clickOutside (clickOutside)="onChartClickOutside()">
-    <app-survey-results-chart [surveyResults]="myStructure" [totalNumberOfUsers]="totalNumberOfUsers"></app-survey-results-chart>
+  <app-survey-results-chart [surveyResults]="myStructure" [totalNumberOfUsers]="totalNumberOfUsers"></app-survey-results-chart>
 </div>
-
 
     </div>
   </div>

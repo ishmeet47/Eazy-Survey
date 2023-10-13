@@ -3,6 +3,7 @@ using API.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static API.Models.Requests.ExtendedSurveyRequest.QuestionWithOptions;
+using static SurveyController;
 
 namespace API.Data.Repo
 {
@@ -93,5 +94,24 @@ namespace API.Data.Repo
         {
             throw new NotImplementedException();
         }
+
+
+
+        public Task<List<OptionCount>> GetAnswerCountsByOptionIds(List<int> optionIds)
+        {
+
+            throw new NotImplementedException();
+
+        }
+
+
+
+        public Task<IEnumerable<GroupCount>> getUsersByGroupIds(List<int> groupIds)
+        {
+            throw new NotImplementedException();
+
+        }
+
+
     }
 }

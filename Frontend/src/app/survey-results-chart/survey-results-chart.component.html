@@ -1,0 +1,27 @@
+
+
+
+<!-- <div [class.shown]="chartOptions" class="chart-popup">
+  <div clickOutside (clickOutside)="hideChart()"> -->
+    <!-- Your chart content here -->
+    <!-- <apx-chart [chart]="chartOptions?.chart" [xaxis]="chartOptions?.xaxis" [series]="chartOptions?.series"></apx-chart>
+  </div>
+</div> -->
+
+
+
+<!-- Working html  -->
+
+
+<div [class.shown]="chartOptions" class="chart-popup">
+  <div clickOutside (clickOutside)="hideChart()">
+    <!-- Your chart content here -->
+    <apx-chart
+      [chart]="chartOptions?.chart"
+      [xaxis]="chartOptions?.xaxis"
+      [series]="chartOptions?.series"
+      [tooltip]="chartOptions?.tooltip">
+    </apx-chart>
+  </div>
+</div>
+

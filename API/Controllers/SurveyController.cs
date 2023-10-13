@@ -173,6 +173,48 @@ public class SurveyController : ControllerBase
 
 
 
+    [HttpPost("getAnswersByOptionIds")]
+    public async Task<ActionResult<IEnumerable<OptionCount>>> GetAnswersByOptionIds([FromBody] List<int> optionIds)
+    {
+        if (optionIds == null || optionIds.Count == 0)
+        {
+            return BadRequest("Option IDs are required.");
+        }
+
+        var results = await _repository.GetAnswerCountsByOptionIds(optionIds);
+        return Ok(results);
+    }
+
+
+
+    [HttpPost("getUsersByGroupIds")]
+    public async Task<ActionResult<IEnumerable<OptionCount>>> getUsersByGroupIds([FromBody] List<int> groupIds)
+    {
+        if (groupIds == null || groupIds.Count == 0)
+        {
+            return BadRequest("Group IDs are required.");
+        }
+
+        var results = await _repository.getUsersByGroupIds(groupIds);
+        return Ok(results);
+    }
+
+
+    public class OptionCount
+    {
+        public int OptionId { get; set; }
+        public int Count { get; set; }
+    }
+
+
+    public class GroupCount
+    {
+        public int GroupId { get; set; }
+        public int Count { get; set; }
+    }
+
+
+
     // public class ExtendedSurveyRequest : SurveyRequest
     // {
     //     public List<(string QuestionText, List<string> Options)> QuestionsWithOptions { get; set; }

@@ -15,7 +15,16 @@ import { SurveyComponent } from './survey/survey.component'; // adjust path acco
 import { ButtonComponent } from './components/button/button.component';
 import { NgxBootstrapIconsModule, allIcons } from 'ngx-bootstrap-icons';
 import { AlertModule } from 'ngx-bootstrap/alert';
-// import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { SurveyResultsChartComponent } from './survey-results-chart/survey-results-chart.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgApexchartsModule } from 'ng-apexcharts';
+// import { NgXClickOutsideModule } from 'ngx-click-outside';
+import { ClickOutsideDirective } from './directives/ClickOutsideDirective';
+
+import { DateValidatorDirective } from './directives/date-validator.directive';
+
 
 @NgModule({
   declarations: [
@@ -25,6 +34,9 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     ManageUsersComponent,
     SurveyComponent,
     ButtonComponent,
+    SurveyResultsChartComponent,
+    ClickOutsideDirective,
+    DateValidatorDirective
   ],
   imports: [
     BrowserModule,
@@ -34,7 +46,10 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     HttpClientModule,
     NgxBootstrapIconsModule.pick(allIcons),
     AlertModule,
-    // NgbModule
+    NgbAlertModule,
+    NgApexchartsModule,
+    NgbModule,
+    // NgXClickOutsideModule
   ],
   providers: [SurveyService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

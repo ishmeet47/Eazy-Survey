@@ -1,0 +1,103 @@
+
+
+
+
+
+
+
+/* ###### new css possible :: */
+
+
+
+/* General Styles for the Chart Popup */
+.chart-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  z-index: 1000;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+  background-color: #f7f9fc;
+  padding: 25px;
+  max-width: 95%;
+  max-height: 95%;
+  width: 800px;
+  height: 600px;
+  overflow: auto;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease-out;
+}
+
+.chart-popup.shown {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: bounce 0.6s;
+}
+
+/* Bounce Animation for the Chart Popup */
+@keyframes bounce {
+  0% {
+      transform: translateY(0);
+  }
+  30% {
+      transform: translateY(-15px);
+  }
+  50% {
+      transform: translateY(7px);
+  }
+  70% {
+      transform: translateY(-5px);
+  }
+  100% {
+      transform: translateY(0);
+  }
+}
+
+/* X-axis Label Styling */
+.apx-chart .apexcharts-xaxis-label {
+  font-weight: bold;
+  color: #2a2a2a;
+  font-size: 13px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* X-axis Label Hover Effect */
+.apx-chart .apexcharts-xaxis-label:hover {
+  color: #007BFF;
+  transform: scale(1.1);
+}
+
+/* Title and Subtitle Styling Inside the Chart */
+.apx-chart .title {
+  color: #333;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.apx-chart .subtitle {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Tooltip Styling */
+.apx-chart .apexcharts-tooltip {
+    background: #333;
+    color: #fff;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    line-height: 1.4;
+}
+
+/* Bar Graph Styling (you can adjust colors or other styles as needed) */
+.apx-chart .apexcharts-bar-series .apexcharts-bar {
+  fill: #007BFF; /* Blue color, adjust as per your branding */
+  transition: all 0.3s ease;
+}
+
+.apx-chart .apexcharts-bar-series .apexcharts-bar:hover {
+  fill: #0056b3; /* Darker blue for hover, adjust as needed */
+}

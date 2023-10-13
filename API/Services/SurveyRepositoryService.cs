@@ -13,6 +13,7 @@ using System.Web;
 using System.Data;
 using System.Data.SqlClient;
 using static API.Models.Requests.ExtendedSurveyRequest.QuestionWithOptions;
+using static SurveyController;
 
 namespace API.Repositories
 {
@@ -76,6 +77,29 @@ namespace API.Repositories
 
 
 
+        public async Task<List<OptionCount>> GetAnswerCountsByOptionIds(List<int> optionIds)
+        {
+            var counts = _context.SurveyAnswers
+                .Where(sa => optionIds.Contains(sa.OptionId))
+                .GroupBy(sa => sa.OptionId)
+                .Select(g => new OptionCount { OptionId = g.Key, Count = g.Count() });
+
+            return await counts.ToListAsync();
+        }
+
+
+
+
+        public async Task<IEnumerable<GroupCount>> getUsersByGroupIds(List<int> groupIds)
+        {
+            // Use EF Core to group and count the UserGroup entries by GroupId
+            var groupCounts = _context.UserGroups
+                .Where(ug => groupIds.Contains(ug.GroupId))
+                .GroupBy(ug => ug.GroupId)
+                .Select(g => new GroupCount { GroupId = g.Key, Count = g.Count() });
+
+            return await groupCounts.ToListAsync();
+        }
 
 
         public async Task<bool> DeleteSurveyQuestion(int questionId)

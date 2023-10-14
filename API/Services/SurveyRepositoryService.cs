@@ -228,6 +228,96 @@ namespace API.Repositories
 
 
 
+        // public async Task<Survey> UpdateSurvey(int id, string title, DateTime? dueDate, string description, List<(string heading, int questionId, List<Option> Options)> questionsWithOptions, List<int> userGroupIds)
+        // {
+        //     var survey = await _context.Surveys
+        //                                .Include(s => s.Questions)
+        //                                .ThenInclude(q => q.Options)
+        //                                .FirstOrDefaultAsync(s => s.Id == id);
+        //     if (survey == null || survey.IsPublished) return null;
+
+        //     // 1. Update Survey details
+        //     survey.Title = title;
+        //     survey.DueDate = dueDate;
+        //     survey.Description = description;
+
+        //     // 2. Update questions
+        //     foreach (var incomingQuestion in questionsWithOptions)
+        //     {
+        //         var question = survey.Questions.FirstOrDefault(q => q.Id == incomingQuestion.questionId);
+
+        //         if (question == null) // Question does not exist in DB
+        //         {
+        //             question = new SurveyQuestion { Heading = incomingQuestion.heading };
+        //             survey.Questions.Add(question); // Use navigation property to add question
+        //         }
+        //         else
+        //         {
+        //             question.Heading = incomingQuestion.heading; // Update existing question heading
+        //         }
+
+        //         // Handle the options for this question.
+        //         foreach (var incomingOption in incomingQuestion.Options)
+        //         {
+        //             var option = question.Options.FirstOrDefault(o => o.Id == incomingOption.Id);
+
+        //             if (option == null) // Option does not exist in DB
+        //             {
+        //                 option = new SurveyOption { Label = incomingOption.Label };
+        //                 question.Options.Add(option); // Use navigation property to add option
+        //             }
+        //             else
+        //             {
+        //                 option.Label = incomingOption.Label; // Update existing option label
+        //             }
+        //         }
+
+        //         // Remove options not in the incoming request
+        //         var optionsToRemove = question.Options.Where(o => !incomingQuestion.Options.Any(io => io.Id == o.Id)).ToList();
+        //         foreach (var opt in optionsToRemove)
+        //         {
+        //             var optionToRemove = _context.SurveyOptions.Find(opt.Id);
+        //             if (optionToRemove != null)
+        //             {
+        //                 _context.SurveyOptions.Remove(optionToRemove);
+        //             }
+        //         }
+        //     }
+
+        //     // Remove questions not in the incoming request
+        //     var questionsToRemove = survey.Questions.Where(q => !questionsWithOptions.Any(iq => iq.questionId == q.Id)).ToList();
+        //     foreach (var qst in questionsToRemove)
+        //     {
+        //         var questionToRemove = _context.SurveyQuestions.Find(qst.Id);
+        //         if (questionToRemove != null)
+        //         {
+        //             _context.SurveyQuestions.Remove(questionToRemove);
+        //         }
+        //     }
+
+        //     // 3. Update GroupSurveys
+        //     var currentGroupSurveys = await _context.GroupSurveys.Where(gs => gs.SurveyId == id).ToListAsync();
+        //     foreach (var groupId in userGroupIds)
+        //     {
+        //         if (!currentGroupSurveys.Any(gs => gs.GroupId == groupId))
+        //         {
+        //             _context.GroupSurveys.Add(new GroupSurvey
+        //             {
+        //                 SurveyId = survey.Id,
+        //                 GroupId = groupId
+        //             });
+        //         }
+        //     }
+
+        //     // Remove group surveys not in the incoming request
+        //     _context.GroupSurveys.RemoveRange(currentGroupSurveys.Where(gs => !userGroupIds.Contains(gs.GroupId)));
+
+        //     await _context.SaveChangesAsync();
+
+        //     return survey;
+        // }
+
+
         public async Task<Survey> UpdateSurvey(int id, string title, DateTime? dueDate, string description, List<(string heading, int questionId, List<Option> Options)> questionsWithOptions, List<int> userGroupIds)
         {
             var survey = await _context.Surveys
@@ -246,14 +336,14 @@ namespace API.Repositories
             {
                 var question = survey.Questions.FirstOrDefault(q => q.Id == incomingQuestion.questionId);
 
-                if (question == null) // Question does not exist in DB
+                if (question == null)
                 {
                     question = new SurveyQuestion { Heading = incomingQuestion.heading };
-                    survey.Questions.Add(question); // Use navigation property to add question
+                    survey.Questions.Add(question);
                 }
                 else
                 {
-                    question.Heading = incomingQuestion.heading; // Update existing question heading
+                    question.Heading = incomingQuestion.heading;
                 }
 
                 // Handle the options for this question.
@@ -261,14 +351,14 @@ namespace API.Repositories
                 {
                     var option = question.Options.FirstOrDefault(o => o.Id == incomingOption.Id);
 
-                    if (option == null) // Option does not exist in DB
+                    if (option == null)
                     {
                         option = new SurveyOption { Label = incomingOption.Label };
-                        question.Options.Add(option); // Use navigation property to add option
+                        question.Options.Add(option);
                     }
                     else
                     {
-                        option.Label = incomingOption.Label; // Update existing option label
+                        option.Label = incomingOption.Label;
                     }
                 }
 
@@ -279,6 +369,10 @@ namespace API.Repositories
                     var optionToRemove = _context.SurveyOptions.Find(opt.Id);
                     if (optionToRemove != null)
                     {
+                        // First remove related SurveyAnswers before removing the option
+                        var answersToRemove = _context.SurveyAnswers.Where(sa => sa.OptionId == optionToRemove.Id).ToList();
+                        _context.SurveyAnswers.RemoveRange(answersToRemove);
+
                         _context.SurveyOptions.Remove(optionToRemove);
                     }
                 }
@@ -316,8 +410,6 @@ namespace API.Repositories
 
             return survey;
         }
-
-
 
 
 

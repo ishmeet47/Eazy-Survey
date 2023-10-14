@@ -65,7 +65,7 @@ type ParsedResultWithCount = {
 @Component({
   selector: 'app-survey',
   templateUrl: './survey.component.html',
-  styleUrls: ['./survey.component.css'],
+  // styleUrls: ['./survey.component.css'],
   encapsulation: ViewEncapsulation.Emulated // or None, or ShadowDom
 
 })

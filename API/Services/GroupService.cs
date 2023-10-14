@@ -39,31 +39,37 @@ namespace API.Services
 
         public async Task DeleteGroupAndAssociations(int groupId)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            var strategy = _context.Database.CreateExecutionStrategy();
 
-            try
+            await strategy.ExecuteAsync(async () =>
             {
-                // Delete all UserGroup entries associated with this groupId
-                var userGroups = _context.UserGroups.Where(ug => ug.GroupId == groupId);
-                _context.UserGroups.RemoveRange(userGroups);
+                using var transaction = await _context.Database.BeginTransactionAsync();
 
-                // Delete the group from the Group table
-                var group = await _context.Groups.FindAsync(groupId);
-                if (group != null)
+                try
                 {
-                    _context.Groups.Remove(group);
+                    // Delete all UserGroup entries associated with this groupId
+                    var userGroups = _context.UserGroups.Where(ug => ug.GroupId == groupId);
+                    _context.UserGroups.RemoveRange(userGroups);
+
+                    // Delete the group from the Group table
+                    var group = await _context.Groups.FindAsync(groupId);
+                    if (group != null)
+                    {
+                        _context.Groups.Remove(group);
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
                 }
-
-                await _context.SaveChangesAsync();
-
-                await transaction.CommitAsync();
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            });
         }
+
 
 
     }

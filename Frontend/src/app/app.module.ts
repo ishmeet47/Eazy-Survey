@@ -12,9 +12,9 @@ import { ButtonComponent } from './components/button/button.component';
 import { AlertModule } from 'ngx-bootstrap/alert';
 // import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
-// import { SurveyResultsChartComponent } from './survey-results-chart/survey-results-chart.component';
+import { SurveyResultsChartComponent } from './survey-results-chart/survey-results-chart.component';
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-// import { NgApexchartsModule } from 'ng-apexcharts';
+import { NgApexchartsModule } from 'ng-apexcharts';
 // import { NgXClickOutsideModule } from 'ngx-click-outside';
 import { ClickOutsideDirective } from './directives/ClickOutsideDirective';
 
@@ -44,7 +44,7 @@ import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     LoginComponent,
     ManageUsersComponent,
     ButtonComponent,
-    // SurveyResultsChartComponent,
+    SurveyResultsChartComponent,
     ClickOutsideDirective,
     DateValidatorDirective,
     UserDashboardComponent,
@@ -73,7 +73,7 @@ import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BsDropdownModule.forRoot(),
     NgbAlertModule,
     NgbModule,
-    // NgApexchartsModule,
+    NgApexchartsModule,
   ],
   providers: [
     SurveyService,
@@ -84,4 +84,4 @@ import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

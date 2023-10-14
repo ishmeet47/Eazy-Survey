@@ -116,14 +116,14 @@
                             name="dueDate"
                             required
                             #dueDateField="ngModel"
-                            (ngModelChange)="resetSubmittedDate()"
+                            (ngModelChange)="resetSubmittedDate()" dateValidator
                           />
                           <!-- <div *ngIf="dueDateField.invalid && submitted" class="alert alert-danger">
                           Due date should be greater than or equal to today's date.
                        </div> -->
                           <!-- Validation for Empty Due Date -->
                           <div
-                            *ngIf="dueDateField.errors?.['required'] && ((dueDateField.touched && !titleField.dirty) || showValidationDateMessage)"
+                            *ngIf="dueDateField.errors?.['required'] && ((dueDateField.touched && !dueDateField.dirty) || showValidationDateMessage)"
                             class="alert alert-danger"
                           >
                             Due date is required.
@@ -506,6 +506,18 @@
           <span class="admin-survey-assigned-groups admin-survey-column">
             {{ assignedGroupsToSurvey[i].groupNames.length }}
           </span>
+
+          <span class="admin-survey-assigned-groups admin-survey-column">
+            <!-- <strong>Assigned to Groups:</strong> -->
+            <ng-container *ngIf="assignedGroupsToSurvey[i] && assignedGroupsToSurvey[i].groupNames.length">
+              <ng-container *ngFor="let groupName of assignedGroupsToSurvey[i].groupNames; let isLast = last">
+                {{ groupName }}<span *ngIf="!isLast">, </span>
+              </ng-container>
+            </ng-container>
+            <span *ngIf="!assignedGroupsToSurvey[i] || !assignedGroupsToSurvey[i].groupNames.length">Not Assigned</span>
+          </span>
+
+
         </div>
         <div class="admin-survey-actions d-flex flex-row">
           <button
@@ -535,13 +547,20 @@
             Delete
           </button>
 
-          <button
+          <button *ngIf="survey.isPublished"
             type="button"
-            class="btn btn-success"
+            class="btn btn-success button-spacing"
             (click)="showPublishPopup(survey.id)"
           >
             Get Sharable Link
           </button>
+
+
+          <button (click)="checkResults(survey);showResults = true" type="button" class="btn btn-success">Check Results</button>
+          <div *ngIf="showResults" clickOutside (clickOutside)="onChartClickOutside()">
+            <app-survey-results-chart [surveyResults]="myStructure" [totalNumberOfUsers]="totalNumberOfUsers"></app-survey-results-chart>
+          </div>
+
         </div>
       </div>
     </div>

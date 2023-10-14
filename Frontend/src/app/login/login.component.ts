@@ -21,7 +21,7 @@ export class LoginComponent implements AfterViewInit, OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
@@ -62,6 +62,9 @@ export class LoginComponent implements AfterViewInit, OnInit {
   private login(): void {
     if (!localStorage.getItem('token')) {
       // User is not logged in
+
+      if (!this.username || (this.username && this.username == '') || (!this.password || (this.password && this.password == ''))) return;
+
       this.authService.login(this.username, this.password).subscribe({
         next: (response) => {
           if (response && response.token) {
@@ -79,6 +82,9 @@ export class LoginComponent implements AfterViewInit, OnInit {
         },
         error: (err) => {
           this.errorMessage = 'Invalid login credentials';
+          setTimeout(() => {
+            this.errorMessage = '';
+          }, 5000);
         },
       });
     } else {

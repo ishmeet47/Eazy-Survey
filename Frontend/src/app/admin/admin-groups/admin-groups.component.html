@@ -1,0 +1,62 @@
+<app-admin-layout class="d-flex flex-column gap-4">
+  <app-card title="Create New Group" class="me-4">
+    <form #loginForm="ngForm" id="form-inputs" (submit)="createGroup()">
+      <div class="d-flex flex-column gap-2">
+        <div
+          class="new-group-input rounded-3 input-group mb-3 overflow-hidden border mt-3"
+        >
+          <input
+            required
+            type="text"
+            class="form-control hide-focus border-0 py-2 px-4 bg-dark text-white"
+            placeholder="Group Name"
+            aria-label="Group"
+            aria-describedby="new-group-icon"
+            [(ngModel)]="newGroupName"
+            name="newGroupName"
+          />
+          <span
+            class="input-group-text border-0 ps-1 px-4 bg-dark text-white"
+            id="new-group-icon"
+          >
+            <i-bs name="people-fill" width="20" height="20"></i-bs>
+          </span>
+        </div>
+        <button
+          type="submit"
+          id="create-new-user-submit"
+          class="btn btn-primary rounded-3"
+          [disabled]="newGroupName === ''"
+        >
+          Create
+        </button>
+        <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <p class="validation-message" *ngIf="validationMessage">
+          {{ validationMessage }}
+        </p>
+      </div>
+    </form>
+  </app-card>
+  <app-card title="Groups">
+    <table class="table table-bordered table-striped text-white">
+      <thead>
+        <tr>
+          <th class="text-white">Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
+        <tr *ngFor="let group of groups">
+          <td>
+            <span class="text-white">{{ group.name }}</span>
+          </td>
+          <td>
+            <button class="btn btn-secondary" (click)="deleteGroup(group)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table></app-card
+  >
+</app-admin-layout>

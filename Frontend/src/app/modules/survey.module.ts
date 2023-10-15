@@ -12,7 +12,6 @@
 // //   }
 // // }
 
-
 // export interface Survey {
 //   $id: string;
 //   isPublished: boolean;
@@ -76,11 +75,7 @@
 //   $values: any[];
 // }
 
-
-
-
 // final class verison :
-
 
 // ... [Your other classes remain unchanged]
 
@@ -90,19 +85,27 @@ export class Survey {
   title: string;
   dueDate: string;
   assignedTo: string | null;
-  completedBy: string | null;
+  completedBy: CompletedBy;
   questions: Questions;
   groupSurveys: GroupSurveys; // Note the type change here
   id: number;
   lastUpdatedOn: string;
   lastUpdatedBy: number;
-  description!: string | "";
+  description!: string | '';
 
   constructor(
-    $id: string, isPublished: boolean, title: string, dueDate: string,
-    assignedTo: string | null, completedBy: string | null, questions: Questions,
+    $id: string,
+    isPublished: boolean,
+    title: string,
+    dueDate: string,
+    assignedTo: string | null,
+    completedBy: CompletedBy,
+    questions: Questions,
     groupSurveys: GroupSurveys, // Note the parameter type change
-    id: number, lastUpdatedOn: string, lastUpdatedBy: number, description: string
+    id: number,
+    lastUpdatedOn: string,
+    lastUpdatedBy: number,
+    description: string
   ) {
     this.$id = $id;
     this.isPublished = isPublished;
@@ -119,6 +122,15 @@ export class Survey {
   }
 }
 
+export class CompletedBy {
+  $id: string;
+  $values: any[];
+
+  constructor($id: string, $values: any[]) {
+    this.$id = $id;
+    this.$values = $values;
+  }
+}
 
 // New GroupSurveys class to represent the groupSurveys object with $values property
 export class GroupSurveys {
@@ -140,8 +152,11 @@ export class GroupSurvey {
   group: null | any; // Depending on the expected structure of 'group', you may need to refine this type
 
   constructor(
-    $id: string, surveyId: number, survey: SurveyRef,
-    groupId: number, group: null | any
+    $id: string,
+    surveyId: number,
+    survey: SurveyRef,
+    groupId: number,
+    group: null | any
   ) {
     this.$id = $id;
     this.surveyId = surveyId;
@@ -150,7 +165,6 @@ export class GroupSurvey {
     this.group = group;
   }
 }
-
 
 export class Questions {
   $id: string;
@@ -175,9 +189,16 @@ export class Question {
   isPublished: boolean;
 
   constructor(
-    $id: string, heading: string, surveyId: number, survey: SurveyRef,
-    options: Options, surveyAnswers: SurveyAnswers, id: number,
-    lastUpdatedOn: string, lastUpdatedBy: number, isPublished: boolean
+    $id: string,
+    heading: string,
+    surveyId: number,
+    survey: SurveyRef,
+    options: Options,
+    surveyAnswers: SurveyAnswers,
+    id: number,
+    lastUpdatedOn: string,
+    lastUpdatedBy: number,
+    isPublished: boolean
   ) {
     this.$id = $id;
     this.heading = heading;
@@ -219,8 +240,12 @@ export class Option {
   answers: Answers;
 
   constructor(
-    $id: string, id: number, label: string, questionId: number,
-    question: QuestionRef, answers: Answers
+    $id: string,
+    id: number,
+    label: string,
+    questionId: number,
+    question: QuestionRef,
+    answers: Answers
   ) {
     this.$id = $id;
     this.id = id;

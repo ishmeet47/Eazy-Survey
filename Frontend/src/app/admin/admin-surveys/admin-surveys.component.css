@@ -1,0 +1,46 @@
+.fixed-button {
+  position: fixed;
+  top: 1.7px; /* Adjust this value to place it at your desired position from the top */
+  left: 50%; /* This will center the button horizontally */
+  transform: translateX(-50%); /* This will ensure the centering is accurate */
+  z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.button-spacing {
+  margin-right: 8px; /* or any other value you prefer */
+}
+
+.admin-survey-column {
+  width: 150px;
+}
+
+.admin-survey-title {
+  width: 250px;
+}
+
+.admin-survey-divider {
+  border-top: 1px solid red;
+}
+
+/* .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+.modal-content {
+  background-color: #202c2d;
+  color: white;
+  padding: 20px;
+  /* width: 50%; */
+  /* max-width: 600px; */
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}

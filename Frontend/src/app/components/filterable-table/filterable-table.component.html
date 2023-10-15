@@ -1,0 +1,18 @@
+<div class="container">
+  <h2>Filterable Table</h2>
+  <input class="form-control" id="myInput" type="text" placeholder="Search.." />
+  <br />
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+      <tr *ngFor="let d of data">
+        <!-- <td>{{ d.id }}</td> -->
+        <td>{{ d.value }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

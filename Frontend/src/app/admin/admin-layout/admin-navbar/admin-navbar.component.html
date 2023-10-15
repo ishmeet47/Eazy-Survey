@@ -1,0 +1,59 @@
+<div class="sidebar-nav d-flex flex-column justify-content-between">
+  <div>
+    <div class="sidebar-heading d-flex flex-row align-items-center gap-2">
+      <i-bs name="layers-fill" width="20" height="20" class="text-primary">
+      </i-bs>
+      <h4 class="ms-2 text-white">Survey App</h4>
+    </div>
+    <ul class="mt-4 navbar-nav">
+      <li class="sidebar-item nav-item mb-4 py-0">
+        <a
+          class="nav-link text-white d-flex flex-row gap-3"
+          routerLinkActive="active"
+          routerLink="/admin/dashboard"
+        >
+          <i-bs name="grid-1x2" width="20" height="20"></i-bs>
+          <span>Dashboard</span></a
+        >
+      </li>
+      <li class="sidebar-item nav-item py-0">
+        <a
+          class="nav-link d-flex flex-row gap-3 text-white"
+          routerLinkActive="active"
+          routerLink="/admin/surveys"
+        >
+          <i-bs name="clipboard-data" width="20" height="20"></i-bs>
+          <span>Surveys</span>
+        </a>
+      </li>
+      <li class="sidebar-item nav-item py-0">
+        <a
+          class="nav-link text-white d-flex flex-row gap-3"
+          routerLinkActive="active"
+          routerLink="/admin/users"
+        >
+          <i-bs name="person" width="20" height="20"></i-bs>
+          <span>Users</span></a
+        >
+      </li>
+      <li class="sidebar-item nav-item py-0">
+        <a
+          class="nav-link text-white d-flex flex-row gap-3"
+          routerLinkActive="active"
+          routerLink="/admin/groups"
+        >
+          <i-bs name="people" width="20" height="20"></i-bs>
+          <span>Groups</span></a
+        >
+      </li>
+    </ul>
+  </div>
+  <div
+    id="sidebar-logout"
+    class="sidebar-item d-flex flex-row gap-3"
+    (click)="logout()"
+  >
+    <i-bs name="box-arrow-in-right" width="20" height="20"></i-bs>
+    <span>Logout</span>
+  </div>
+</div>

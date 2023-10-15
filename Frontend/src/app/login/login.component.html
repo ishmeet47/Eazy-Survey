@@ -19,7 +19,8 @@
       class="w-50 pt-5"
     >
       <div class="login-input input-group mb-3 overflow-hidden border">
-        <input name="username"
+        <input
+          name="username"
           required
           type="username"
           [(ngModel)]="username"
@@ -36,7 +37,8 @@
         </span>
       </div>
       <div class="login-input input-group mb-3 overflow-hidden border">
-        <input name="password"
+        <input
+          name="password"
           required
           [type]="passwordVisibility ? 'text' : 'password'"
           [(ngModel)]="password"
@@ -71,7 +73,7 @@
       >
         Login
       </button>
-      <alert type="danger" *ngIf="errorMessage" class="error-message">
+      <alert type="danger" *ngIf="errorMessage" class="error-message mt-4">
         <strong>Error: </strong>{{ errorMessage }}
       </alert>
     </form>

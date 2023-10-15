@@ -58,6 +58,16 @@ namespace API.Data
                 .WithMany(sq => sq.Options)
                 .HasForeignKey(so => so.QuestionId);
 
+
+            modelBuilder.Entity<SurveyOption>()
+                .HasMany(o => o.Answers)
+                .WithOne(sa => sa.Option)
+                .HasForeignKey(sa => sa.OptionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+
             // One-to-many relationship between SurveyAnswer and SurveyOption
             modelBuilder.Entity<SurveyAnswer>()
                 .HasOne(sa => sa.Option)

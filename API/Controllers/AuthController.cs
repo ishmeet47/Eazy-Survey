@@ -43,7 +43,7 @@ namespace API.Controllers
                                    .Select(ug => ug.GroupId)
                                    .ToList();
 
-            return Ok(new { token, UserType = user.UserType, GroupIds = groupIds });
+            return Ok(new { token, UserType = user.UserType, GroupIds = groupIds, userId = user.Id });
         }
 
         private bool VerifyPassword(string password, byte[] storedSalt, byte[] storedHash)

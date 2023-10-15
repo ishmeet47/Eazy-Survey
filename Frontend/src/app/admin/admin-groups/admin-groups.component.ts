@@ -26,6 +26,9 @@ export class AdminGroupsComponent implements OnInit {
   groups$: Observable<Group[]>;
   editingGroups: Group[] = [];
 
+  showDeleteConfirmationModal = false;
+  selectDeleteGroup: Group | undefined;
+
   constructor(
     private userService: UserService,
     private surveyService: SurveyService,

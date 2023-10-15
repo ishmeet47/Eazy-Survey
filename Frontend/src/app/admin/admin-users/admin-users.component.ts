@@ -15,6 +15,9 @@ import { UserService } from 'src/app/services/user.service';
 export class AdminUsersComponent implements OnInit {
   passwordVisibility: boolean = false; // To toggle password visibility
 
+  showDeleteConfirmationModal = false;
+  selectDeleteUser: User | undefined;
+
   users: User[] = [];
   groups: Group[] = [];
   dropdownGroups: IKeyValuePair[] = []; // For group dropdown

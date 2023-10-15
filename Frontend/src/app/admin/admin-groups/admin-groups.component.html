@@ -51,7 +51,12 @@
             <span class="text-white">{{ group.name }}</span>
           </td>
           <td>
-            <button class="btn btn-secondary" (click)="deleteGroup(group)">
+            <button
+              class="btn btn-danger"
+              (click)="
+                selectDeleteGroup = group; showDeleteConfirmationModal = true
+              "
+            >
               Delete
             </button>
           </td>
@@ -60,3 +65,27 @@
     </table></app-card
   >
 </app-admin-layout>
+
+<div *ngIf="showDeleteConfirmationModal" class="delete-confirmation-container">
+  <div class="delete-confirmation">
+    <h5>Are you sure you want to delete {{ selectDeleteGroup?.name }}?</h5>
+    <div class="d-flex justify-content-between pt-3">
+      <button
+        class="btn btn-secondary"
+        (click)="
+          showDeleteConfirmationModal = false; selectDeleteGroup = undefined
+        "
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-danger"
+        (click)="
+          deleteGroup(selectDeleteGroup); showDeleteConfirmationModal = false
+        "
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

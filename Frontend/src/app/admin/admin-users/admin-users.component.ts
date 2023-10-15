@@ -48,6 +48,7 @@ export class AdminUsersComponent implements OnInit {
   selectedGroupIds: number[] = [];
   groups$: Observable<Group[]>;
   editingGroups: Group[] = [];
+  changePassword: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -253,7 +254,16 @@ export class AdminUsersComponent implements OnInit {
           matchingGroup.selected = true;
         }
       });
+
+      this.editingUser.changePassword = this.changePassword;
+
     }
+
+    if (this.editingUser) {
+      this.editingUser.changePassword = this.changePassword;
+
+    }
+
   }
 
   updateUser(event: Event): void {
@@ -264,6 +274,8 @@ export class AdminUsersComponent implements OnInit {
         .map((group) => group.id);
       this.editingUser.groupIds = selectedGroups;
       console.log(this.editingUser.groupIds);
+
+
       this.userService.updateUser(this.editingUser).subscribe(() => {
         // After updating, you might want to reset the group selections in editingGroups, close the modal, and reload the list of users
         this.editingGroups.forEach((group) => (group.selected = false));

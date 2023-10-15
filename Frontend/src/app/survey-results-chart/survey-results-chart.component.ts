@@ -67,6 +67,7 @@ export class SurveyResultsChartComponent implements OnInit {
 
 
       tooltip: {
+        position: 'topRight',
         enabled: true,
         shared: true,
         intersect: false, // <-- Add this line

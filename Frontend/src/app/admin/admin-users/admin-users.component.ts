@@ -134,6 +134,13 @@ export class AdminUsersComponent implements OnInit {
   }
 
   addUser(): void {
+    // console.log(`this.newUsername: ${this.newUsername}`);
+    // console.log(`this.newPassword: ${this.newPassword}`);
+
+    if (!this.validateNewPassword()) return;
+
+    this.errorMessage = ''; // Clear previous error messages
+
     const userPayload: any = {
       username: this.newUsername,
       password: this.newPassword,
@@ -356,5 +363,44 @@ export class AdminUsersComponent implements OnInit {
     this.editingUser = null;
     this.selectedUserGroups = undefined || [];
     this.editingGroups.forEach((group) => (group.selected = false));
+  }
+
+  validateNewPassword(): boolean {
+    // add checks for if password is strong enough. Requirements are:
+    // at least 8 characters
+    // at least 1 uppercase letter
+    // at least 1 lowercase letter
+    // at least 1 number
+
+    console.log(`this.newPassword: ${this.newPassword}`);
+
+    const password = this.newPassword;
+
+    if (password.length < 8) {
+      console.log('Password must be at least 8 characters long.');
+      this.errorMessage = 'Password must be at least 8 characters long.';
+      return false;
+    }
+
+    if (password === password.toLowerCase()) {
+      console.log('Password must contain at least 1 uppercase letter.');
+      this.errorMessage = 'Password must contain at least 1 uppercase letter.';
+      return false;
+    }
+
+    if (password === password.toUpperCase()) {
+      console.log('Password must contain at least 1 lowercase letter.');
+      this.errorMessage = 'Password must contain at least 1 lowercase letter.';
+      return false;
+    }
+
+    if (!/\d/.test(password)) {
+      console.log('Password must contain at least 1 number.');
+      this.errorMessage = 'Password must contain at least 1 number.';
+      return false;
+    }
+
+    console.log('Password is valid.');
+    return true;
   }
 }

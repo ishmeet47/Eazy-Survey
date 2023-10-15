@@ -82,6 +82,10 @@
                 <span class="ms-2">{{ group.name }}</span>
               </div>
             </div>
+            <!-- error message -->
+            <p class="error-message" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </p>
             <button
               type="submit"
               id="create-new-user-submit"

@@ -1676,6 +1676,9 @@ export class AdminSurveysComponent implements OnInit {
   showDeleteConfirmationModal = false;
   selectDeleteSurvey: Survey | undefined;
 
+  noQuestionsError: boolean = false;
+  showValidationDateMessage: boolean = false;
+
   // constructor() {
   // }
 
@@ -2626,10 +2629,15 @@ export class AdminSurveysComponent implements OnInit {
     return null;
   }
 
-  noQuestionsError: boolean = false;
-  showValidationDateMessage: boolean = false;
-
   createSurvey(): void {
+    // submitted &&
+    // questionsNew.length === 0 &&
+    // noQuestionsError
+
+    console.log(`submitted: ${this.submitted}`);
+    console.log(`questionsNew.length: ${this.questionsNew.length}`);
+    console.log(`noQuestionsError: ${this.noQuestionsError}`);
+
     this.showValidationTitleMessage = true;
     this.showValidationDateMessage = true;
 
@@ -2641,6 +2649,15 @@ export class AdminSurveysComponent implements OnInit {
     //   // return;  // Exit the function to stop the survey from being created
     // }
 
+    // this.cd.detectChanges();
+
+    if (!this.questions || this.questionsNew.length === 0) {
+      this.noQuestionsError = true;
+      this.questionsNewError =
+        'At least one question with options is required.';
+      return; // Exit the function to stop the survey from being created
+    }
+
     if (this.surveyForm.invalid) {
       // Assuming you've named your form 'form'
       this.showValidationMessages = true;
@@ -2648,19 +2665,9 @@ export class AdminSurveysComponent implements OnInit {
       return;
     }
 
-    // this.cd.detectChanges();
-
     console.log('Is form valid:', this.surveyForm.valid);
-
     if (!this.surveyForm.valid) {
       return;
-    }
-
-    if (!this.questions || this.questions.length === 0) {
-      this.noQuestionsError = true;
-      this.questionsNewError =
-        'At least one question with options is required.';
-      return; // Exit the function to stop the survey from being created
     }
 
     // Filter out the selected user groups

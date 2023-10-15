@@ -126,7 +126,7 @@ public class UserService : IUserService
         byte[] hashedPassword = user.Password;
         byte[] passwordKey = user.PasswordKey;
 
-        if (!string.IsNullOrEmpty(request.Password))
+        if (request.ChangePassword && !string.IsNullOrEmpty(request.Password))
         {
             passwordKey = GenerateSalt();
             hashedPassword = HashPassword(request.Password, passwordKey);

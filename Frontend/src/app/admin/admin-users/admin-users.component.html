@@ -136,7 +136,12 @@
                 <button class="btn btn-primary me-2" (click)="editUser(user)">
                   Edit
                 </button>
-                <button class="btn btn-secondary" (click)="deleteUser(user.id)">
+                <button
+                  class="btn btn-secondary"
+                  (click)="
+                    selectDeleteUser = user; showDeleteConfirmationModal = true
+                  "
+                >
                   Delete
                 </button>
               </td>
@@ -189,3 +194,27 @@
     </app-card>
   </div>
 </app-admin-layout>
+
+<div *ngIf="showDeleteConfirmationModal" class="delete-confirmation-container">
+  <div class="delete-confirmation">
+    <h5>Are you sure you want to delete {{ selectDeleteUser?.username }}?</h5>
+    <div class="d-flex justify-content-between pt-3">
+      <button
+        class="btn btn-secondary"
+        (click)="
+          showDeleteConfirmationModal = false; selectDeleteUser = undefined
+        "
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-danger"
+        (click)="
+          deleteUser(selectDeleteUser!.id); showDeleteConfirmationModal = false
+        "
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

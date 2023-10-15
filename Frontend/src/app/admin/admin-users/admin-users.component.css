@@ -65,3 +65,25 @@ td {
 /* button:hover {
   background-color: #0056b3;
 } */
+
+.delete-confirmation-container {
+  /* Set fixed modal */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /* Set background color */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Center modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-confirmation {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+}

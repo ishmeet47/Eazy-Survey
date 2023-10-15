@@ -557,7 +557,9 @@
           <button
             type="button"
             class="btn btn-danger button-spacing"
-            (click)="deleteSurvey(survey.id)"
+            (click)="
+              selectDeleteSurvey = survey; showDeleteConfirmationModal = true
+            "
           >
             Delete
           </button>
@@ -627,3 +629,28 @@
     </div>
   </app-card>
 </app-admin-layout>
+
+<div *ngIf="showDeleteConfirmationModal" class="delete-confirmation-container">
+  <div class="delete-confirmation">
+    <h5>Are you sure you want to delete {{ selectDeleteSurvey?.title }}?</h5>
+    <div class="d-flex justify-content-between pt-3">
+      <button
+        class="btn btn-secondary"
+        (click)="
+          showDeleteConfirmationModal = false; selectDeleteSurvey = undefined
+        "
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-danger"
+        (click)="
+          deleteSurvey(selectDeleteSurvey!.id);
+          showDeleteConfirmationModal = false
+        "
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

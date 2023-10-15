@@ -22,7 +22,6 @@
 
 // declare var $: any; // if you're not using the jQuery type definition
 
-
 // // First, declare your types or interfaces outside the class
 // type NewSurvey = {
 //   questions: {
@@ -58,10 +57,6 @@
 // type ParsedResultWithCount = {
 //   [questionHeading: string]: OptionWithCount[]
 // };
-
-
-
-
 
 // @Component({
 //   selector: 'app-admin-surveys',
@@ -728,8 +723,6 @@
 //     this.cd.detectChanges();
 //   }
 
-
-
 //   // checkResults(surveyId: number) {
 //   //   this.surveyService.getSurveyById(surveyId).subscribe(surveyData => {
 //   //     this.showResults(surveyData);
@@ -913,8 +906,6 @@
 //         })
 //       );
 //   }
-
-
 
 //   resetSubmittedDate() {
 //     // this.submitted = false;
@@ -1601,13 +1592,12 @@
 //   }
 // }
 
-
-
-
-
-
-
-import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { Observable, forkJoin, throwError } from 'rxjs';
@@ -1624,59 +1614,54 @@ import { ViewChild } from '@angular/core';
 import { of } from 'rxjs';
 import { ClickOutsideDirective } from 'src/app/directives/ClickOutsideDirective';
 
-
 declare var $: any; // if you're not using the jQuery type definition
-
 
 // First, declare your types or interfaces outside the class
 type NewSurvey = {
   questions: {
     $values: Array<{
-      heading: string,
+      heading: string;
       options: {
         $values: Array<{
-          id: number,
-          label: string
-        }>
-      }
-    }>
-  }
+          id: number;
+          label: string;
+        }>;
+      };
+    }>;
+  };
 };
 
 type Option = {
-  id: number,
-  label: string
+  id: number;
+  label: string;
 };
 
 type ParsedResult = {
-  [questionHeading: string]: Option[]
+  [questionHeading: string]: Option[];
 };
-
-
 
 type CountResponse = {
   $values: Array<{
-    optionId: number,
-    count: number
-  }>
+    optionId: number;
+    count: number;
+  }>;
 };
 
 type OptionWithCount = {
-  id: number,
-  label: string,
-  count?: number
+  id: number;
+  label: string;
+  count?: number;
 };
 
 type ParsedResultWithCount = {
-  [questionHeading: string]: OptionWithCount[]
+  [questionHeading: string]: OptionWithCount[];
 };
 
 @Component({
   selector: 'app-admin-surveys',
   templateUrl: './admin-surveys.component.html',
   styleUrls: ['./admin-surveys.component.css'],
-  encapsulation: ViewEncapsulation.Emulated // or None, or ShadowDom
-
+  encapsulation: ViewEncapsulation.Emulated, // or None, or ShadowDom
 })
 export class AdminSurveysComponent implements OnInit {
   @ViewChild('surveyForm', { static: false }) surveyForm!: NgForm;
@@ -1688,27 +1673,33 @@ export class AdminSurveysComponent implements OnInit {
 
   todayDate: string;
 
+  showDeleteConfirmationModal = false;
+  selectDeleteSurvey: Survey | undefined;
+
   // constructor() {
   // }
 
-  constructor(private router: Router, private http: HttpClient, private userService: UserService, private cd: ChangeDetectorRef) {
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private userService: UserService,
+    private cd: ChangeDetectorRef
+  ) {
     // router.events.subscribe((event) => {
     //   if (event instanceof NavigationEnd) {
     //     this.loadGroups();
     //   }
     // });
 
-
     const today = new Date();
     this.todayDate = today.toISOString().split('T')[0];
-
   }
   submitted: boolean = false;
   questionsError!: string;
   title!: string;
   editTitle!: string;
   dueDate!: Date;
-  editDueDate !: Date;
+  editDueDate!: Date;
   // questions: string[] = []; // to hold questions from the textarea
 
   questions: any[] = [];
@@ -1719,9 +1710,9 @@ export class AdminSurveysComponent implements OnInit {
   message!: string;
   groups: any[] = [];
   editingGroups: any[] = [];
-  questionsText: string = '';  // <-- Single string for the textarea binding
+  questionsText: string = ''; // <-- Single string for the textarea binding
   editQuestionsText: string = '';
-  assignedGroupsToSurvey: { surveyId: number, groupNames: string[] }[] = [];
+  assignedGroupsToSurvey: { surveyId: number; groupNames: string[] }[] = [];
   newgroups: any[] = [];
   private baseUrl = 'http://localhost:5225';
   dueDateString: string = '';
@@ -1731,9 +1722,6 @@ export class AdminSurveysComponent implements OnInit {
   editOptionsText: string = '';
   today = new Date().toISOString().split('T')[0];
 
-
-
-
   showAddQuestionPopup = false;
   questionsNew: any[] = [];
   newQuestionText = '';
@@ -1742,17 +1730,12 @@ export class AdminSurveysComponent implements OnInit {
   questionsNewError: string | null = null;
   submittedNew = false;
 
-
-
   // for editing question and option on the create sdurvey from :
-
 
   // New properties
   isEditing = false;
   editingIndex: number | null = null;
   editingOptionIndex: number | null = null;
-
-
 
   // openModal() {
   //   const element = document.getElementById('publishModal');
@@ -1763,7 +1746,6 @@ export class AdminSurveysComponent implements OnInit {
   //     console.error('Modal element not found!');
   //   }
   // }
-
 
   openModal() {
     setTimeout(() => {
@@ -1777,15 +1759,11 @@ export class AdminSurveysComponent implements OnInit {
     });
   }
 
-
-
-
-
   deleteQuestion(index: number): void {
     if (index > -1 && index < this.questions.length) {
       this.questions.splice(index, 1);
     }
-    this.cd.detectChanges();  // If you have issues with change detection, use this line.
+    this.cd.detectChanges(); // If you have issues with change detection, use this line.
   }
 
   // Function to start editing a question
@@ -1793,18 +1771,15 @@ export class AdminSurveysComponent implements OnInit {
     this.isEditing = true;
     this.editingQuestionIndex = i;
     // this.newQuestionText = this.questionsNew[i].QuestionText;
-    console.log("the indes a", this.editingQuestionIndex);
+    console.log('the indes a', this.editingQuestionIndex);
     // new check for debugging
 
     this.newQuestionText = this.questions[i].heading;
 
-
-
     this.showAddQuestionFormFlag = true;
     this.addingOptionToExistingQuestion = false;
 
-    this.cd.detectChanges();  // manually trigger change detection
-
+    this.cd.detectChanges(); // manually trigger change detection
   }
 
   startEditingOption(questionIndex: number, optionIndex: number): void {
@@ -1812,13 +1787,11 @@ export class AdminSurveysComponent implements OnInit {
     this.editingOptionIndex = optionIndex;
     // this.newOptionText = this.questionsNew[questionIndex].Options[optionIndex];
 
-
     // for edit survey debugging new property
     // this.newOptionText = this.questions[questionIndex].options[optionIndex];
 
-
-    this.newOptionText = this.questions[questionIndex].options[optionIndex].label; // This function sets the value of newOptionText to the option's current text, and this value should be shown in the editing textarea for the option.
-
+    this.newOptionText =
+      this.questions[questionIndex].options[optionIndex].label; // This function sets the value of newOptionText to the option's current text, and this value should be shown in the editing textarea for the option.
 
     this.addingOptionToExistingQuestion = false;
 
@@ -1829,20 +1802,15 @@ export class AdminSurveysComponent implements OnInit {
   isEditingExistingSurvey: boolean = false;
   nowSurevyisEdited(): void {
     this.isEditingExistingSurvey = true;
-
   }
-
-
-
-
-
-
 
   // version 3
   // new updated version for updatequestionandoptions so that empty option text will not render empty dot on the UI
 
   updateQuestionOrOption(): void {
-    let currentQuestions = this.isEditingExistingSurvey ? this.questions : this.questions;
+    let currentQuestions = this.isEditingExistingSurvey
+      ? this.questions
+      : this.questions;
 
     if (this.editingQuestionIndex !== null) {
       if (!currentQuestions[this.editingQuestionIndex]) {
@@ -1852,19 +1820,29 @@ export class AdminSurveysComponent implements OnInit {
 
       if (this.editingOptionIndex !== null) {
         // If it's an option that's being edited
-        let optionsProperty = 'options';  // It's the same for both cases now
+        let optionsProperty = 'options'; // It's the same for both cases now
 
         if (!currentQuestions[this.editingQuestionIndex][optionsProperty]) {
-          console.error('No options array found for question at index:', this.editingQuestionIndex);
+          console.error(
+            'No options array found for question at index:',
+            this.editingQuestionIndex
+          );
           return;
         }
 
-        if (!this.newOptionText.trim()) { // If the edited option is empty
+        if (!this.newOptionText.trim()) {
+          // If the edited option is empty
           // Remove the option from the list
-          currentQuestions[this.editingQuestionIndex][optionsProperty].splice(this.editingOptionIndex, 1);
+          currentQuestions[this.editingQuestionIndex][optionsProperty].splice(
+            this.editingOptionIndex,
+            1
+          );
         } else {
-          let updatedQuestion = { ...currentQuestions[this.editingQuestionIndex] };
-          updatedQuestion[optionsProperty][this.editingOptionIndex].label = this.newOptionText;
+          let updatedQuestion = {
+            ...currentQuestions[this.editingQuestionIndex],
+          };
+          updatedQuestion[optionsProperty][this.editingOptionIndex].label =
+            this.newOptionText;
 
           // Update the appropriate array in the component's state
           this.questions[this.editingQuestionIndex] = updatedQuestion;
@@ -1872,20 +1850,18 @@ export class AdminSurveysComponent implements OnInit {
       } else {
         // If it's a question that's being edited
         let questionProperty = 'heading';
-        currentQuestions[this.editingQuestionIndex][questionProperty] = this.newQuestionText;
+        currentQuestions[this.editingQuestionIndex][questionProperty] =
+          this.newQuestionText;
 
         // Update the appropriate array in the component's state
-        this.questions[this.editingQuestionIndex][questionProperty] = this.newQuestionText;
+        this.questions[this.editingQuestionIndex][questionProperty] =
+          this.newQuestionText;
       }
     }
 
-    this.cd.detectChanges();  // Force view update
+    this.cd.detectChanges(); // Force view update
     this.resetEditingState();
   }
-
-
-
-
 
   resetEditingState(): void {
     this.isEditing = false;
@@ -1897,7 +1873,6 @@ export class AdminSurveysComponent implements OnInit {
     this.addingOptionToExistingQuestion = false;
   }
 
-
   update(): void {
     // if (this.editingQuestionIndex !== null && this.editingOptionIndex !== null) {
     //   this.questionsNew[this.editingQuestionIndex].Options[this.editingOptionIndex] = this.newOptionText;
@@ -1907,10 +1882,13 @@ export class AdminSurveysComponent implements OnInit {
     //   this.questionsNew[this.editingQuestionIndex].QuestionText = this.newQuestionText;
     // }
 
-
-
-    if (this.editingQuestionIndex !== null && this.editingOptionIndex !== null) {
-      this.questions[this.editingQuestionIndex].options[this.editingOptionIndex] = this.newOptionText;
+    if (
+      this.editingQuestionIndex !== null &&
+      this.editingOptionIndex !== null
+    ) {
+      this.questions[this.editingQuestionIndex].options[
+        this.editingOptionIndex
+      ] = this.newOptionText;
     }
 
     if (this.editingQuestionIndex !== null) {
@@ -1924,18 +1902,11 @@ export class AdminSurveysComponent implements OnInit {
     this.showAddQuestionFormFlag = false;
   }
 
-
-
-
-
   resetOptionError(): void {
-
     if (this.newOptionText.trim().length > 0) {
       this.noOptionsError = false;
 
-
       this.noOptionsSpecialError = false;
-
     }
     this.questionsNewError = '';
   }
@@ -1960,9 +1931,9 @@ export class AdminSurveysComponent implements OnInit {
       // ... the rest of your logic for adding/updating the question
     }
 
-
     if (this.tempOptions.length === 0) {
-      this.questionsNewError = 'At least one option is required for the question!';
+      this.questionsNewError =
+        'At least one option is required for the question!';
       return;
     } else {
       this.questionsNewError = ''; // Reset the error
@@ -1977,23 +1948,23 @@ export class AdminSurveysComponent implements OnInit {
       // }
 
       if (this.editingOptionIndex !== null) {
-        this.questions[this.editingIndex].options[this.editingOptionIndex] = this.newQuestionText;
+        this.questions[this.editingIndex].options[this.editingOptionIndex] =
+          this.newQuestionText;
       } else {
         this.questions[this.editingIndex].heading = this.newQuestionText;
       }
-
-
 
       this.stopEditing();
       this.finalizeOptionsAndClose();
     } else {
       if (this.tempOptions.length === 0) {
-        this.questionsNewError = 'At least one option is required for the question!';
+        this.questionsNewError =
+          'At least one option is required for the question!';
         return;
       }
       this.questionsNew.push({
         QuestionText: this.newQuestionText,
-        Options: [...this.tempOptions]
+        Options: [...this.tempOptions],
       });
 
       // this.questions.push({
@@ -2001,18 +1972,15 @@ export class AdminSurveysComponent implements OnInit {
       //   Options: [...this.tempOptions]
       // });
 
-
       this.questions.push({
         heading: this.newQuestionText,
-        options: [...this.tempOptions]
+        options: [...this.tempOptions],
       });
 
       this.resetQuestionFields();
     }
     this.showAddQuestionFormFlag = false;
-
   }
-
 
   // Function to stop editing mode
   stopEditing(): void {
@@ -2039,17 +2007,11 @@ export class AdminSurveysComponent implements OnInit {
   //   this.resetQuestionFields();
   // }
 
-
   finalizeOptionsAndClose(): void {
     this.optionsFinalized = true;
     this.showAddQuestionPopup = false;
     this.resetQuestionFields();
   }
-
-
-
-
-
 
   showAddQuestionFormFlag: boolean = false;
 
@@ -2064,11 +2026,8 @@ export class AdminSurveysComponent implements OnInit {
     // // ... existing logic
     // this.newQuestionText = '';
     // this.noQuestionsError = false;
-    this.submitted = false;  // Reset the submitted flag to false
-    this.showValidationMessages = false
-
-
-
+    this.submitted = false; // Reset the submitted flag to false
+    this.showValidationMessages = false;
 
     this.showAddQuestionFormFlag = !this.showAddQuestionFormFlag;
     if (this.showAddQuestionFormFlag) {
@@ -2082,29 +2041,19 @@ export class AdminSurveysComponent implements OnInit {
       this.isEditing = false;
       this.editingOptionIndex = null;
       this.addingOptionToExistingQuestion = false;
-      this.noOptionsSpecialError = false
+      this.noOptionsSpecialError = false;
     }
   }
 
-
-
-
-
-  addingOptionToExistingQuestion: boolean = false;  // Declare this at the class level
+  addingOptionToExistingQuestion: boolean = false; // Declare this at the class level
 
   showOptionInput(questionIndex: number): void {
-    this.isEditing = false;  // We're not editing an existing question
+    this.isEditing = false; // We're not editing an existing question
     this.editingQuestionIndex = questionIndex;
-    this.addingOptionToExistingQuestion = true;  // We're adding an option
+    this.addingOptionToExistingQuestion = true; // We're adding an option
     this.showAddQuestionFormFlag = true;
     this.newOptionText = '';
   }
-
-
-
-
-
-
 
   noOptionsError: boolean = false; // Add this to the class properties to track the error state
 
@@ -2115,7 +2064,10 @@ export class AdminSurveysComponent implements OnInit {
           if (!this.questions[this.editingQuestionIndex].options) {
             this.questions[this.editingQuestionIndex].options = [];
           }
-          this.questions[this.editingQuestionIndex].options = [...this.questions[this.editingQuestionIndex].options, ...this.tempOptions];
+          this.questions[this.editingQuestionIndex].options = [
+            ...this.questions[this.editingQuestionIndex].options,
+            ...this.tempOptions,
+          ];
         } else {
           // if (!this.questionsNew[this.editingQuestionIndex].Options) {
           //   this.questionsNew[this.editingQuestionIndex].Options = [];
@@ -2125,9 +2077,10 @@ export class AdminSurveysComponent implements OnInit {
           if (!this.questions[this.editingQuestionIndex].options) {
             this.questions[this.editingQuestionIndex].options = [];
           }
-          this.questions[this.editingQuestionIndex].options = [...this.questions[this.editingQuestionIndex].options, ...this.tempOptions];
-
-
+          this.questions[this.editingQuestionIndex].options = [
+            ...this.questions[this.editingQuestionIndex].options,
+            ...this.tempOptions,
+          ];
         }
 
         this.tempOptions = []; // Clear the temporary options
@@ -2135,12 +2088,10 @@ export class AdminSurveysComponent implements OnInit {
         this.addingOptionToExistingQuestion = false; // Reset this flag
         this.noOptionsError = false; // Reset the no options error
         this.noOptionsSpecialError = false; // Set the error if there are no options
-
       } else {
         // this.noOptionsError = true; // Set the error if there are no options
 
         this.noOptionsSpecialError = true; // Set the error if there are no options
-
       }
     }
   }
@@ -2157,16 +2108,10 @@ export class AdminSurveysComponent implements OnInit {
   // Flag to determine if options have been finalized
   optionsFinalized: boolean = false;
 
-
-
-
-
-
   addNewOption(): void {
     // if (this.newOptionText.trim().length === 0) {
     //   this.noOptionsError = true;
     // }
-
 
     if (!this.newOptionText.trim()) {
       this.questionsNewError = 'Option text is required!';
@@ -2179,51 +2124,43 @@ export class AdminSurveysComponent implements OnInit {
     var newOptionId, IDQuestion;
     if (this.editingQuestionIndex === null) {
       if (this.questions && this.questions.length == 0) {
-        IDQuestion = 999999;//this.questions[this.editingQuestionIndex].id;
+        IDQuestion = 999999; //this.questions[this.editingQuestionIndex].id;
         newOptionId = IDQuestion;
       }
     } else {
       if (this.questions && this.questions.length > 0) {
         if (this.questions[this.editingQuestionIndex].options == null) {
-
           if (this.questions[this.editingQuestionIndex].id) {
-            IDQuestion = this.questions[this.editingQuestionIndex].id
-            newOptionId = 999999
+            IDQuestion = this.questions[this.editingQuestionIndex].id;
+            newOptionId = 999999;
           } else {
-            IDQuestion = 999999;//this.questions[this.editingQuestionIndex].id;
+            IDQuestion = 999999; //this.questions[this.editingQuestionIndex].id;
             newOptionId = IDQuestion;
           }
-
-
-        } else if (this.questions[this.editingQuestionIndex].options && this.questions[this.editingQuestionIndex].options.length > 0) {
-          const options_present = this.questions[this.editingQuestionIndex].options;
+        } else if (
+          this.questions[this.editingQuestionIndex].options &&
+          this.questions[this.editingQuestionIndex].options.length > 0
+        ) {
+          const options_present =
+            this.questions[this.editingQuestionIndex].options;
           IDQuestion = options_present[options_present.length - 1].questionId;
           newOptionId = 999999;
         }
       }
-
     }
-
 
     option = {
       id: newOptionId,
       label: this.newOptionText,
-      questionId: IDQuestion  // Assuming `this.currentSurveyId` holds the ID of the currently selected survey.
+      questionId: IDQuestion, // Assuming `this.currentSurveyId` holds the ID of the currently selected survey.
     };
-
-
-
-
 
     this.tempOptions.push(option);
     this.newOptionText = ''; // Reset the input field
     this.noOptionsError = false;
 
-
-    this.noOptionsSpecialError = false
-
+    this.noOptionsSpecialError = false;
   }
-
 
   resetForm(): void {
     this.submitted = false;
@@ -2253,10 +2190,8 @@ export class AdminSurveysComponent implements OnInit {
     this.showValidationTitleMessage = false;
     this.showValidationDateMessage = false;
     this.dueDateString = '';
-    this.description = ''
+    this.description = '';
   }
-
-
 
   resetFormAndHide(): void {
     this.displayForm = false; // Hide the form
@@ -2273,8 +2208,6 @@ export class AdminSurveysComponent implements OnInit {
         group.selected = false;
       });
     }
-
-
 
     this.submitted = false;
     this.submittedNew = false;
@@ -2306,12 +2239,10 @@ export class AdminSurveysComponent implements OnInit {
 
   ngOnInit(): void {
     // This is just a placeholder, you might want to fetch the actual groups from your backend
-    this.loadGroups();  // Loading groups on component initialization
+    this.loadGroups(); // Loading groups on component initialization
 
     this.loadSurveys();
-
   }
-
 
   // loadGroups(): void {
   //   this.http.get<any[]>(`${this.baseUrl}/user/groups`)  // Assuming /user/groups is the endpoint to fetch groups
@@ -2324,42 +2255,43 @@ export class AdminSurveysComponent implements OnInit {
   //     });
   // }
 
-
   loadGroups(): void {
-    this.userService.getGroups().subscribe(groups => {
-      console.log("Fetched groups:", groups); // Diagnostic log
+    this.userService.getGroups().subscribe(
+      (groups) => {
+        console.log('Fetched groups:', groups); // Diagnostic log
 
-      if (groups && Array.isArray(groups)) {
-        this.groups = groups.map(group => ({ ...group, selected: false }));
-        this.editingGroups = groups.map(group => ({ ...group, selected: false }));
+        if (groups && Array.isArray(groups)) {
+          this.groups = groups.map((group) => ({ ...group, selected: false }));
+          this.editingGroups = groups.map((group) => ({
+            ...group,
+            selected: false,
+          }));
 
-        // this.cd.detectChanges(); // Manually trigger change detection
+          // this.cd.detectChanges(); // Manually trigger change detection
+        } else {
+          console.error('Unexpected data structure:', groups);
+        }
+        // this.cd.detectChanges();
 
-      } else {
-        console.error("Unexpected data structure:", groups);
+        console.log('yoo', this.groups); // Check the output after loadGroups has been called
+        console.log('editing groups are', this.editingGroups); // Check the output after loadGroups has been called
+
+        this.groupSurveys = this.groups;
+        // this.newgroups = [
+        //   { id: 1, name: 'Test Group 1', selected: false },
+        //   { id: 2, name: 'Test Group 2', selected: false }
+        // ];
+      },
+      (error) => {
+        console.error('Error fetching groups:', error); // Diagnostic log
+        this.message = 'Failed to fetch user groups.';
       }
-      // this.cd.detectChanges();
-
-      console.log("yoo", this.groups); // Check the output after loadGroups has been called
-      console.log("editing groups are", this.editingGroups); // Check the output after loadGroups has been called
-
-
-      this.groupSurveys = this.groups;
-      // this.newgroups = [
-      //   { id: 1, name: 'Test Group 1', selected: false },
-      //   { id: 2, name: 'Test Group 2', selected: false }
-      // ];
-    },
-      error => {
-        console.error("Error fetching groups:", error); // Diagnostic log
-        this.message = "Failed to fetch user groups.";
-      });
+    );
   }
 
   createSurveyOld(): void {
     this.submitted = true;
     this.checkQuestionsValid(this.questionsText);
-
 
     // if (!this.checkQuestionsValid(this.questionsText)) {
     //   this.message = "Please enter options for your question.";
@@ -2367,30 +2299,35 @@ export class AdminSurveysComponent implements OnInit {
     // }
 
     if (this.questionsError) {
-      return;  // Exit the function to stop the survey from being created
+      return; // Exit the function to stop the survey from being created
     }
 
     const questionsArray = this.questionsText.split('\n\n'); // Assuming two newlines separate each question
     const questionsWithOptions = this.parseQuestions(questionsArray);
 
     // Filter out the selected user groups
-    const selectedGroups = this.groups.filter(group => group.selected).map(group => group.id);
+    const selectedGroups = this.groups
+      .filter((group) => group.selected)
+      .map((group) => group.id);
 
     const surveyData = {
       title: this.title,
       dueDate: this.dueDateString,
       QuestionsWithOptions: questionsWithOptions,
-      userGroupIds: selectedGroups  // Add the selected user group ids here
+      userGroupIds: selectedGroups, // Add the selected user group ids here
     };
-    this.http.post(`${this.baseUrl}/survey/create`, surveyData)
-      .pipe(catchError(error => {
-        this.submitted = false; // Resetting the flag
+    this.http
+      .post(`${this.baseUrl}/survey/create`, surveyData)
+      .pipe(
+        catchError((error) => {
+          this.submitted = false; // Resetting the flag
 
-        this.message = "Failed to create survey.";
-        return throwError(error);
-      }))
-      .subscribe(response => {
-        this.message = "Survey created successfully!";
+          this.message = 'Failed to create survey.';
+          return throwError(error);
+        })
+      )
+      .subscribe((response) => {
+        this.message = 'Survey created successfully!';
         this.resetForm(); // Resetting form after successful creation
         this.loadGroups();
         this.loadSurveys();
@@ -2406,20 +2343,14 @@ export class AdminSurveysComponent implements OnInit {
     this.showValidationTitleMessage = false;
     // this.showValidationDateMessage = false;
     this.cd.detectChanges();
-
   }
 
-
-
   // checkResults(surveyId: number) {
-
 
   //   this.surveyService.getSurveyById(surveyId).subscribe(surveyData => {
   //     this.showResults(surveyData);
   //   });
   // }
-
-
 
   extractQuestionsAndOptions(survey: NewSurvey): ParsedResult {
     let resultMap: ParsedResult = {};
@@ -2435,7 +2366,7 @@ export class AdminSurveysComponent implements OnInit {
       for (const option of optionsArray) {
         optionsList.push({
           id: option.id,
-          label: option.label
+          label: option.label,
         });
       }
 
@@ -2449,18 +2380,23 @@ export class AdminSurveysComponent implements OnInit {
   // const result = extractQuestionsAndOptions(survey);
   // console.log(result);
 
-  updateCountInResultMap(countResponse: CountResponse, resultMap: ParsedResult): ParsedResultWithCount {
+  updateCountInResultMap(
+    countResponse: CountResponse,
+    resultMap: ParsedResult
+  ): ParsedResultWithCount {
     let updatedResultMap: ParsedResultWithCount = {};
 
     for (const [question, options] of Object.entries(resultMap)) {
-      updatedResultMap[question] = options.map(opt => {
+      updatedResultMap[question] = options.map((opt) => {
         // Find matching count data
-        const matchingCountData = countResponse.$values.find(item => item.optionId === opt.id);
+        const matchingCountData = countResponse.$values.find(
+          (item) => item.optionId === opt.id
+        );
         // If found, add the count to the result option
         if (matchingCountData) {
           return {
             ...opt,
-            count: matchingCountData.count
+            count: matchingCountData.count,
           };
         }
         // Otherwise, return the option as is
@@ -2471,22 +2407,19 @@ export class AdminSurveysComponent implements OnInit {
     return updatedResultMap;
   }
 
-
   onChartClickOutside(): void {
     this.showResults = false;
   }
-
 
   showResults: boolean = false;
   // ng - apex chart fields :
 
   // parent.component.ts
-  myStructure: { [key: string]: { id: number, label: string, count?: number }[] } = {};
+  myStructure: {
+    [key: string]: { id: number; label: string; count?: number }[];
+  } = {};
 
-  totalNumberOfUsers!: number;  // total number of users
-
-
-
+  totalNumberOfUsers!: number; // total number of users
 
   checkResults(survey: any) {
     // ... (the rest of your existing code for extracting IDs, etc.)
@@ -2494,13 +2427,13 @@ export class AdminSurveysComponent implements OnInit {
 
     const result = this.extractQuestionsAndOptions(survey);
 
-
     console.log(result);
 
     const groupIds = this.getGroupIdsFromSurvey(survey);
     // Both API calls
     const answersObservable = this.getAnswersByOptionIds(optionIds);
-    const usersObservable = this.getAllUsersToWhichTheSurveyisAssigned(groupIds);
+    const usersObservable =
+      this.getAllUsersToWhichTheSurveyisAssigned(groupIds);
 
     // Using forkJoin to make concurrent API requests
     forkJoin([answersObservable, usersObservable]).subscribe(
@@ -2511,7 +2444,10 @@ export class AdminSurveysComponent implements OnInit {
         var finalParsedData = this.updateCountInResultMap(data1, result);
         this.myStructure = finalParsedData;
 
-        console.log("The structure send to the apex charts method is ", this.myStructure);
+        console.log(
+          'The structure send to the apex charts method is ',
+          this.myStructure
+        );
         // Handle the response from getAllUsersToWhichTheSurveyisAssigned
         const data2 = usersResponse;
         console.log(data2);
@@ -2519,26 +2455,23 @@ export class AdminSurveysComponent implements OnInit {
         data2.$values.forEach((x: any) => {
           totalnoofusers += x.count;
         });
-        console.log("total no of users ", totalnoofusers);
+        console.log('total no of users ', totalnoofusers);
         this.totalNumberOfUsers = totalnoofusers;
 
         // Finally, set showResults to true, as both API calls have returned
         this.showResults = true;
       },
-      error => {
+      (error) => {
         console.error('Error fetching data:', error);
       }
     );
   }
-
-
 
   // checkResults(survey: any) {
   //   // Extract option IDs
   //   const optionIds = this.getOptionIdsFromSurvey(survey);
 
   //   const result = this.extractQuestionsAndOptions(survey);
-
 
   //   console.log(result);
 
@@ -2568,14 +2501,11 @@ export class AdminSurveysComponent implements OnInit {
   //     //   console.log("total no of users ", totalnoofusers);
   //     //   this.totalNumberOfUsers = totalnoofusers;
 
-
   //     // });
 
   //     // this.totalNumberOfUsers = 5;
 
-
   //   });
-
 
   //   this.totalNumberOfUsers = 5;
 
@@ -2598,7 +2528,6 @@ export class AdminSurveysComponent implements OnInit {
     return optionId;
   }
 
-
   getGroupIdsFromSurvey(survey: any): number[] {
     let groupId: number[] = [];
 
@@ -2610,7 +2539,6 @@ export class AdminSurveysComponent implements OnInit {
 
     return groupId;
   }
-
 
   // showResults(surveyData: any) {
   //   const results: { optionId: number; userCount: number }[] = [];
@@ -2627,70 +2555,59 @@ export class AdminSurveysComponent implements OnInit {
   //   // this.displayChart(results);
   // }
 
-
   onChartDisplayed(event: boolean) {
     if (event) {
       // Handle the event, e.g., show a message or perform other actions.
     }
   }
 
-
-
-
-
-
   getAnswersByOptionIds(optionIds: number[]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/survey/getAnswersByOptionIds`, optionIds)
+    return this.http
+      .post(`${this.baseUrl}/survey/getAnswersByOptionIds`, optionIds)
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           // Handle the error here - perhaps send it to an error logging service, show a user notification, etc.
-          console.error("Error fetching answers by option IDs: ", error);
+          console.error('Error fetching answers by option IDs: ', error);
           return throwError(error);
         }),
-        map(response => {
+        map((response) => {
           // Process or transform the response if needed
           return response;
         })
       );
   }
-
-
 
   getAllUsersToWhichTheSurveyisAssigned(groupIds: number[]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/survey/getUsersByGroupIds`, groupIds)
+    return this.http
+      .post(`${this.baseUrl}/survey/getUsersByGroupIds`, groupIds)
       .pipe(
-        catchError(error => {
+        catchError((error) => {
           // Handle the error here - perhaps send it to an error logging service, show a user notification, etc.
-          console.error("Error fetching answers by option IDs: ", error);
+          console.error('Error fetching answers by option IDs: ', error);
           return throwError(error);
         }),
-        map(response => {
+        map((response) => {
           // Process or transform the response if needed
           return response;
         })
       );
   }
-
-
-
 
   resetSubmittedDate() {
     // this.submitted = false;
     // this.showValidationTitleMessage = false;
     this.showValidationDateMessage = false;
     this.cd.detectChanges();
-
   }
 
   resetQuestionValidationState() {
     this.newQuestionText = ''; // reset the question text
     this.showAddQuestionFormFlag = true; // set flag to show the add question form
     this.noQuestionsError = false;
-    this.submitted = false;  // Reset the submitted flag to false
-    this.showValidationMessages = false
+    this.submitted = false; // Reset the submitted flag to false
+    this.showValidationMessages = false;
     // Any other flags or properties related to the question validation should be reset here
   }
-
 
   resetQuestionValidationStateNew() {
     this.noQuestionsError = false;
@@ -2704,7 +2621,7 @@ export class AdminSurveysComponent implements OnInit {
     today.setHours(0, 0, 0, 0); // Set to midnight to compare dates without time
 
     if (inputDate < today) {
-      return { 'dateInvalid': true };
+      return { dateInvalid: true };
     }
     return null;
   }
@@ -2718,23 +2635,18 @@ export class AdminSurveysComponent implements OnInit {
 
     this.submitted = true;
 
-
-
     // if (!this.questionsNew || this.questionsNew.length === 0) {
     //   this.noQuestionsError = true;
     //   this.questionsNewError = "At least one question with options is required.";
     //   // return;  // Exit the function to stop the survey from being created
     // }
 
-
-
-
-    if (this.surveyForm.invalid) { // Assuming you've named your form 'form'
+    if (this.surveyForm.invalid) {
+      // Assuming you've named your form 'form'
       this.showValidationMessages = true;
       // this.showOtherValidationMessages = true;
       return;
     }
-
 
     // this.cd.detectChanges();
 
@@ -2744,21 +2656,19 @@ export class AdminSurveysComponent implements OnInit {
       return;
     }
 
-
-
     if (!this.questions || this.questions.length === 0) {
       this.noQuestionsError = true;
-      this.questionsNewError = "At least one question with options is required.";
-      return;  // Exit the function to stop the survey from being created
+      this.questionsNewError =
+        'At least one question with options is required.';
+      return; // Exit the function to stop the survey from being created
     }
 
-
     // Filter out the selected user groups
-    const selectedGroups = this.groups.filter(group => group.selected).map(group => group.id);
-
+    const selectedGroups = this.groups
+      .filter((group) => group.selected)
+      .map((group) => group.id);
 
     const transformedQuestions = this.questions;
-
 
     // const transformedQuestions = this.questions.map(question => {
     //   return {
@@ -2769,34 +2679,36 @@ export class AdminSurveysComponent implements OnInit {
 
     const surveyData = {
       title: this.title,
-      Description: this.description || "",
+      Description: this.description || '',
       dueDate: this.dueDateString,
       // QuestionsWithOptions: this.questionsNew,  // Using the new property directly
-      QuestionsWithOptions: transformedQuestions,  // Using the new property directly
+      QuestionsWithOptions: transformedQuestions, // Using the new property directly
 
-      userGroupIds: selectedGroups
+      userGroupIds: selectedGroups,
     };
 
-    this.http.post(`${this.baseUrl}/survey/create`, surveyData)
-      .pipe(catchError(error => {
-        this.submitted = false; // Resetting the flag
-        this.message = "Failed to create survey.";
+    this.http
+      .post(`${this.baseUrl}/survey/create`, surveyData)
+      .pipe(
+        catchError((error) => {
+          this.submitted = false; // Resetting the flag
+          this.message = 'Failed to create survey.';
+          setTimeout(() => {
+            this.message = ''; // clear the message after 5 seconds
+          }, 5000);
+          return throwError(error);
+        })
+      )
+      .subscribe((response) => {
+        this.message = 'Survey created successfully!';
         setTimeout(() => {
-          this.message = '';  // clear the message after 5 seconds
-        }, 5000);
-        return throwError(error);
-      }))
-      .subscribe(response => {
-        this.message = "Survey created successfully!";
-        setTimeout(() => {
-          this.message = '';  // clear the message after 5 seconds
+          this.message = ''; // clear the message after 5 seconds
         }, 5000);
         this.resetForm(); // Resetting form after successful creation
         this.loadGroups();
         this.loadSurveys();
       });
   }
-
 
   optionsNewError: string = '';
 
@@ -2806,12 +2718,12 @@ export class AdminSurveysComponent implements OnInit {
 
     this.submitted = true;
 
-    if (this.surveyForm.invalid) { // Assuming you've named your form 'form'
+    if (this.surveyForm.invalid) {
+      // Assuming you've named your form 'form'
       this.showValidationMessages = true;
       // this.showOtherValidationMessages = true;
       return;
     }
-
 
     // this.cd.detectChanges();
 
@@ -2830,39 +2742,40 @@ export class AdminSurveysComponent implements OnInit {
     var checker = false;
     if (!this.questions || this.questions.length === 0) {
       this.noQuestionsError = true;
-      this.questionsNewError = "At least one question with options is required.";
-      return;  // Exit the function to stop the survey from being created
-    }
-    else if (this.questions.length > 0) {
-      this.questions.forEach(element => {
+      this.questionsNewError =
+        'At least one question with options is required.';
+      return; // Exit the function to stop the survey from being created
+    } else if (this.questions.length > 0) {
+      this.questions.forEach((element) => {
         if (element.options == null || element.options.length == 0) {
           this.noOptionsError = true;
-          this.optionsNewError = "Please select some options for the question.";
+          this.optionsNewError = 'Please select some options for the question.';
           checker = true;
-          return;  // Exit the function to stop the survey from being created
-
-
+          return; // Exit the function to stop the survey from being created
         }
-
       });
       // return;
     }
     if (checker) return;
 
-
     // Filter out the selected user groups
-    const selectedGroups = this.groups.filter(group => group.selected).map(group => group.id);
-
+    const selectedGroups = this.groups
+      .filter((group) => group.selected)
+      .map((group) => group.id);
 
     // const transformedQuestions = this.questions;
 
-    const transformedQuestions = this.questions.map(question => {
+    const transformedQuestions = this.questions.map((question) => {
       // Clone the question object to prevent mutating the original
       const transformedQuestion = { ...question };
 
       // If id property is not present but there are options, populate it with the questionId of the first option
-      if (!transformedQuestion.id && transformedQuestion.options && transformedQuestion.options.length > 0) {
-        transformedQuestion.id = 99999999//transformedQuestion.options[0].questionId;
+      if (
+        !transformedQuestion.id &&
+        transformedQuestion.options &&
+        transformedQuestion.options.length > 0
+      ) {
+        transformedQuestion.id = 99999999; //transformedQuestion.options[0].questionId;
       }
 
       // If surveyAnswers property is not present, add it as an empty array
@@ -2872,7 +2785,6 @@ export class AdminSurveysComponent implements OnInit {
 
       return transformedQuestion;
     });
-
 
     // const transformedQuestions = this.questions.map(question => {
     //   return {
@@ -2884,27 +2796,30 @@ export class AdminSurveysComponent implements OnInit {
     const surveyData = {
       id: this.surveyId,
       title: this.title,
-      Description: this.description || "",
+      Description: this.description || '',
       dueDate: this.dueDateString,
       // QuestionsWithOptions: this.questionsNew,  // Using the new property directly
-      QuestionsWithOptions: transformedQuestions,  // Using the new property directly
+      QuestionsWithOptions: transformedQuestions, // Using the new property directly
 
-      userGroupIds: selectedGroups
+      userGroupIds: selectedGroups,
     };
 
-    this.http.put(`${this.baseUrl}/survey/updatesurvey/${this.surveyId}`, surveyData)
-      .pipe(catchError(error => {
-        this.submitted = false; // Resetting the flag
-        this.message = "Failed to update survey.";
+    this.http
+      .put(`${this.baseUrl}/survey/updatesurvey/${this.surveyId}`, surveyData)
+      .pipe(
+        catchError((error) => {
+          this.submitted = false; // Resetting the flag
+          this.message = 'Failed to update survey.';
+          setTimeout(() => {
+            this.message = ''; // clear the message after 5 seconds
+          }, 5000);
+          return throwError(error);
+        })
+      )
+      .subscribe((response) => {
+        this.message = 'Survey updated successfully!';
         setTimeout(() => {
-          this.message = '';  // clear the message after 5 seconds
-        }, 5000);
-        return throwError(error);
-      }))
-      .subscribe(response => {
-        this.message = "Survey updated successfully!";
-        setTimeout(() => {
-          this.message = '';  // clear the message after 5 seconds
+          this.message = ''; // clear the message after 5 seconds
         }, 5000);
         this.resetForm(); // Resetting form after successful creation
         this.loadGroups();
@@ -2913,15 +2828,17 @@ export class AdminSurveysComponent implements OnInit {
   }
 
   // Helper function to transform questions array into structured format
-  parseQuestions(questionsArray: string[]): Array<{ QuestionText: string, Options: string[] }> {
-    const result: Array<{ QuestionText: string, Options: string[] }> = [];
+  parseQuestions(
+    questionsArray: string[]
+  ): Array<{ QuestionText: string; Options: string[] }> {
+    const result: Array<{ QuestionText: string; Options: string[] }> = [];
 
-    questionsArray.forEach(questionString => {
+    questionsArray.forEach((questionString) => {
       const lines = questionString.split('\n');
       let questionText = '';
       const options: string[] = [];
 
-      lines.forEach(line => {
+      lines.forEach((line) => {
         if (line.startsWith('Question:')) {
           questionText = line.replace('Question:', '').trim();
         } else if (line.startsWith('Ans ')) {
@@ -2938,22 +2855,17 @@ export class AdminSurveysComponent implements OnInit {
     return result;
   }
 
-
-
-
-
-
-
-
-
   loadSurveyById(id: number): void {
     this.selectedSurveyId = id;
 
-    this.http.get(`${this.baseUrl}/survey/getsurvey/${this.selectedSurveyId}`)
-      .pipe(catchError(error => {
-        this.message = "Failed to fetch the survey.";
-        return throwError(error);
-      }))
+    this.http
+      .get(`${this.baseUrl}/survey/getsurvey/${this.selectedSurveyId}`)
+      .pipe(
+        catchError((error) => {
+          this.message = 'Failed to fetch the survey.';
+          return throwError(error);
+        })
+      )
       .subscribe((survey: any) => {
         this.title = survey.title;
         this.dueDate = new Date(survey.dueDate);
@@ -2962,17 +2874,11 @@ export class AdminSurveysComponent implements OnInit {
       });
   }
 
-
   // working version
-
-
-
-
-
 
   editSurveyNew(surveyId: number): void {
     this.surveyId = surveyId;
-    const survey = this.surveys.find(s => s.id === surveyId);
+    const survey = this.surveys.find((s) => s.id === surveyId);
     if (!survey) return;
 
     this.title = survey.title; // Directly set the title for the form model.
@@ -2985,40 +2891,42 @@ export class AdminSurveysComponent implements OnInit {
     //   };
     // });
 
-
     this.questions = survey.questions.$values.map((q: any) => {
       return {
         QuestionText: q.heading,
-        Options: q.options.$values.map((opt: any) => opt.label)
+        Options: q.options.$values.map((opt: any) => opt.label),
       };
     });
 
-    const assignedGroupsForSurvey = this.assignedGroupsToSurvey.find(ag => ag.surveyId === surveyId);
+    const assignedGroupsForSurvey = this.assignedGroupsToSurvey.find(
+      (ag) => ag.surveyId === surveyId
+    );
     if (assignedGroupsForSurvey) {
       const groupNamesAssigned = assignedGroupsForSurvey.groupNames;
-      this.groups.forEach(group => {
+      this.groups.forEach((group) => {
         group.selected = groupNamesAssigned.includes(group.name);
       });
     } else {
-      this.groups.forEach(group => group.selected = false);
+      this.groups.forEach((group) => (group.selected = false));
     }
 
     this.editMode = true;
   }
 
-
   loadSurveys(): void {
-
     this.loadGroups();
 
-    this.http.get<any>(`${this.baseUrl}/survey/getsurveys`)
-      .pipe(catchError(error => {
-        if (error.status !== 404) {
-          this.message = "Failed to fetch surveys.";
-        }
-        return throwError(error);
-      }))
-      .subscribe(response => {
+    this.http
+      .get<any>(`${this.baseUrl}/survey/getsurveys`)
+      .pipe(
+        catchError((error) => {
+          if (error.status !== 404) {
+            this.message = 'Failed to fetch surveys.';
+          }
+          return throwError(error);
+        })
+      )
+      .subscribe((response) => {
         this.surveys = response.$values;
         this.assignedGroupsToSurvey = [];
 
@@ -3029,7 +2937,9 @@ export class AdminSurveysComponent implements OnInit {
           // Go through each groupSurvey entry for the current survey
           for (const groupSurvey of survey.groupSurveys.$values) {
             // Find the group from this.groups by matching the ID
-            let matchedGroup = this.groups.find(group => group.id === groupSurvey.groupId);
+            let matchedGroup = this.groups.find(
+              (group) => group.id === groupSurvey.groupId
+            );
 
             // If a match is found, push the group name to groupNamesForThisSurvey
             if (matchedGroup) {
@@ -3040,20 +2950,16 @@ export class AdminSurveysComponent implements OnInit {
           // Create an object representing the survey and its corresponding group names
           this.assignedGroupsToSurvey.push({
             surveyId: survey.id,
-            groupNames: groupNamesForThisSurvey
+            groupNames: groupNamesForThisSurvey,
           });
         }
 
         // this.cd.detectChanges();
 
-        console.log("surveys are ", this.surveys);
-        console.log("assigned groups are ", this.assignedGroupsToSurvey);
+        console.log('surveys are ', this.surveys);
+        console.log('assigned groups are ', this.assignedGroupsToSurvey);
       });
   }
-
-
-
-
 
   // declare var $: any; // if you're not using the jQuery type definition
 
@@ -3064,7 +2970,7 @@ export class AdminSurveysComponent implements OnInit {
 
   editSurvey(surveyId: number): void {
     this.surveyId = surveyId;
-    const survey = this.surveys.find(s => s.id === surveyId);
+    const survey = this.surveys.find((s) => s.id === surveyId);
     if (!survey) return;
 
     console.log('editing groups are ', this.editingGroups);
@@ -3077,24 +2983,34 @@ export class AdminSurveysComponent implements OnInit {
 
     this.editTitle = survey.title;
     this.editDueDate = new Date(survey.dueDate);
-    this.editQuestionsText = survey.questions.$values.map((q: any) => q.heading).join('\n\n');
-    this.editOptionsText = survey.questions.$values.map((q: any) => q.options.$values.map((opt: any) => opt.label).join(', ')).join('\n\n');
-
+    this.editQuestionsText = survey.questions.$values
+      .map((q: any) => q.heading)
+      .join('\n\n');
+    this.editOptionsText = survey.questions.$values
+      .map((q: any) =>
+        q.options.$values.map((opt: any) => opt.label).join(', ')
+      )
+      .join('\n\n');
 
     const date = new Date(survey.dueDate);
-    this.editDueDateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    this.editDueDateString = `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
     // Here's the logic to set the 'selected' property of groups
-    const assignedGroupsForSurvey = this.assignedGroupsToSurvey.find(ag => ag.surveyId === surveyId);
+    const assignedGroupsForSurvey = this.assignedGroupsToSurvey.find(
+      (ag) => ag.surveyId === surveyId
+    );
     if (assignedGroupsForSurvey) {
-
       console.log('assignedGroupsForSurvey ', this.assignedGroupsToSurvey);
       const groupNamesAssigned = assignedGroupsForSurvey.groupNames;
-      this.editingGroups.forEach(editingGroup => {
+      this.editingGroups.forEach((editingGroup) => {
         editingGroup.selected = groupNamesAssigned.includes(editingGroup.name);
       });
     } else {
-      this.editingGroups.forEach(editingGroup => editingGroup.selected = false);
+      this.editingGroups.forEach(
+        (editingGroup) => (editingGroup.selected = false)
+      );
     }
 
     // this.cd.detectChanges();
@@ -3112,32 +3028,26 @@ export class AdminSurveysComponent implements OnInit {
   // for new approach when user clicks on the button to open the form :
   displayForm = false;
 
-
-
-
   openCreateForm() {
     this.editMode = false;
     this.resetForm();
     this.displayForm = true;
 
-
     // $('#surveyModal').modal('show'); // for the jquery pop up
   }
 
-
-
   publishedSurveyLink!: string;
 
-
-
-
   showPublishPopup(surveyId: number) {
-    this.http.put<any>(`${this.baseUrl}/survey/publish/${surveyId}`, {})
-      .pipe(catchError(error => {
-        console.error('Failed to publish survey:', error);
-        return of(null); // Emit null to proceed to the subscription without throwing an error
-      }))
-      .subscribe(response => {
+    this.http
+      .put<any>(`${this.baseUrl}/survey/publish/${surveyId}`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to publish survey:', error);
+          return of(null); // Emit null to proceed to the subscription without throwing an error
+        })
+      )
+      .subscribe((response) => {
         if (response && response.success) {
           // Rest of your logic...
 
@@ -3153,7 +3063,9 @@ export class AdminSurveysComponent implements OnInit {
             console.error('Modal element not found!');
           }
         } else {
-          console.error(response ? response.message : 'Failed to publish survey');
+          console.error(
+            response ? response.message : 'Failed to publish survey'
+          );
         }
 
         this.loadSurveys();
@@ -3161,16 +3073,10 @@ export class AdminSurveysComponent implements OnInit {
       });
   }
 
-
-
-
-
-
   generateSharingId(surveyId: number) {
     // Your logic to generate sharing ID for a survey goes here
     return surveyId.toString();
   }
-
 
   // openEditForm(survey: any) {
   //   this.editMode = true;
@@ -3199,9 +3105,7 @@ export class AdminSurveysComponent implements OnInit {
 
     // ocnverting in to string
 
-    this.dueDateString = survey.dueDate.split("T")[0];
-
-
+    this.dueDateString = survey.dueDate.split('T')[0];
 
     this.assignedTo = survey.assignedTo;
     this.completedBy = survey.completedBy;
@@ -3219,13 +3123,13 @@ export class AdminSurveysComponent implements OnInit {
           return {
             id: option.id,
             label: option.label,
-            questionId: option.questionId
+            questionId: option.questionId,
           };
         }),
         surveyAnswers: question.surveyAnswers.$values,
         id: question.id,
         lastUpdatedOn: question.lastUpdatedOn,
-        lastUpdatedBy: question.lastUpdatedBy
+        lastUpdatedBy: question.lastUpdatedBy,
       };
     });
 
@@ -3246,15 +3150,13 @@ export class AdminSurveysComponent implements OnInit {
       }
     }
 
-
-    console.log("updated gtroups are ", this.groupSurveys);
+    console.log('updated gtroups are ', this.groupSurveys);
   }
 
   deleteOption(questionIndex: number, optionIndex: number) {
     // Remove the option from the question's options array
     this.questions[questionIndex].options.splice(optionIndex, 1);
   }
-
 
   updateSurveyold(): void {
     this.showValidationMessages = true;
@@ -3269,47 +3171,49 @@ export class AdminSurveysComponent implements OnInit {
     // }
 
     if (this.questionsError) {
-      return;  // Exit the function to stop the survey from being updated
+      return; // Exit the function to stop the survey from being updated
     }
 
     const questionsArray = this.questionsText.split('\n\n'); // Assuming two newlines separate each question
     const questionsWithOptions = this.parseQuestions(questionsArray);
 
     // Filter out the selected user groups
-    const selectedGroups = this.groups.filter(group => group.selected).map(group => group.id);
+    const selectedGroups = this.groups
+      .filter((group) => group.selected)
+      .map((group) => group.id);
 
     // Construct the data to be sent for the update
     const surveyData = {
-      id: this.surveyId,  // Assuming you have the survey's ID stored in the component
+      id: this.surveyId, // Assuming you have the survey's ID stored in the component
       title: this.editTitle,
       dueDate: this.editDueDate,
       QuestionsWithOptions: questionsWithOptions,
-      userGroupIds: selectedGroups  // Add the selected user group ids here
+      userGroupIds: selectedGroups, // Add the selected user group ids here
     };
 
     // Notice the change in endpoint, it now has the surveyId and the 'update' action
-    this.http.put(`${this.baseUrl}/survey/updatesurvey/${this.surveyId}`, surveyData)
-      .pipe(catchError(error => {
-        this.message = "Failed to update survey.";
-        return throwError(error);
-      }))
-      .subscribe(response => {
-        this.message = "Survey updated successfully!";
+    this.http
+      .put(`${this.baseUrl}/survey/updatesurvey/${this.surveyId}`, surveyData)
+      .pipe(
+        catchError((error) => {
+          this.message = 'Failed to update survey.';
+          return throwError(error);
+        })
+      )
+      .subscribe((response) => {
+        this.message = 'Survey updated successfully!';
         this.resetForm(); // Resetting form after successful update
         this.loadSurveys();
       });
   }
 
-
-
   checkQuestionsValid(questionsText: string): void {
-
     // Reset questionsError at the beginning.
-    this.questionsError = "";
+    this.questionsError = '';
 
     // If there's no question mark
     if (!questionsText.includes('?')) {
-      this.questionsError = "Please enter the question.";
+      this.questionsError = 'Please enter the question.';
       return;
     }
 
@@ -3319,26 +3223,23 @@ export class AdminSurveysComponent implements OnInit {
     // Loop through all the parts except the last (because after the last '?' there's no question)
     for (let i = 0; i < questionsArray.length - 1; i++) {
       const question = questionsArray[i].trim();
-      const nextQuestionOrOption = (questionsArray[i + 1] || "").trim();
+      const nextQuestionOrOption = (questionsArray[i + 1] || '').trim();
 
       // If a question mark is present but is followed by nothing or only spaces, set the error message
       if (!nextQuestionOrOption) {
-        this.questionsError = "Please enter options for your question.";
+        this.questionsError = 'Please enter options for your question.';
         return;
       }
     }
 
     // If all questions are valid, reset the error message
-    this.questionsError = "";
+    this.questionsError = '';
   }
-
 
   showValidationMessages = false;
 
-
-
   resetQuestionError() {
-    this.questionsError = "";
+    this.questionsError = '';
   }
 
   // updateSurvey(): void {
@@ -3360,21 +3261,23 @@ export class AdminSurveysComponent implements OnInit {
   // }
 
   deleteSurvey(id: number): void {
-    this.http.delete(`${this.baseUrl}/survey/deletesurvey/${id}`)
-      .pipe(catchError(error => {
-        this.message = "Failed to delete the survey.";
+    this.http
+      .delete(`${this.baseUrl}/survey/deletesurvey/${id}`)
+      .pipe(
+        catchError((error) => {
+          this.message = 'Failed to delete the survey.';
+          setTimeout(() => {
+            this.message = ''; // clear the message after 5 seconds
+          }, 5000);
+          return throwError(error);
+        })
+      )
+      .subscribe((response) => {
+        this.message = 'Survey deleted successfully!';
         setTimeout(() => {
-          this.message = '';  // clear the message after 5 seconds
-        }, 5000);
-        return throwError(error);
-      }))
-      .subscribe(response => {
-        this.message = "Survey deleted successfully!";
-        setTimeout(() => {
-          this.message = '';  // clear the message after 5 seconds
+          this.message = ''; // clear the message after 5 seconds
         }, 5000);
         this.loadSurveys();
       });
   }
 }
-

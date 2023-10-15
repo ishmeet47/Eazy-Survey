@@ -176,6 +176,10 @@
                 [(ngModel)]="editingUser.password"
                 name="editNewPassword"
               />
+              <!-- error message -->
+              <p class="error-message" *ngIf="editModalErrorMessage">
+                {{ editModalErrorMessage }}
+              </p>
 
               <!-- Checkboxes to select multiple user groups -->
               <!-- <div *ngFor="let group of groups">
@@ -197,7 +201,10 @@
 
               <div class="d-flex flex-row gap-2">
                 <button class="btn btn-primary" type="submit">Update</button>
-                <button class="btn btn-secondary" (click)="closeEditModal()">
+                <button
+                  class="btn btn-secondary"
+                  (click)="closeEditModal(); this.editModalErrorMessage = ''"
+                >
                   Cancel
                 </button>
               </div>

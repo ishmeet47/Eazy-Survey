@@ -40,6 +40,7 @@ export class AdminUsersComponent implements OnInit {
   selectedGroup: number | undefined;
 
   errorMessage!: string; // To store any error messages
+  editModalErrorMessage!: string; // To store any error messages in the edit modal
   validationMessage!: string; // To store validation messages
 
   newSurveyTitle: string = '';
@@ -280,6 +281,10 @@ export class AdminUsersComponent implements OnInit {
   }
 
   updateUser(event: Event): void {
+    if (!this.validateResetPassword()) return;
+
+    this.editModalErrorMessage = ''; // Clear previous error messages
+
     event.preventDefault();
     if (this.editingUser) {
       // If the password field is empty, use the old password
@@ -397,6 +402,51 @@ export class AdminUsersComponent implements OnInit {
     if (!/\d/.test(password)) {
       console.log('Password must contain at least 1 number.');
       this.errorMessage = 'Password must contain at least 1 number.';
+      return false;
+    }
+
+    console.log('Password is valid.');
+    return true;
+  }
+
+  validateResetPassword(): boolean {
+    // add checks for if password is strong enough. Requirements are:
+    // at least 8 characters
+    // at least 1 uppercase letter
+    // at least 1 lowercase letter
+    // at least 1 number
+
+    let password = '';
+
+    if (this.editingUser !== null) {
+      console.log(`this.editingUser.password: ${this.editingUser.password}`);
+      password = this.editingUser.password!;
+    }
+
+    if (password.length < 8) {
+      console.log('Password must be at least 8 characters long.');
+      this.editModalErrorMessage =
+        'Password must be at least 8 characters long.';
+      return false;
+    }
+
+    if (password === password.toLowerCase()) {
+      console.log('Password must contain at least 1 uppercase letter.');
+      this.editModalErrorMessage =
+        'Password must contain at least 1 uppercase letter.';
+      return false;
+    }
+
+    if (password === password.toUpperCase()) {
+      console.log('Password must contain at least 1 lowercase letter.');
+      this.editModalErrorMessage =
+        'Password must contain at least 1 lowercase letter.';
+      return false;
+    }
+
+    if (!/\d/.test(password)) {
+      console.log('Password must contain at least 1 number.');
+      this.editModalErrorMessage = 'Password must contain at least 1 number.';
       return false;
     }
 

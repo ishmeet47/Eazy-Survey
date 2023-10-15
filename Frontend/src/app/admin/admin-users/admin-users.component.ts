@@ -25,6 +25,8 @@ export class AdminUsersComponent implements OnInit {
   // For creating a new user
   newUsername: string;
   newPassword: string;
+  oldPassword: string; // Store old password to retrieve if no new password is entered
+  editNewPassword: string;
   selectedUserGroups: number[] = [];
 
   // For editing a user
@@ -58,6 +60,8 @@ export class AdminUsersComponent implements OnInit {
   ) {
     this.newUsername = '';
     this.newPassword = '';
+    this.editNewPassword = '';
+    this.oldPassword = '';
     this.newGroupName = '';
     this.groups$ = this.userService.getGroups();
   }
@@ -234,6 +238,8 @@ export class AdminUsersComponent implements OnInit {
     console.log('Editing user:');
     console.log(this.editingUser);
 
+    if (this.editingUser) this.editingUser.password = '';
+
     // Clone the groups to editingGroups
     this.editingGroups = JSON.parse(JSON.stringify(this.groups));
 
@@ -269,6 +275,11 @@ export class AdminUsersComponent implements OnInit {
   updateUser(event: Event): void {
     event.preventDefault();
     if (this.editingUser) {
+      // If the password field is empty, use the old password
+      if (this.editingUser.password === '') {
+        this.editingUser.password = this.oldPassword;
+      }
+
       const selectedGroups = this.editingGroups
         .filter((group) => group.selected)
         .map((group) => group.id);

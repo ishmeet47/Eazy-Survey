@@ -44,7 +44,6 @@ type ParsedResult = {
 };
 
 
-
 type CountResponse = {
   $values: Array<{
     optionId: number,

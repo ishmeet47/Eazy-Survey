@@ -14,6 +14,8 @@ using System.Data;
 using System.Data.SqlClient;
 using static API.Models.Requests.ExtendedSurveyRequest.QuestionWithOptions;
 using static SurveyController;
+using Microsoft.VisualBasic;
+using Castle.Core.Internal;
 
 namespace API.Repositories
 {
@@ -591,9 +593,15 @@ namespace API.Repositories
             }
 
             // add user complete to the UserSurvey DB
-
+            var surveyuser = new SurveyUser{
+                UserId = userId,
+                SurveyId = surveyId
+            };
+            // User user = _context.Users.Where(user => user.Id == userId);
+            // Survey survey =  _context.Surveys.Where(sur => sur.Id == surveyId);
+            // survey.CompletedBy.Add()
             //
-
+            _context.SurveyUsers.Add(surveyuser);
             var result = await _context.SaveChangesAsync();
             return result > 0;
 
@@ -628,8 +636,13 @@ namespace API.Repositories
             /// now I have all the survey allowed stored in surveys, call prev function and return
             foreach (var id in surveyIds)
             {
-                var Sur = await GetSurvey(id);
-                SurveyList.Add(Sur);
+                var survey = await _context.SurveyUsers.Where(su => su.UserId == userId).ToListAsync();
+                // check if already answered
+                if(survey.IsNullOrEmpty()){
+                    var Sur = await GetSurvey(id);
+                    SurveyList.Add(Sur);
+                }
+
             }
 
             return SurveyList.ToArray();

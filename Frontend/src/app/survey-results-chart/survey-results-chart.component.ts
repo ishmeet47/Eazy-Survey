@@ -16,8 +16,7 @@ export class SurveyResultsChartComponent implements OnInit {
 
   chartOptions: any;
 
-  constructor(private cdr: ChangeDetectorRef) { }
-
+  constructor(private cdr: ChangeDetectorRef) {}
 
   //   // this.chartOptions = this.getChartOptions();
   //   console.log('Chart Options:', this.chartOptions);
@@ -77,25 +76,16 @@ export class SurveyResultsChartComponent implements OnInit {
           w: any;
         }) {
           const label = combinedLabels[dataPointIndex];
-          return `<div>${label}: ${series[seriesIndex][dataPointIndex]}</div>`;
-        }
-
+          return `<div class="text-black">${label}: ${series[seriesIndex][dataPointIndex]}</div>`;
+        },
 
         // custom: function ({ }) {
         //   return '<div>Test Tooltip</div>';
         // }
-      }
-
-
-
-
-
-
-
+      },
     };
 
     this.cdr.detectChanges();
-
   }
 
   hideChart(): void {

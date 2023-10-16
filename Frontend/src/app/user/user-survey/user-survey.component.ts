@@ -147,6 +147,7 @@ export class UserSurveyComponent implements OnInit {
     console.log('this.SAnsList is: ');
     console.log(this.SAnsList);
     this.submitSurvey();
+    this.loadQuestionsAndOptions();
     this.router.navigate(['/dashboard']);
   }
 

@@ -276,9 +276,12 @@ export class AdminUsersComponent implements OnInit {
   }
 
   updateUser(event: Event): void {
-    if (!this.validateResetPassword()) return;
+    if (this.editingUser!.password !== '' && !this.validateResetPassword())
+      return;
 
     this.editModalErrorMessage = ''; // Clear previous error messages
+
+    console.log('this.editingUser.password: ' + this.editingUser!.password);
 
     event.preventDefault();
     if (this.editingUser) {

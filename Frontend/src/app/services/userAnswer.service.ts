@@ -29,7 +29,44 @@ export class UserAnswerService {
     );
   }
 
-  // getQuestions(SId: number): Observable<Question[]>{
+  createSurvey(survey: { title: string, dueDate: Date, questions: string[] }): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/survey/create`, survey);
+  }
+
+  createAnswerNew(ans: {UserId: number, OptionIdList: number[]}): Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/UserAnswer/answerQuestion`, ans);
+  }
+ 
+
+  getOptions(QId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getoptions/${QId}`);
+  }
+
+  createAnswer(answer: { userId: number; optionId: number }): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/UserAnswer/answerQuestion`,
+      answer
+    );
+  }
+
+  submitSurvey(token: { UserId: number; SurveyId: number }): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/UserAnswer/submitsurvey`,
+      token
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+ // getQuestions(SId: number): Observable<Question[]>{
   //   return this.http.get<{ $id: string; $values: Question[]}>
   //   (`${this.baseUrl}/UserAnswer/getquestion/${SId}`).pipe(
   //     map(response => response.$values.map(question => {
@@ -61,22 +98,3 @@ export class UserAnswerService {
   //     }))
   //   )
   // }
-
-  getOptions(QId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getoptions/${QId}`);
-  }
-
-  createAnswer(answer: { userId: number; optionId: number }): Observable<any> {
-    return this.http.post<any>(
-      `${this.baseUrl}/UserAnswer/answerQuestion`,
-      answer
-    );
-  }
-
-  submitSurvey(token: { userId: number; surveyId: number }): Observable<any> {
-    return this.http.post<any>(
-      `${this.baseUrl}/UserAnswer/submitsurvey`,
-      token
-    );
-  }
-}

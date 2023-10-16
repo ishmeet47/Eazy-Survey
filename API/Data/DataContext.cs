@@ -18,15 +18,17 @@ namespace API.Data
         public DbSet<SurveyOption> SurveyOptions { get; set; }
         public DbSet<SurveyAnswer> SurveyAnswers { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; } // Added this for the join table
-
-
         public DbSet<GroupSurvey> GroupSurveys { get; set; }   // This represents the join table.
+
+        public DbSet<SurveyUser> SurveyUsers { get; set; }   // This represents the join table.
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GroupSurvey>()
        .HasKey(gs => new { gs.SurveyId, gs.GroupId });
 
+    modelBuilder.Entity<SurveyUser>()
+       .HasKey(su => new { su.UserId, su.SurveyId });
 
             // check for this relationship... 
 

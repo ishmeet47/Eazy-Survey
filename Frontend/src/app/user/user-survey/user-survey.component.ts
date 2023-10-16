@@ -147,8 +147,9 @@ export class UserSurveyComponent implements OnInit {
     console.log('this.SAnsList is: ');
     console.log(this.SAnsList);
     this.submitSurvey();
-    this.loadQuestionsAndOptions();
-    this.router.navigate(['/dashboard']);
+    
+    
+    this.router.navigate(['/dashboard']).then();
   }
 
   // this function updates the SurveyUser DB add current user to the completed database

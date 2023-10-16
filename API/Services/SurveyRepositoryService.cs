@@ -637,8 +637,10 @@ namespace API.Repositories
             foreach (var id in surveyIds)
             {
                 var survey = await _context.SurveyUsers.Where(su => su.SurveyId == id).ToListAsync();
+                var temp_s = await _context.Surveys.FindAsync(id);
+                bool published = temp_s.IsPublished;
                 // check if already answered
-                if(survey.IsNullOrEmpty()){
+                if(survey.IsNullOrEmpty() && published){
                     var Sur = await GetSurvey(id);
                     SurveyList.Add(Sur);
                 }

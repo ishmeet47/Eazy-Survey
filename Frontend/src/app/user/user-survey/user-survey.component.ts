@@ -5,6 +5,10 @@ import { new_SAns, new_SOpt, new_SQus } from '../../modules/surveyQ_A.module';
 import { Question } from '../../modules/survey.module';
 import { SurveyQuestionAndOptions } from 'src/app/models/SurveyQuestionAndOptions';
 import { Router } from '@angular/router';
+import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { option } from 'ngx-bootstrap-icons';
 
 @Component({
   selector: 'app-user-survey',
@@ -28,7 +32,9 @@ export class UserSurveyComponent implements OnInit {
 
   selectedOption: number;
 
-  constructor(private UAService: UserAnswerService, private router: Router) {
+  private baseUrl = 'http://localhost:5225';
+
+  constructor(private UAService: UserAnswerService, private router: Router, private http: HttpClient,) {
     this.selectedOption = -1;
     this.currentQuestionNumber = 0;
     this.questionsAndOptions = [];
@@ -56,6 +62,66 @@ export class UserSurveyComponent implements OnInit {
   // implement save draft function
   onSave(): void {}
 
+  // getAllUsersToWhichTheSurveyisAssigned(groupIds: number[]): Observable<any> {
+  //   return this.http
+  //     .post(`${this.baseUrl}/survey/getUsersByGroupIds`, groupIds)
+  //     .pipe(
+  //       catchError((error) => {
+  //         // Handle the error here - perhaps send it to an error logging service, show a user notification, etc.
+  //         console.error('Error fetching answers by option IDs: ', error);
+  //         return throwError(error);
+  //       }),
+  //       map((response) => {
+  //         // Process or transform the response if needed
+  //         return response;
+  //       })
+  //     );
+  // }
+
+  getAllOptiontoSurveyAnswers(optionIds: number[]): Observable<any>{
+    return this.http
+      .post(`${this.baseUrl}/survey/getAllOptiontoSurveyAnswers`, optionIds)
+      .pipe(
+        catchError((error) => {
+            // Handle the error here - perhaps send it to an error logging service, show a user notification, etc.
+            console.error('Error fetching answers by option IDs: ', error);
+            return throwError(error);
+          }),
+        map((response) => {
+          // Process or transform the response if needed
+          return response;
+        })
+      );
+  }
+
+  createAnswers(){
+    const optlist = new Array<number>();
+    this.SAnsList.forEach(ans => {
+      optlist.push(ans.optionId)
+    });
+    const answerPayload = {
+      UserId: Number(localStorage.getItem('user_id')),
+      OptionIdList: optlist,
+    };
+
+    this.UAService.createAnswerNew(answerPayload).subscribe(
+      (response) => {
+        // Handle successful creation (e.g., show a success message or refresh the list of surveys)
+        // this.errorMessage = ''; // clear any previous error messages
+        // this.newSurveyTitle = ''; // reset the fields
+        // this.newSurveyDueDate = null;
+        // this.newSurveyQuestions = '';
+
+        // Optionally, show a success message or redirect somewhere or reload surveys
+      },
+      (error) => {
+        // Handle error
+        // this.errorMessage = 'Failed to create the survey. Please try again.';
+      }
+    );
+  }
+  
+
   onSubmit(): void {
     // Submit the last question
     this.updateAnswer(
@@ -76,30 +142,24 @@ export class UserSurveyComponent implements OnInit {
 
     // checker passed so create survey answer
     if (this.valid) {
-      this.SAnsList.forEach((ans) => {
-        //define a const
-        const answer: any = {
-          username: ans.userId,
-          password: ans.optionId,
-        };
-        console.log('created');
-        this.UAService.createAnswer(answer);
-      });
+      this.createAnswers();
     }
 
     console.log('this.SAnsList is: ');
     console.log(this.SAnsList);
-
-    this.router.navigate(['/dashboard']);
+    this.submitSurvey();
+    
+    
+    this.router.navigate(['/dashboard']).then();
   }
 
   // this function updates the SurveyUser DB add current user to the completed database
   submitSurvey() {
     const Token: any = {
-      userId: Number(localStorage.getItem('user_id')),
-      surveyId: Number(localStorage.getItem('surveyId')),
+      UserId: Number(localStorage.getItem('user_id')),
+      SurveyId: Number(localStorage.getItem('surveyId')),
     };
-    this.UAService.submitSurvey(Token);
+    this.UAService.submitSurvey(Token).subscribe();
     localStorage.removeItem('surveyId');
   }
 

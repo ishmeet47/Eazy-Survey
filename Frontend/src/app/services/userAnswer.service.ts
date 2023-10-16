@@ -29,6 +29,24 @@ export class UserAnswerService {
     );
   }
 
+  createSurvey(survey: {
+    title: string;
+    dueDate: Date;
+    questions: string[];
+  }): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/survey/create`, survey);
+  }
+
+  createAnswerNew(ans: {
+    UserId: number;
+    OptionIdList: number[];
+  }): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/UserAnswer/answerQuestion`,
+      ans
+    );
+  }
+
   getOptions(QId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getoptions/${QId}`);
   }

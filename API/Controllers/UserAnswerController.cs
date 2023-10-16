@@ -88,5 +88,11 @@ namespace API.Controllers
             }
             return groups.ToArray();
         }
+
+        [HttpGet("getSubmittedSurvey/{userId}")]
+        public async Task<IActionResult> GetMySubmittedSurvey(int id){
+            var submitList = await _repository.GetAllSubmittedSurvey(id);
+            return Ok(submitList);
+        }
     }
 }

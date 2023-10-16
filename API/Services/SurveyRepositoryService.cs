@@ -656,9 +656,24 @@ namespace API.Repositories
             return belongToGroup;
         }
 
+
         public async Task<IEnumerable<SurveyQuestion>> GetAllQuestionOfSurvey(int surveyId)
         {
             return await _context.SurveyQuestions.Where(Question => Question.SurveyId == surveyId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Survey>> GetAllSubmittedSurvey(int userId){
+            List<Survey> submitSurveyList = new List<Survey>();
+
+            var SurveyUsers = await _context.SurveyUsers.Where(su => su.UserId == userId).ToListAsync();
+
+            foreach(var su in SurveyUsers){
+                if(su.UserId == userId){
+                    submitSurveyList.Add(su.Survey);
+                }
+            }
+
+            return submitSurveyList.ToArray();
         }
     }
 

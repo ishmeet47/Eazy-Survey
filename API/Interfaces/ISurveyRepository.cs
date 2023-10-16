@@ -70,7 +70,8 @@ namespace API.Interfaces
     Task<IEnumerable<SurveyOption>> GetAnswerOptions(int QuestionId);
     Task<IEnumerable<Survey>> GetAllowedSurveys(int userId);
     Task<IEnumerable<UserGroup>> GetAllMyGroups(int userId);
-    //Task<IEnumerable<Survey>> GetAllGroupSurveys(UserGroup[] userGroups);
-    //Task<IEnumerable<>>
-  }
+    Task<IEnumerable<Survey>> GetAllSubmittedSurvey(int userId);
+        //Task<IEnumerable<Survey>> GetAllGroupSurveys(UserGroup[] userGroups);
+        //Task<IEnumerable<>>
+    }
 }

@@ -28,6 +28,8 @@ export class UserDashboardComponent implements OnInit {
   }
 
   loadSurveys(): void {
+    console.log('Running loadSurveys()');
+
     this.UAService.getSurveys(
       Number(localStorage.getItem('user_id'))
     ).subscribe((Response: any) => {
@@ -35,10 +37,26 @@ export class UserDashboardComponent implements OnInit {
       console.log(Response);
       if (Response) {
         this.surveys = Response;
+        console.log('this.surveys:');
+        console.log(this.surveys);
       } else {
         console.log('sorry no survey at this moment');
       }
       this.checkCompletedSurveys();
+    });
+
+    this.UAService.getSubmittedSurveys(
+      Number(localStorage.getItem('user_id'))
+    ).subscribe((Response: any) => {
+      //console.log(Response);
+      console.log(Response);
+      if (Response) {
+        this.completedSurveys = Response;
+        console.log('this.completedSurveys:');
+        console.log(this.completedSurveys);
+      } else {
+        console.log('sorry no survey at this moment');
+      }
     });
   }
 

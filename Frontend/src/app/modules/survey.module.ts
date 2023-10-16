@@ -1,3 +1,10 @@
+
+import { SurveyUser, SurveyUsers } from "./surveyuser.module";
+
+
+
+// ... [Your other classes remain unchanged]
+
 export class Survey {
   $id: string;
   isPublished: boolean;
@@ -11,6 +18,8 @@ export class Survey {
   lastUpdatedOn: string;
   lastUpdatedBy: number;
   description!: string | '';
+  surveyUsers: SurveyUsers; // or Array<SurveyUser>; adding the new property
+
 
   constructor(
     $id: string,
@@ -24,7 +33,8 @@ export class Survey {
     id: number,
     lastUpdatedOn: string,
     lastUpdatedBy: number,
-    description: string
+    description: string,
+    surveyUsers: SurveyUsers
   ) {
     this.$id = $id;
     this.isPublished = isPublished;
@@ -38,6 +48,8 @@ export class Survey {
     this.lastUpdatedOn = lastUpdatedOn;
     this.lastUpdatedBy = lastUpdatedBy;
     this.description = description;
+    this.surveyUsers = surveyUsers; // initialize the new property
+
   }
 }
 

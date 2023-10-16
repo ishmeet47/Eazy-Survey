@@ -16,7 +16,7 @@ using static API.Models.Requests.ExtendedSurveyRequest.QuestionWithOptions;
 using static SurveyController;
 using Microsoft.VisualBasic;
 using Castle.Core.Internal;
-
+using static API.Models.SurveyUser;
 namespace API.Repositories
 {
     public class SurveyRepositoryService : ISurveyRepository
@@ -125,14 +125,66 @@ namespace API.Repositories
             return await _context.Surveys.FindAsync(id);
         }
 
+
         public async Task<IEnumerable<Survey>> GetSurveys()
         {
-            return await _context.Surveys
+            // Fetch the surveys along with related data.
+            var surveys = await _context.Surveys
                 .Include(s => s.Questions)
                     .ThenInclude(q => q.Options)
                 .Include(s => s.GroupSurveys)
+                .Include(s => s.SurveyUsers)
+                    .ThenInclude(su => su.User)
+                .AsNoTracking() // Read-only, slight performance boost.
                 .ToListAsync();
+
+            return surveys; // As List<T> is an IEnumerable<T>, you can return it directly here.
         }
+
+
+
+        // public async Task<IEnumerable<object>> GetSurveys()
+        // {
+        //     // The projection happens within the database query itself, thanks to the IQueryable interface.
+        //     var surveysWithUsernames = await _context.Surveys
+        //         .AsNoTracking() // Use AsNoTracking to improve performance since the entities won't be modified.
+        //         .Select(s => new
+        //         {
+        //             s.Id,
+        //             s.Title,
+        //             s.Description,
+        //             s.DueDate,
+        //             s.IsPublished,
+        //             Questions = s.Questions.Select(q => new
+        //             {
+        //                 q.Id,
+        //                 q.Heading,
+        //                 q.IsPublished,
+        //                 Options = q.Options.Select(o => new
+        //                 {
+        //                     o.Id,
+        //                     o.Label
+        //                 }),
+        //                 // Including answers, if they are in a separate table.
+        //                 // Answers = q.Answers.Select(a => new { ... })
+        //             }),
+        //             GroupSurveys = s.GroupSurveys.Select(gs => new
+        //             {
+        //                 gs.GroupId,
+        //                 // Include other necessary properties from GroupSurveys
+        //             }),
+        //             Usernames = s.SurveyUsers.Select(su => su.User.Username) // Ensure navigation property is correct.
+        //         })
+        //         .ToListAsync();
+
+        //     return surveysWithUsernames;
+        // }
+
+
+
+
+
+
 
 
         // public async Task<Survey> UpdateSurvey(int id, string title, DateTime? dueDate, string description, List<(string heading, int questionId, List<Option> Options)> questionsWithOptions, List<int> userGroupIds)

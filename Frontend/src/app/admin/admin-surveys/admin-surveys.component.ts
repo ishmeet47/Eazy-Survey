@@ -115,6 +115,8 @@ export class AdminSurveysComponent implements OnInit {
   questionsText: string = ''; // <-- Single string for the textarea binding
   editQuestionsText: string = '';
   assignedGroupsToSurvey: { surveyId: number; groupNames: string[] }[] = [];
+  surveyUsernamesMap: { surveyId: number; usernames: string[] }[] = [];
+
   newgroups: any[] = [];
   private baseUrl = 'http://localhost:5225';
   dueDateString: string = '';
@@ -1192,8 +1194,55 @@ export class AdminSurveysComponent implements OnInit {
 
         console.log('surveys are ', this.surveys);
         console.log('assigned groups are ', this.assignedGroupsToSurvey);
+
+
+
+        this.onSurveysFetched(this.surveys);
+
       });
   }
+
+
+  // Assuming you have a method that gets called when you receive your surveys.
+  onSurveysFetched(surveys: Survey[]): void {
+    // Clear the previous map
+    this.surveyUsernamesMap = [];
+
+    // Loop through all surveys
+    for (const survey of surveys) {
+      const usernames: string[] = [];
+
+      // Check if surveyUsers property exists and is an array
+      if (survey.surveyUsers && Array.isArray(survey.surveyUsers.$values)) {
+        for (const surveyUser of survey.surveyUsers.$values) {
+          // Assuming 'user' is a property of 'surveyUser' and 'username' is a property of 'user'.
+          if (surveyUser.user) {
+            usernames.push(surveyUser.user.username);
+          }
+        }
+      }
+
+      // Add entry to the map
+      this.surveyUsernamesMap.push({ surveyId: survey.id, usernames });
+    }
+
+    console.log("Extracted usernames are ", this.surveyUsernamesMap);
+  }
+
+
+
+  getUsernamesForSurvey(surveyId: number): string[] {
+    const entry = this.surveyUsernamesMap.find(entry => entry.surveyId === surveyId);
+    return entry ? entry.usernames : [];
+  }
+
+
+  // declare var $: any; // if you're not using the jQuery type definition
+
+  // Add a function to show the modal when clicking edit or create survey button.
+  // openCreateForm() {
+  //     $('#surveyModal').modal('show');
+  // }
 
   editSurvey(surveyId: number): void {
     this.surveyId = surveyId;

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ClickOutsideDirective } from '../directives/ClickOutsideDirective';
 import { QuestionOptions } from '../interfaces/QuestionOptions';
 
@@ -16,7 +16,8 @@ export class SurveyResultsChartComponent implements OnInit {
 
   chartOptions: any;
 
-  constructor() {}
+  constructor(private cdr: ChangeDetectorRef) { }
+
 
   //   // this.chartOptions = this.getChartOptions();
   //   console.log('Chart Options:', this.chartOptions);
@@ -60,7 +61,7 @@ export class SurveyResultsChartComponent implements OnInit {
       // }
 
       tooltip: {
-        position: 'topRight',
+        // position: 'topRight',
         enabled: true,
         shared: true,
         intersect: false, // <-- Add this line
@@ -77,9 +78,24 @@ export class SurveyResultsChartComponent implements OnInit {
         }) {
           const label = combinedLabels[dataPointIndex];
           return `<div>${label}: ${series[seriesIndex][dataPointIndex]}</div>`;
-        },
-      },
+        }
+
+
+        // custom: function ({ }) {
+        //   return '<div>Test Tooltip</div>';
+        // }
+      }
+
+
+
+
+
+
+
     };
+
+    this.cdr.detectChanges();
+
   }
 
   hideChart(): void {

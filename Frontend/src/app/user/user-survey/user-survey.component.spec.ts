@@ -11,9 +11,8 @@ describe('UserSurveyComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserSurveyComponent ]
-    })
-    .compileComponents();
+      declarations: [UserSurveyComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

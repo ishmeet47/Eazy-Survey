@@ -4,7 +4,7 @@ interface Group {
   lastUpdatedOn: string;
   lastUpdatedBy: number;
   isPublished: boolean;
-  surveysAssigned?: any; // If more detail is known, this type can be refined
+  surveysAssigned?: any;
 }
 
 interface GroupResponse {

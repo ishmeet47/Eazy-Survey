@@ -1,13 +1,3 @@
-// export interface User {
-//   id?: number; // ? makes the property optional
-//   username: string;
-//   password?: string; // Password is optional because you might not always want to send or receive it for security reasons
-//   groupIds: number[];  // To associate a user with a group
-//   // Add other properties as needed
-// }
-
-
-
 export interface User {
   $id?: string;
   id?: number;
@@ -27,12 +17,10 @@ export interface User {
 interface GroupResponse {
   $id?: string;
   $values?: any[];
-  groups: any[];// Replace any[] with the appropriate type if known
+  groups: any[];
 }
 
 interface SurveyResponse {
   $id?: string;
-  $values?: any[];  // Replace any[] with the appropriate type if known
+  $values?: any[];
 }
-
-

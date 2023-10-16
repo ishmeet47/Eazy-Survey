@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import { SurveyUser, SurveyUsers } from "./surveyuser.module";
 
@@ -5,6 +6,8 @@ import { SurveyUser, SurveyUsers } from "./surveyuser.module";
 
 // ... [Your other classes remain unchanged]
 
+=======
+>>>>>>> 35c62de13b31a7893c7a86e017f964fa51247065
 export class Survey {
   $id: string;
   isPublished: boolean;
@@ -13,7 +16,7 @@ export class Survey {
   assignedTo: string | null;
   completedBy: CompletedBy;
   questions: Questions;
-  groupSurveys: GroupSurveys; // Note the type change here
+  groupSurveys: GroupSurveys;
   id: number;
   lastUpdatedOn: string;
   lastUpdatedBy: number;
@@ -29,7 +32,7 @@ export class Survey {
     assignedTo: string | null,
     completedBy: CompletedBy,
     questions: Questions,
-    groupSurveys: GroupSurveys, // Note the parameter type change
+    groupSurveys: GroupSurveys,
     id: number,
     lastUpdatedOn: string,
     lastUpdatedBy: number,
@@ -80,7 +83,7 @@ export class GroupSurvey {
   surveyId: number;
   survey: SurveyRef;
   groupId: number;
-  group: null | any; // Depending on the expected structure of 'group', you may need to refine this type
+  group: null | any;
 
   constructor(
     $id: string,

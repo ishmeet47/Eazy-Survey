@@ -689,7 +689,7 @@ namespace API.Repositories
             /// now I have all the survey allowed stored in surveys, call prev function and return
             foreach (var id in surveyIds)
             {
-                var survey = await _context.SurveyUsers.Where(su => su.SurveyId == id).ToListAsync();
+                var survey = await _context.SurveyUsers.Where(su => su.SurveyId == id && su.UserId == userId).ToListAsync();
                 var temp_s = await _context.Surveys.FindAsync(id);
                 bool published = temp_s.IsPublished;
                 // check if already answered

@@ -11,9 +11,8 @@ describe('AdminGroupsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminGroupsComponent ]
-    })
-    .compileComponents();
+      declarations: [AdminGroupsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -29,14 +29,23 @@ export class UserAnswerService {
     );
   }
 
-  createSurvey(survey: { title: string, dueDate: Date, questions: string[] }): Observable<any> {
+  createSurvey(survey: {
+    title: string;
+    dueDate: Date;
+    questions: string[];
+  }): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/survey/create`, survey);
   }
 
-  createAnswerNew(ans: {UserId: number, OptionIdList: number[]}): Observable<any>{
-    return this.http.post<any>(`${this.baseUrl}/UserAnswer/answerQuestion`, ans);
+  createAnswerNew(ans: {
+    UserId: number;
+    OptionIdList: number[];
+  }): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/UserAnswer/answerQuestion`,
+      ans
+    );
   }
- 
 
   getOptions(QId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getoptions/${QId}`);
@@ -49,52 +58,10 @@ export class UserAnswerService {
     );
   }
 
-  submitSurvey(token: { UserId: number; SurveyId: number }): Observable<any> {
+  submitSurvey(token: { userId: number; surveyId: number }): Observable<any> {
     return this.http.post<any>(
       `${this.baseUrl}/UserAnswer/submitsurvey`,
       token
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
- // getQuestions(SId: number): Observable<Question[]>{
-  //   return this.http.get<{ $id: string; $values: Question[]}>
-  //   (`${this.baseUrl}/UserAnswer/getquestion/${SId}`).pipe(
-  //     map(response => response.$values.map(question => {
-  //       const survey = question.survey || {$ref: "" };
-  //       const options = question.options || {$id: "", $values: []};
-  //       const surveyAnswers = question.surveyAnswers || { $id: "", $values: []};
-
-  //       return new Question(
-  //         question.$id,
-  //         question.heading,
-  //         question.surveyId,
-  //         {
-  //           $ref: survey.$ref
-  //         },
-  //         {
-  //           $id: options.$id,
-  //           $values: options.$values
-  //         },
-  //         {
-  //           $id: surveyAnswers.$id,
-  //           $values: surveyAnswers.$values
-  //         },
-  //         question.id,
-  //         question.lastUpdatedOn,
-  //         question.lastUpdatedBy,
-  //         question.isPublished
-  //       );
-
-  //     }))
-  //   )
-  // }

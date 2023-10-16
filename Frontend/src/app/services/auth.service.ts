@@ -13,9 +13,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_TYPE_KEY = 'user_type';
 
-  ///
   private readonly USER_ID = 'user_id';
-  ///
 
   private baseUrl = 'http://localhost:5225'; // Your API's base URL, adjust if different
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
@@ -54,10 +52,6 @@ export class AuthService {
   getUserType(): string {
     return localStorage.getItem(this.USER_TYPE_KEY) ?? '';
   }
-
-  // getGroupsByShareId(shareId: number): Observable<string[]> {
-  //   return this.http.get<string[]>(`${this.baseUrl}/group/getgroupsbysurvey/${shareId}`);
-  // }
 
   getGroupsByShareId(shareId: number): Observable<Group[]> {
     return this.http

@@ -23,6 +23,24 @@ export class UserAnswerService {
     );
   }
 
+  getSubmittedSurveys(userId: number): Observable<any[]> {
+    // console.log(
+    //   'Calling' + `${this.baseUrl}/UserAnswer/getSubmittedSurvey/${userId}`
+    // );
+
+    console.log('getSubmittedSurveys');
+    this.http
+      .get<any[]>(`${this.baseUrl}/UserAnswer/getSubmittedSurvey/${userId}`)
+      .subscribe((Response: any) => {
+        console.log('Response:');
+        console.log(Response);
+      });
+
+    return this.http.get<any[]>(
+      `${this.baseUrl}/UserAnswer/getSubmittedSurvey/${userId}`
+    );
+  }
+
   getQuestions_new(QId: number): Observable<any[]> {
     return this.http.get<any[]>(
       `${this.baseUrl}/UserAnswer/getquestion/${QId}`

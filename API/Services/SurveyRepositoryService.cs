@@ -593,7 +593,8 @@ namespace API.Repositories
             }
 
             // add user complete to the UserSurvey DB
-            var surveyuser = new SurveyUser{
+            var surveyuser = new SurveyUser
+            {
                 UserId = userId,
                 SurveyId = surveyId
             };
@@ -640,7 +641,8 @@ namespace API.Repositories
                 var temp_s = await _context.Surveys.FindAsync(id);
                 bool published = temp_s.IsPublished;
                 // check if already answered
-                if(survey.IsNullOrEmpty() && published){
+                if (survey.IsNullOrEmpty() && published)
+                {
                     var Sur = await GetSurvey(id);
                     SurveyList.Add(Sur);
                 }
@@ -656,9 +658,79 @@ namespace API.Repositories
             return belongToGroup;
         }
 
+
         public async Task<IEnumerable<SurveyQuestion>> GetAllQuestionOfSurvey(int surveyId)
         {
             return await _context.SurveyQuestions.Where(Question => Question.SurveyId == surveyId).ToListAsync();
+        }
+
+        // public async Task<IEnumerable<Survey>> GetAllSubmittedSurvey(int userId)
+        // {
+        //     List<Survey> submitSurveyList = new List<Survey>();
+
+        //     var SurveyUsers = await _context.SurveyUsers.Where(su => su.UserId == userId).ToListAsync();
+
+        //     Console.WriteLine("Hi");
+        //     Console.WriteLine("Count: " + SurveyUsers.Count);
+
+        //     foreach (var su in SurveyUsers)
+        //     {
+        //         var Sur = await GetSurvey(su.SurveyId);
+        //         submitSurveyList.Add(Sur);
+        //         // submitSurveyList.Add(su.Survey);
+        //     }
+
+        //     return submitSurveyList.ToArray();
+        // }
+
+        public async Task<IEnumerable<Survey>> GetAllSubmittedSurvey(int userId)
+        {
+            List<Survey> SurveyList = new List<Survey>();
+            List<int> groups = new List<int>();
+            List<int> surveyIds = new List<int>();
+
+            var belongToGroup = await _context.UserGroups.Where(user => user.UserId == userId).ToListAsync();
+            foreach (var userGroup in belongToGroup)
+            {
+                //Console.Write(userGroup.GroupId);
+                int groupId = userGroup.GroupId;
+                groups.Add(groupId);
+            }
+            //Console.WriteLine("size of this surveyIds is: " + groups.Count);
+            /// ok now I have groups I need to pull all the survey that concluded in these groups
+            foreach (int group in groups)
+            {
+                // _surveys is a GroupSurvey elementd
+                var _surveys = await _context.GroupSurveys.Where(gs => gs.GroupId == group).ToListAsync();
+                //Console.WriteLine("size of this _survey is: " + _surveys.Count);
+                foreach (var survey in _surveys)
+                {
+                    if (!surveyIds.Contains(survey.SurveyId))
+                        surveyIds.Add(survey.SurveyId);
+                }
+            }
+
+            Console.WriteLine();
+
+            /// now I have all the survey allowed stored in surveys, call prev function and return
+            foreach (var id in surveyIds)
+            {
+                var survey = await _context.SurveyUsers.Where(su => su.SurveyId == id && su.UserId == userId).ToListAsync();
+                var temp_s = await _context.Surveys.FindAsync(id);
+                bool published = temp_s.IsPublished;
+
+                Console.WriteLine("Count: " + survey.Count);
+
+                // check if already answered
+                if (!survey.IsNullOrEmpty() && published)
+                {
+                    var Sur = await GetSurvey(id);
+                    SurveyList.Add(Sur);
+                }
+
+            }
+
+            return SurveyList.ToArray();
         }
     }
 

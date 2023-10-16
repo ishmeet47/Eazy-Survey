@@ -143,5 +143,10 @@ namespace API.Data.Repo
         {
             throw new NotImplementedException();
         }
+
+        public Task<IEnumerable<Survey>> GetAllSubmittedSurvey(int userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -51,7 +51,6 @@ export class AdminUsersComponent implements OnInit {
   selectedGroupIds: number[] = [];
   groups$: Observable<Group[]>;
   editingGroups: Group[] = [];
-  changePassword: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -266,25 +265,30 @@ export class AdminUsersComponent implements OnInit {
           matchingGroup.selected = true;
         }
       });
-
-      this.editingUser.changePassword = this.changePassword;
-    }
-
-    if (this.editingUser) {
-      this.editingUser.changePassword = this.changePassword;
     }
   }
 
   updateUser(event: Event): void {
-    if (!this.validateResetPassword()) return;
+    if (this.editingUser!.password !== '' && !this.validateResetPassword())
+      return;
 
     this.editModalErrorMessage = ''; // Clear previous error messages
+
+    console.log('this.editingUser.password: ' + this.editingUser!.password);
 
     event.preventDefault();
     if (this.editingUser) {
       // If the password field is empty, use the old password
       if (this.editingUser.password === '') {
+        this.editingUser.changePassword = false;
         this.editingUser.password = this.oldPassword;
+      } else {
+        // If the password field is not empty, use the new password & set changePassword to true to indicate to API that the password has been changed
+        this.editingUser.changePassword = true;
+        console.log(
+          'Changing this.editingUser.changePassword to ' +
+            this.editingUser.changePassword
+        );
       }
 
       const selectedGroups = this.editingGroups

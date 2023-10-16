@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 import { SurveyUser, SurveyUsers } from "./surveyuser.module";
 
@@ -6,8 +5,6 @@ import { SurveyUser, SurveyUsers } from "./surveyuser.module";
 
 // ... [Your other classes remain unchanged]
 
-=======
->>>>>>> 35c62de13b31a7893c7a86e017f964fa51247065
 export class Survey {
   $id: string;
   isPublished: boolean;

@@ -11,9 +11,8 @@ describe('AdminNavbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminNavbarComponent ]
-    })
-    .compileComponents();
+      declarations: [AdminNavbarComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
   showSurvey!: number | null;
 
   ngOnInit(): void {
-    const userRoles = this.authService.getUserType(); // This is just an example method. You'll need to define how you get user roles in your application.
+    const userRoles = this.authService.getUserType();
     this.isAdmin = userRoles.includes('Admin'); // change this
     this.isAuthenticated = this.authService.isAuthenticated();
 
@@ -30,18 +30,8 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  isAdmin: boolean = false; // You can initialize it to false or true based on your logic
+  isAdmin: boolean = false;
   // Declare the properties
   newUsername: string = '';
   newPassword: string = '';
-
-  // createUser() {
-  //   this.userService.createUser(this.newUsername, this.newPassword).subscribe(response => {
-  //     console.log('User created:', response);
-  //     // Handle success, show messages, etc.
-  //   }, error => {
-  //     console.error('Error creating user:', error);
-  //     // Handle errors, show error messages, etc.
-  //   });
-  // }
 }

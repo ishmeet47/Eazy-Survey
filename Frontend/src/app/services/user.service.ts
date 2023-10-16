@@ -58,11 +58,6 @@ export class UserService {
     });
   }
 
-  // getGroups(): Observable<Group[]> {
-  // getGroups(): Observable<{ $id: string, $values: Group[] }> {
-  //   return this.http.get<Group[]>(`${this.baseUrl}/group/getgroups`);
-  // }
-
   deleteGroupById(groupId: number): Observable<any> {
     const deleteUrl = `${this.baseUrl}/group/deletegroup/${groupId}`; // Adjust the endpoint based on your backend's structure
     return this.http.delete(deleteUrl);

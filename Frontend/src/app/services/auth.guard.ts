@@ -1,6 +1,11 @@
-import { Injectable } from "@angular/core";
-import { AuthService } from "./auth.service";
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
+import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { JwtModule } from '@auth0/angular-jwt';
 
@@ -10,7 +15,10 @@ import { JwtModule } from '@auth0/angular-jwt';
 export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {
     // Check for authentication
     if (this.authService.isAuthenticated()) {
       // Get the expected UserType (role) for this route
@@ -26,7 +34,10 @@ export class AuthGuard implements CanActivate {
 
       const jwtHelper = new JwtHelperService();
       const decodedToken = jwtHelper.decodeToken(token);
-      const userRole = decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      const userRole =
+        decodedToken[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ];
 
       // Check if the current user has the expected role
       if (expectedRole && userRole === expectedRole) {

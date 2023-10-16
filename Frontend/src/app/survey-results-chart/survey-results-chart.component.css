@@ -1,13 +1,4 @@
-
-
-
-
-
-
-
 /* ###### new css possible :: */
-
-
 
 /* General Styles for the Chart Popup */
 .chart-popup {
@@ -38,19 +29,19 @@
 /* Bounce Animation for the Chart Popup */
 @keyframes bounce {
   0% {
-      transform: translateY(0);
+    transform: translateY(0);
   }
   30% {
-      transform: translateY(-15px);
+    transform: translateY(-15px);
   }
   50% {
-      transform: translateY(7px);
+    transform: translateY(7px);
   }
   70% {
-      transform: translateY(-5px);
+    transform: translateY(-5px);
   }
   100% {
-      transform: translateY(0);
+    transform: translateY(0);
   }
 }
 
@@ -64,7 +55,7 @@
 
 /* X-axis Label Hover Effect */
 .apx-chart .apexcharts-xaxis-label:hover {
-  color: #007BFF;
+  color: #007bff;
   transform: scale(1.1);
 }
 
@@ -83,21 +74,21 @@
 
 /* Tooltip Styling */
 .apx-chart .apexcharts-tooltip {
-    background: #333;
-    color: #fff;
-    border-radius: 4px;
-    padding: 8px 12px;
-    font-size: 14px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    line-height: 1.4;
+  background: #333;
+  color: #fff;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  line-height: 1.4;
 }
 
-/* Bar Graph Styling (you can adjust colors or other styles as needed) */
+/* Bar Graph Styling  */
 .apx-chart .apexcharts-bar-series .apexcharts-bar {
-  fill: #007BFF; /* Blue color, adjust as per your branding */
+  fill: #007bff; /* Blue color, adjust as per your branding */
   transition: all 0.3s ease;
 }
 
 .apx-chart .apexcharts-bar-series .apexcharts-bar:hover {
-  fill: #0056b3; /* Darker blue for hover, adjust as needed */
+  fill: #0056b3; /* Darker blue for hover*/
 }

@@ -29,39 +29,6 @@ export class UserAnswerService {
     );
   }
 
-  // getQuestions(SId: number): Observable<Question[]>{
-  //   return this.http.get<{ $id: string; $values: Question[]}>
-  //   (`${this.baseUrl}/UserAnswer/getquestion/${SId}`).pipe(
-  //     map(response => response.$values.map(question => {
-  //       const survey = question.survey || {$ref: "" };
-  //       const options = question.options || {$id: "", $values: []};
-  //       const surveyAnswers = question.surveyAnswers || { $id: "", $values: []};
-
-  //       return new Question(
-  //         question.$id,
-  //         question.heading,
-  //         question.surveyId,
-  //         {
-  //           $ref: survey.$ref
-  //         },
-  //         {
-  //           $id: options.$id,
-  //           $values: options.$values
-  //         },
-  //         {
-  //           $id: surveyAnswers.$id,
-  //           $values: surveyAnswers.$values
-  //         },
-  //         question.id,
-  //         question.lastUpdatedOn,
-  //         question.lastUpdatedBy,
-  //         question.isPublished
-  //       );
-
-  //     }))
-  //   )
-  // }
-
   getOptions(QId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/UserAnswer/getoptions/${QId}`);
   }

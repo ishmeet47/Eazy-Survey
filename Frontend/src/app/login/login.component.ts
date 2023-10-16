@@ -21,7 +21,7 @@ export class LoginComponent implements AfterViewInit, OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
@@ -63,7 +63,13 @@ export class LoginComponent implements AfterViewInit, OnInit {
     if (!localStorage.getItem('token')) {
       // User is not logged in
 
-      if (!this.username || (this.username && this.username == '') || (!this.password || (this.password && this.password == ''))) return;
+      if (
+        !this.username ||
+        (this.username && this.username == '') ||
+        !this.password ||
+        (this.password && this.password == '')
+      )
+        return;
 
       this.authService.login(this.username, this.password).subscribe({
         next: (response) => {

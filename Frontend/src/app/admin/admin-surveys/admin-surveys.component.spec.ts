@@ -11,9 +11,8 @@ describe('AdminSurveysComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminSurveysComponent ]
-    })
-    .compileComponents();
+      declarations: [AdminSurveysComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

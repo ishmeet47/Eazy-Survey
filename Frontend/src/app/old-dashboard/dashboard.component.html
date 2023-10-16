@@ -1,27 +1,15 @@
 <h2>Dashboard</h2>
 
-<!-- Display for Admin users -->
-<!-- <div *ngIf="isAdmin">
-    <h3>Admin Dashboard</h3> -->
-
-    <!-- Create User form -->
-    <!-- <h4>Create User</h4>
-    <input [(ngModel)]="newUsername" placeholder="Username">
-    <input [(ngModel)]="newPassword" type="password" placeholder="Password">
-    <button (click)="createUserWithoutUserGroup()">Create User</button> -->
-
-    <!-- Add more admin-specific components or information here -->
-<!-- </div> -->
-
 <!-- Display for Regular users -->
 <div *ngIf="!isAdmin">
-    <h3>User Dashboard</h3>
-    <p>Welcome! You're logged in as a regular user. Enjoy the features available to you.</p>
+  <h3>User Dashboard</h3>
+  <p>
+    Welcome! You're logged in as a regular user. Enjoy the features available to
+    you.
+  </p>
 
+  <p *ngIf="showSurvey">You are allowed to view and complete the surevy</p>
+  <p *ngIf="!showSurvey">You are not allowed to view and complete the surevy</p>
 
-
-    <p *ngIf="showSurvey" > You are allowed to view and complete the surevy</p>
-    <p *ngIf="!showSurvey" > You are not allowed to view and complete the surevy</p>
-
-    <!-- Add more user-specific components or information here -->
+  <!-- Add more user-specific components or information here -->
 </div>

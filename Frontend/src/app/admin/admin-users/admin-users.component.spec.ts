@@ -11,9 +11,8 @@ describe('AdminUsersComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminUsersComponent ]
-    })
-    .compileComponents();
+      declarations: [AdminUsersComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

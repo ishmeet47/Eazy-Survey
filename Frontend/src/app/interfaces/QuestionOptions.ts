@@ -1,4 +1,4 @@
 export interface QuestionOptions {
   question: string;
-  options: { name: string, data: number[] }[];
+  options: { name: string; data: number[] }[];
 }

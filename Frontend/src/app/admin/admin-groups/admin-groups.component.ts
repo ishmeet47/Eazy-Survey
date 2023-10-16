@@ -88,8 +88,6 @@ export class AdminGroupsComponent implements OnInit {
           // Handle server-side errors
           this.errorMessage =
             'There was an issue creating the group. Please try again later.';
-          // Optionally extract a more detailed message from the error object if your server provides one
-          // this.errorMessage = error.message || 'There was an issue creating the group. Please try again later.';
         }
       );
     } else {

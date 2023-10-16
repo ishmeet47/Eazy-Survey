@@ -1,84 +1,3 @@
-// // // survey.module.ts
-
-// // export class Survey {
-// //   id: number;
-// //   title: string;
-// //   questions: string[]; // This can be a more complex type if needed
-
-// //   constructor(id: number, title: string, questions: string[] = []) {
-// //       this.id = id;
-// //       this.title = title;
-// //       this.questions = questions;
-// //   }
-// // }
-
-// export interface Survey {
-//   $id: string;
-//   isPublished: boolean;
-//   title: string;
-//   dueDate: string;
-//   assignedTo: string | null;
-//   completedBy: string | null;
-//   questions: Questions;
-//   id: number;
-//   lastUpdatedOn: string;
-//   lastUpdatedBy: number;
-// }
-
-// interface Questions {
-//   $id: string;
-//   $values: Question[];
-// }
-
-// interface Question {
-//   $id: string;
-//   heading: string;
-//   surveyId: number;
-//   survey: SurveyRef;
-//   options: Options;
-//   surveyAnswers: SurveyAnswers;
-//   id: number;
-//   lastUpdatedOn: string;
-//   lastUpdatedBy: number;
-//   isPublished: boolean;
-// }
-
-// interface SurveyRef {
-//   $ref: string;
-// }
-
-// interface Options {
-//   $id: string;
-//   $values: Option[];
-// }
-
-// interface Option {
-//   $id: string;
-//   id: number;
-//   label: string;
-//   questionId: number;
-//   question: QuestionRef;
-//   answers: Answers;
-// }
-
-// interface QuestionRef {
-//   $ref: string;
-// }
-
-// interface Answers {
-//   $id: string;
-//   $values: any[];
-// }
-
-// interface SurveyAnswers {
-//   $id: string;
-//   $values: any[];
-// }
-
-// final class verison :
-
-// ... [Your other classes remain unchanged]
-
 export class Survey {
   $id: string;
   isPublished: boolean;
@@ -87,7 +6,7 @@ export class Survey {
   assignedTo: string | null;
   completedBy: CompletedBy;
   questions: Questions;
-  groupSurveys: GroupSurveys; // Note the type change here
+  groupSurveys: GroupSurveys;
   id: number;
   lastUpdatedOn: string;
   lastUpdatedBy: number;
@@ -101,7 +20,7 @@ export class Survey {
     assignedTo: string | null,
     completedBy: CompletedBy,
     questions: Questions,
-    groupSurveys: GroupSurveys, // Note the parameter type change
+    groupSurveys: GroupSurveys,
     id: number,
     lastUpdatedOn: string,
     lastUpdatedBy: number,
@@ -149,7 +68,7 @@ export class GroupSurvey {
   surveyId: number;
   survey: SurveyRef;
   groupId: number;
-  group: null | any; // Depending on the expected structure of 'group', you may need to refine this type
+  group: null | any;
 
   constructor(
     $id: string,

@@ -1,31 +1,5 @@
-// import { User } from "./user.module";
-// import { Survey } from "./survey.module";
-
-import { Survey } from "./survey.module";
-import { User } from "./user.module";
-
-// export class Group {
-//   id: number;
-//   name: string;
-//   users: User[];
-//   surveysAssigned: Survey[];  // Assuming you have a Survey model in the frontend
-//   selected?: boolean; // This is the new line
-
-//   constructor(
-//     id: number,
-//     name: string,
-//     users?: User[],
-//     surveysAssigned?: Survey[]
-//   ) {
-//     this.id = id;
-//     this.name = name;
-//     this.users = users || [];
-//     this.surveysAssigned = surveysAssigned || [];
-//   }
-// }
-
-
-
+import { Survey } from './survey.module';
+import { User } from './user.module';
 
 export class Group {
   $id: string;

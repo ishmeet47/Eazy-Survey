@@ -1,81 +1,7 @@
-// // // survey.module.ts
 
-// // export class Survey {
-// //   id: number;
-// //   title: string;
-// //   questions: string[]; // This can be a more complex type if needed
+import { SurveyUser, SurveyUsers } from "./surveyuser.module";
 
-// //   constructor(id: number, title: string, questions: string[] = []) {
-// //       this.id = id;
-// //       this.title = title;
-// //       this.questions = questions;
-// //   }
-// // }
 
-// export interface Survey {
-//   $id: string;
-//   isPublished: boolean;
-//   title: string;
-//   dueDate: string;
-//   assignedTo: string | null;
-//   completedBy: string | null;
-//   questions: Questions;
-//   id: number;
-//   lastUpdatedOn: string;
-//   lastUpdatedBy: number;
-// }
-
-// interface Questions {
-//   $id: string;
-//   $values: Question[];
-// }
-
-// interface Question {
-//   $id: string;
-//   heading: string;
-//   surveyId: number;
-//   survey: SurveyRef;
-//   options: Options;
-//   surveyAnswers: SurveyAnswers;
-//   id: number;
-//   lastUpdatedOn: string;
-//   lastUpdatedBy: number;
-//   isPublished: boolean;
-// }
-
-// interface SurveyRef {
-//   $ref: string;
-// }
-
-// interface Options {
-//   $id: string;
-//   $values: Option[];
-// }
-
-// interface Option {
-//   $id: string;
-//   id: number;
-//   label: string;
-//   questionId: number;
-//   question: QuestionRef;
-//   answers: Answers;
-// }
-
-// interface QuestionRef {
-//   $ref: string;
-// }
-
-// interface Answers {
-//   $id: string;
-//   $values: any[];
-// }
-
-// interface SurveyAnswers {
-//   $id: string;
-//   $values: any[];
-// }
-
-// final class verison :
 
 // ... [Your other classes remain unchanged]
 
@@ -92,6 +18,8 @@ export class Survey {
   lastUpdatedOn: string;
   lastUpdatedBy: number;
   description!: string | '';
+  surveyUsers: SurveyUsers; // or Array<SurveyUser>; adding the new property
+
 
   constructor(
     $id: string,
@@ -105,7 +33,8 @@ export class Survey {
     id: number,
     lastUpdatedOn: string,
     lastUpdatedBy: number,
-    description: string
+    description: string,
+    surveyUsers: SurveyUsers
   ) {
     this.$id = $id;
     this.isPublished = isPublished;
@@ -119,6 +48,8 @@ export class Survey {
     this.lastUpdatedOn = lastUpdatedOn;
     this.lastUpdatedBy = lastUpdatedBy;
     this.description = description;
+    this.surveyUsers = surveyUsers; // initialize the new property
+
   }
 }
 

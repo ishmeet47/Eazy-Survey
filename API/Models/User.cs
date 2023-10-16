@@ -14,6 +14,8 @@ namespace API.Models
             UserType = userType;
             UserGroups = new HashSet<UserGroup>();
             SurveysCompleted = new HashSet<Survey>();
+            this.SurveyUsers = new HashSet<SurveyUser>();
+
         }
 
         [Required]
@@ -33,5 +35,9 @@ namespace API.Models
         public ICollection<UserGroup> UserGroups { get; set; }
 
         public virtual ICollection<Survey> SurveysCompleted { get; set; }
+
+
+        public virtual ICollection<SurveyUser> SurveyUsers { get; set; }
+
     }
 }

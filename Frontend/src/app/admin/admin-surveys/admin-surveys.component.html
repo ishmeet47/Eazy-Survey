@@ -493,6 +493,10 @@
           <span class="admin-survey-assigned-groups admin-survey-column">
             Groups Assigned
           </span>
+
+          <span class="admin-survey-assigned-groups admin-survey-column">
+            Completed by
+          </span>
         </div>
       </div>
       <div
@@ -546,6 +550,23 @@
               >Not Assigned</span
             >
           </span>
+
+          <!-- <span class="admin-survey-assigned-groups admin-survey-column">
+            {{ assignedGroupsToSurvey[i].groupNames.length }}
+          </span> -->
+
+
+          <span class="admin-survey-assigned-groups admin-survey-column">
+
+            <span class="usernames-list" *ngIf="getUsernamesForSurvey(survey.id).length > 0">
+              <!-- Completed By -->
+              <ul style="list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column;">
+                    <li *ngFor="let username of getUsernamesForSurvey(survey.id)">{{ username }}</li>
+                </ul>
+            </span>
+        </span>
+
+
         </div>
         <div class="admin-survey-actions d-flex flex-row">
           <button

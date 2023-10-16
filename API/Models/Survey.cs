@@ -24,6 +24,7 @@ namespace API.Models
             // Questions = new HashSet<SurveyQuestion>();
             this.Questions = new List<SurveyQuestion>();
             Description = description;
+            this.SurveyUsers = new HashSet<SurveyUser>();
 
         }
 
@@ -44,6 +45,7 @@ namespace API.Models
 
         public virtual ICollection<GroupSurvey> GroupSurveys { get; set; }
 
+        public virtual ICollection<SurveyUser> SurveyUsers { get; set; }
 
 
     }

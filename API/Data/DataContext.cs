@@ -27,8 +27,20 @@ namespace API.Data
             modelBuilder.Entity<GroupSurvey>()
        .HasKey(gs => new { gs.SurveyId, gs.GroupId });
 
-    modelBuilder.Entity<SurveyUser>()
-       .HasKey(su => new { su.UserId, su.SurveyId });
+            modelBuilder.Entity<SurveyUser>()
+               .HasKey(su => new { su.UserId, su.SurveyId });
+
+
+
+            modelBuilder.Entity<SurveyUser>()
+             .HasOne(su => su.Survey)
+             .WithMany(s => s.SurveyUsers)
+             .HasForeignKey(su => su.SurveyId);
+
+            modelBuilder.Entity<SurveyUser>()
+                .HasOne(su => su.User)
+                .WithMany(u => u.SurveyUsers) // You might need to add this navigation property in the 'User' model as well
+                .HasForeignKey(su => su.UserId);
 
             // check for this relationship... 
 

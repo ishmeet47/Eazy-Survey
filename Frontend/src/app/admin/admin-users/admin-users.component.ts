@@ -239,7 +239,6 @@ export class AdminUsersComponent implements OnInit {
 
   editUser(user: any): void {
     this.editingUser = { ...user }; // Create a copy of user to avoid direct mutations
-    this.changePassword = false;
 
     console.log('Editing user:');
     console.log(this.editingUser);

@@ -82,6 +82,10 @@
                 <span class="ms-2">{{ group.name }}</span>
               </div>
             </div>
+            <!-- error message -->
+            <p class="error-message" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </p>
             <button
               type="submit"
               id="create-new-user-submit"
@@ -155,13 +159,27 @@
             <h5>Editing User</h5>
             <span (click)="closeEditModal()" class="close">&times;</span>
             <form (submit)="updateUser($event)" class="pt-4">
-              <label for="username" class="pb-2">Username</label>
+              <label for="username" class="mb-2">Username</label>
               <input
                 type="text"
                 class="form-control hide-focus border-0 py-2 px-4 bg-light-subtle text-black"
                 [(ngModel)]="editingUser.username"
                 name="username"
               />
+
+              <label for="editNewPassword" class="mb-2 mt-4"
+                >New Password</label
+              >
+              <input
+                type="text"
+                class="form-control hide-focus border-0 py-2 px-4 bg-light-subtle text-black"
+                [(ngModel)]="editingUser.password"
+                name="editNewPassword"
+              />
+              <!-- error message -->
+              <p class="error-message" *ngIf="editModalErrorMessage">
+                {{ editModalErrorMessage }}
+              </p>
 
               <!-- Checkboxes to select multiple user groups -->
               <!-- <div *ngFor="let group of groups">
@@ -183,7 +201,10 @@
 
               <div class="d-flex flex-row gap-2">
                 <button class="btn btn-primary" type="submit">Update</button>
-                <button class="btn btn-secondary" (click)="closeEditModal()">
+                <button
+                  class="btn btn-secondary"
+                  (click)="closeEditModal(); this.editModalErrorMessage = ''"
+                >
                   Cancel
                 </button>
               </div>

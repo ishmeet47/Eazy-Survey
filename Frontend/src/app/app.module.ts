@@ -20,7 +20,6 @@ import { ClickOutsideDirective } from './directives/ClickOutsideDirective';
 
 import { DateValidatorDirective } from './directives/date-validator.directive';
 import { UserAnswerService } from './services/userAnswer.service';
-import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminGroupsComponent } from './admin/admin-groups/admin-groups.component';
 import { AdminSurveysComponent } from './admin/admin-surveys/admin-surveys.component';
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
@@ -49,7 +48,6 @@ import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     DateValidatorDirective,
     UserDashboardComponent,
     AdminNavbarComponent,
-    AdminDashboardComponent,
     AdminGroupsComponent,
     AdminSurveysComponent,
     AdminUsersComponent,
@@ -84,4 +82,4 @@ import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

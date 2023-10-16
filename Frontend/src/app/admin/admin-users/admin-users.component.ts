@@ -25,6 +25,8 @@ export class AdminUsersComponent implements OnInit {
   // For creating a new user
   newUsername: string;
   newPassword: string;
+  oldPassword: string; // Store old password to retrieve if no new password is entered
+  editNewPassword: string;
   selectedUserGroups: number[] = [];
 
   // For editing a user
@@ -38,6 +40,7 @@ export class AdminUsersComponent implements OnInit {
   selectedGroup: number | undefined;
 
   errorMessage!: string; // To store any error messages
+  editModalErrorMessage!: string; // To store any error messages in the edit modal
   validationMessage!: string; // To store validation messages
 
   newSurveyTitle: string = '';
@@ -48,6 +51,7 @@ export class AdminUsersComponent implements OnInit {
   selectedGroupIds: number[] = [];
   groups$: Observable<Group[]>;
   editingGroups: Group[] = [];
+  changePassword: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -57,6 +61,8 @@ export class AdminUsersComponent implements OnInit {
   ) {
     this.newUsername = '';
     this.newPassword = '';
+    this.editNewPassword = '';
+    this.oldPassword = '';
     this.newGroupName = '';
     this.groups$ = this.userService.getGroups();
   }
@@ -129,6 +135,13 @@ export class AdminUsersComponent implements OnInit {
   }
 
   addUser(): void {
+    // console.log(`this.newUsername: ${this.newUsername}`);
+    // console.log(`this.newPassword: ${this.newPassword}`);
+
+    if (!this.validateNewPassword()) return;
+
+    this.errorMessage = ''; // Clear previous error messages
+
     const userPayload: any = {
       username: this.newUsername,
       password: this.newPassword,
@@ -233,6 +246,8 @@ export class AdminUsersComponent implements OnInit {
     console.log('Editing user:');
     console.log(this.editingUser);
 
+    if (this.editingUser) this.editingUser.password = '';
+
     // Clone the groups to editingGroups
     this.editingGroups = JSON.parse(JSON.stringify(this.groups));
 
@@ -253,17 +268,37 @@ export class AdminUsersComponent implements OnInit {
           matchingGroup.selected = true;
         }
       });
+
+      this.editingUser.changePassword = this.changePassword;
+
     }
+
+    if (this.editingUser) {
+      this.editingUser.changePassword = this.changePassword;
+
+    }
+
   }
 
   updateUser(event: Event): void {
+    if (!this.validateResetPassword()) return;
+
+    this.editModalErrorMessage = ''; // Clear previous error messages
+
     event.preventDefault();
     if (this.editingUser) {
+      // If the password field is empty, use the old password
+      if (this.editingUser.password === '') {
+        this.editingUser.password = this.oldPassword;
+      }
+
       const selectedGroups = this.editingGroups
         .filter((group) => group.selected)
         .map((group) => group.id);
       this.editingUser.groupIds = selectedGroups;
       console.log(this.editingUser.groupIds);
+
+
       this.userService.updateUser(this.editingUser).subscribe(() => {
         // After updating, you might want to reset the group selections in editingGroups, close the modal, and reload the list of users
         this.editingGroups.forEach((group) => (group.selected = false));
@@ -333,5 +368,89 @@ export class AdminUsersComponent implements OnInit {
     this.editingUser = null;
     this.selectedUserGroups = undefined || [];
     this.editingGroups.forEach((group) => (group.selected = false));
+  }
+
+  validateNewPassword(): boolean {
+    // add checks for if password is strong enough. Requirements are:
+    // at least 8 characters
+    // at least 1 uppercase letter
+    // at least 1 lowercase letter
+    // at least 1 number
+
+    console.log(`this.newPassword: ${this.newPassword}`);
+
+    const password = this.newPassword;
+
+    if (password.length < 8) {
+      console.log('Password must be at least 8 characters long.');
+      this.errorMessage = 'Password must be at least 8 characters long.';
+      return false;
+    }
+
+    if (password === password.toLowerCase()) {
+      console.log('Password must contain at least 1 uppercase letter.');
+      this.errorMessage = 'Password must contain at least 1 uppercase letter.';
+      return false;
+    }
+
+    if (password === password.toUpperCase()) {
+      console.log('Password must contain at least 1 lowercase letter.');
+      this.errorMessage = 'Password must contain at least 1 lowercase letter.';
+      return false;
+    }
+
+    if (!/\d/.test(password)) {
+      console.log('Password must contain at least 1 number.');
+      this.errorMessage = 'Password must contain at least 1 number.';
+      return false;
+    }
+
+    console.log('Password is valid.');
+    return true;
+  }
+
+  validateResetPassword(): boolean {
+    // add checks for if password is strong enough. Requirements are:
+    // at least 8 characters
+    // at least 1 uppercase letter
+    // at least 1 lowercase letter
+    // at least 1 number
+
+    let password = '';
+
+    if (this.editingUser !== null) {
+      console.log(`this.editingUser.password: ${this.editingUser.password}`);
+      password = this.editingUser.password!;
+    }
+
+    if (password.length < 8) {
+      console.log('Password must be at least 8 characters long.');
+      this.editModalErrorMessage =
+        'Password must be at least 8 characters long.';
+      return false;
+    }
+
+    if (password === password.toLowerCase()) {
+      console.log('Password must contain at least 1 uppercase letter.');
+      this.editModalErrorMessage =
+        'Password must contain at least 1 uppercase letter.';
+      return false;
+    }
+
+    if (password === password.toUpperCase()) {
+      console.log('Password must contain at least 1 lowercase letter.');
+      this.editModalErrorMessage =
+        'Password must contain at least 1 lowercase letter.';
+      return false;
+    }
+
+    if (!/\d/.test(password)) {
+      console.log('Password must contain at least 1 number.');
+      this.editModalErrorMessage = 'Password must contain at least 1 number.';
+      return false;
+    }
+
+    console.log('Password is valid.');
+    return true;
   }
 }

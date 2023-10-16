@@ -491,7 +491,7 @@
             >Due Date</span
           >
           <span class="admin-survey-assigned-groups admin-survey-column">
-            # Groups Assigned
+            Groups Assigned
           </span>
         </div>
       </div>
@@ -506,16 +506,16 @@
           <span class="admin-survey-due-date admin-survey-column">
             {{ survey.dueDate | date }}
           </span>
-          <span class="admin-survey-assigned-groups admin-survey-column">
+          <!-- <span class="admin-survey-assigned-groups admin-survey-column">
             {{ assignedGroupsToSurvey[i].groupNames.length }}
-          </span>
+          </span> -->
 
           <span class="admin-survey-assigned-groups admin-survey-column">
             <!-- <strong>Assigned to Groups:</strong> -->
             <ng-container
               *ngIf="
                 assignedGroupsToSurvey[i] &&
-                assignedGroupsToSurvey[i].groupNames.length
+                assignedGroupsToSurvey[i].groupNames.length <= 3
               "
             >
               <ng-container
@@ -525,6 +525,17 @@
                 "
               >
                 {{ groupName }}<span *ngIf="!isLast">, </span>
+              </ng-container>
+            </ng-container>
+            <ng-container
+              *ngIf="
+                assignedGroupsToSurvey[i] &&
+                assignedGroupsToSurvey[i].groupNames.length > 3
+              "
+            >
+              <ng-container>
+                {{ assignedGroupsToSurvey[i].groupNames[0] }} +
+                {{ assignedGroupsToSurvey[i].groupNames.length - 1 }} more
               </ng-container>
             </ng-container>
             <span

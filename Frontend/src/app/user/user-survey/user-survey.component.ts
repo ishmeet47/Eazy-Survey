@@ -50,6 +50,7 @@ export class UserSurveyComponent implements OnInit {
       this.questionsAndOptions[this.currentQuestionNumber].question.key,
       this.selectedOption
     );
+    this.selectedOption = -1;
     this.currentQuestionNumber++;
   }
 

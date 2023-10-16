@@ -20,6 +20,7 @@ export interface User {
   lastUpdatedOn?: string;
   lastUpdatedBy?: number;
   groupIds: number[];
+  changePassword: boolean;
   // ... any other properties as needed
 }
 

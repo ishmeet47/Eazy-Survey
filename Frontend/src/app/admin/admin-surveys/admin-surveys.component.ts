@@ -4,6 +4,8 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
+import * as $ from 'jquery';
+
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { Observable, forkJoin, throwError } from 'rxjs';
@@ -12,15 +14,21 @@ import { Survey } from 'src/app/modules/survey.module';
 import { Group } from 'src/app/modules/group.module';
 import { NavigationEnd, Router } from '@angular/router';
 // import { bootstrap } from 'ngx-bootstrap-icons';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import * as bootstrap from 'bootstrap';
 
 import { AbstractControl, NgForm } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { of } from 'rxjs';
 import { ClickOutsideDirective } from 'src/app/directives/ClickOutsideDirective';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// import 'bootstrap/dist/js/bootstrap.min.js';
 
-declare var $: any;
+import { AfterViewInit } from '@angular/core';
+
+
+// declare var $: any;
+
 
 type NewSurvey = {
   questions: {
@@ -68,7 +76,7 @@ type ParsedResultWithCount = {
   styleUrls: ['./admin-surveys.component.css'],
   encapsulation: ViewEncapsulation.Emulated, // or None, or ShadowDom
 })
-export class AdminSurveysComponent implements OnInit {
+export class AdminSurveysComponent implements OnInit, AfterViewInit {
   @ViewChild('surveyForm', { static: false }) surveyForm!: NgForm;
   assignedTo: any;
   completedBy: any;
@@ -134,6 +142,9 @@ export class AdminSurveysComponent implements OnInit {
   questionsNewError: string | null = null;
   submittedNew = false;
 
+  optionsError: string = ''; // Add this line here to declare the new property.
+
+
   // for editing question and option on the create sdurvey from :
 
   // New properties
@@ -141,11 +152,19 @@ export class AdminSurveysComponent implements OnInit {
   editingIndex: number | null = null;
   editingOptionIndex: number | null = null;
 
+
   openModal() {
     setTimeout(() => {
       const element = document.getElementById('publishModal');
       if (element) {
-        const modal = new bootstrap.Modal(element);
+        // const modal = new bootstrap.Modal(element);
+
+
+        const modal = new bootstrap.Modal(element, {
+          backdrop: 'static',
+          keyboard: false
+        });
+
         modal.show();
       } else {
         console.error('Modal element not found!');
@@ -315,7 +334,7 @@ export class AdminSurveysComponent implements OnInit {
 
     if (this.tempOptions.length === 0) {
       this.questionsNewError =
-        'At least one option is required for the question!';
+        'At least two options are required for the question!';
       return;
     } else {
       this.questionsNewError = ''; // Reset the error
@@ -340,7 +359,7 @@ export class AdminSurveysComponent implements OnInit {
     } else {
       if (this.tempOptions.length === 0) {
         this.questionsNewError =
-          'At least one option is required for the question!';
+          'At least two options are required for the question!';
         return;
       }
       this.questionsNew.push({
@@ -363,6 +382,49 @@ export class AdminSurveysComponent implements OnInit {
     this.showAddQuestionFormFlag = false;
   }
 
+
+  // newer with added validation for atleast 2 options :
+
+  // addOrUpdateQuestion(): void {
+  //   // Check if the question text is empty.
+  //   if (!this.newQuestionText) {
+  //     this.noQuestionsError = true;
+  //     return;  // Return early from the function.
+  //   } else {
+  //     this.noQuestionsError = false;
+  //   }
+
+  //   // Validate that there are at least two options.
+  //   if (this.tempOptions.length < 2) {
+  //     this.questionsNewError = 'A minimum of two options are required for the question!';
+  //     return;  // Return early because there aren't enough options.
+  //   } else {
+  //     this.questionsNewError = ''; // Reset the error message if the validation is now passed.
+  //   }
+
+  //   // Existing question editing logic.
+  //   if (this.isEditing && this.editingIndex !== null) {
+  //     if (this.editingOptionIndex !== null) {
+  //       this.questions[this.editingIndex].options[this.editingOptionIndex] = this.newQuestionText;
+  //     } else {
+  //       this.questions[this.editingIndex].heading = this.newQuestionText;
+  //     }
+  //     this.stopEditing();
+  //   } else {
+  //     // Adding a new question because we're not in editing mode.
+  //     this.questions.push({
+  //       heading: this.newQuestionText,
+  //       options: [...this.tempOptions],  // Spread operator to clone the options.
+  //     });
+  //     this.resetQuestionFields();  // Reset the input fields after question addition.
+  //   }
+
+  //   // Additional UI logic handling.
+  //   this.showAddQuestionFormFlag = false; // Hide the add question form.
+  //   this.finalizeOptionsAndClose(); // Assuming this method handles the closing of any option-related UI elements.
+  // }
+
+
   // Function to stop editing mode
   stopEditing(): void {
     this.isEditing = false;
@@ -374,12 +436,15 @@ export class AdminSurveysComponent implements OnInit {
   resetQuestionFields(): void {
     this.newQuestionText = '';
     this.tempOptions = [];
+    this.optionsError = '';
+    // this.noQuestionsError = false;
     // Do not close the popup here
   }
 
   finalizeOptionsAndClose(): void {
     this.optionsFinalized = true;
     this.showAddQuestionPopup = false;
+    // this.noQuestionsError = false;
     this.resetQuestionFields();
   }
 
@@ -556,9 +621,11 @@ export class AdminSurveysComponent implements OnInit {
     this.showValidationDateMessage = false;
     this.dueDateString = '';
     this.description = '';
+    // this.noQuestionsError = false;
   }
 
   resetFormAndHide(): void {
+    // this.noQuestionsError = false;
     this.displayForm = false; // Hide the form
     this.title = ''; // Reset the title
     this.description = ''; // Reset the description
@@ -607,7 +674,31 @@ export class AdminSurveysComponent implements OnInit {
     this.loadGroups(); // Loading groups on component initialization
 
     this.loadSurveys();
+
+
   }
+
+
+  // ngAfterViewInit(): void {
+  //   $('#publishModal').modal({
+  //     backdrop: 'static',
+  //     keyboard: false
+  //   });
+  // }
+
+  ngAfterViewInit(): void {
+    const element = document.getElementById('publishModal');
+    if (element) {
+      const modal = new bootstrap.Modal(element, {
+        backdrop: 'static',
+        keyboard: false
+      });
+      modal.show();
+    } else {
+      console.error('Modal element not found!');
+    }
+  }
+
 
   loadGroups(): void {
     this.userService.getGroups().subscribe(
@@ -784,7 +875,7 @@ export class AdminSurveysComponent implements OnInit {
         );
         // Handle the response from getAllUsersToWhichTheSurveyisAssigned
         const data2 = usersResponse;
-        console.log(data2);
+        console.log("user responses are ", data2);
         let totalnoofusers = 0;
         data2.$values.forEach((x: any) => {
           totalnoofusers += x.count;
@@ -1245,6 +1336,7 @@ export class AdminSurveysComponent implements OnInit {
   // }
 
   editSurvey(surveyId: number): void {
+    // this.resetForm();
     this.surveyId = surveyId;
     const survey = this.surveys.find((s) => s.id === surveyId);
     if (!survey) return;
@@ -1356,6 +1448,7 @@ export class AdminSurveysComponent implements OnInit {
   tmpSurveyForOption: any;
 
   openEditForm(survey: any) {
+    this.noQuestionsError = false;
     this.tmpSurveyForOption = survey;
     this.editMode = true;
     this.displayForm = true;

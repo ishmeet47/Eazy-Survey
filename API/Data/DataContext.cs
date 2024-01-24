@@ -125,6 +125,15 @@ namespace API.Data
             modelBuilder.Entity<User>()
                 .Property(u => u.PasswordKey)
                 .HasColumnType("varbinary(MAX)");
+
+
+            modelBuilder.Entity<SurveyAnswer>()
+     .HasOne(sa => sa.Option) // Corrected to use the actual name of the navigation property
+     .WithMany(so => so.Answers) // This should match the name of the collection in SurveyOption
+     .HasForeignKey(sa => sa.OptionId)
+     .OnDelete(DeleteBehavior.Cascade); // Set the cascade delete
+
+
         }
 
 

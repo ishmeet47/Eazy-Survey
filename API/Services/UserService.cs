@@ -108,15 +108,34 @@ public class UserService : IUserService
         return result > 0;
     }
 
+    // public async Task<bool> DeleteUserAsync(int userId)
+    // {
+    //     var user = await _context.Users.FindAsync(userId);
+    //     if (user == null) return false;
+
+    //     _context.Users.Remove(user);
+    //     var result = await _context.SaveChangesAsync();
+    //     return result > 0;
+    // }
+
+
     public async Task<bool> DeleteUserAsync(int userId)
     {
         var user = await _context.Users.FindAsync(userId);
         if (user == null) return false;
 
+        // Remove related records
+        _context.SurveyAnswers.RemoveRange(_context.SurveyAnswers.Where(sa => sa.UserId == userId));
+        _context.UserGroups.RemoveRange(_context.UserGroups.Where(ug => ug.UserId == userId));
+        _context.SurveyUsers.RemoveRange(_context.SurveyUsers.Where(su => su.UserId == userId));
+
+        // Remove the user itself
         _context.Users.Remove(user);
+
         var result = await _context.SaveChangesAsync();
         return result > 0;
     }
+
 
     public async Task<bool> UpdateUserAsync(int userId, UpdateUserRequest request)
     {

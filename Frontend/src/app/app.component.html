@@ -1,1 +1,11 @@
+<!-- app.component.html -->
+<div *ngIf="message" class="alert" [ngClass]="{
+  'alert-success': message.type === 'success',
+  'alert-danger': message.type === 'error',
+  'alert-info': message.type === 'info'
+}"
+style="font-size: 1.5em; position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 1000; text-align: center; width: 100%; max-width: 400px;">
+  {{ message.text }}
+</div>
+
 <router-outlet></router-outlet>

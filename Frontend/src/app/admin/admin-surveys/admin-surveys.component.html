@@ -13,6 +13,8 @@
       tabindex="-1"
       aria-labelledby="publishModalLabel"
       aria-hidden="true"
+      data-backdrop="static"
+      data-keyboard="false"
       div
       *ngIf="displayForm"
     >
@@ -390,6 +392,12 @@
                               </ul>
                             </div>
 
+
+
+                            <!-- <div *ngIf="optionsError" class="alert alert-danger">
+                              {{ optionsError }}
+                            </div> -->
+
                             <!-- Confirm Question and Options button - Only visible when adding a new question -->
                             <button
                               *ngIf="
@@ -519,7 +527,7 @@
             <ng-container
               *ngIf="
                 assignedGroupsToSurvey[i] &&
-                assignedGroupsToSurvey[i].groupNames.length <= 3
+                assignedGroupsToSurvey[i].groupNames.length <= 5
               "
             >
               <ng-container
@@ -534,7 +542,7 @@
             <ng-container
               *ngIf="
                 assignedGroupsToSurvey[i] &&
-                assignedGroupsToSurvey[i].groupNames.length > 3
+                assignedGroupsToSurvey[i].groupNames.length > 5
               "
             >
               <ng-container>
@@ -614,16 +622,17 @@
           >
             Check Results
           </button>
+
+
           <div
             *ngIf="showResults"
-            clickOutside
-            (clickOutside)="onChartClickOutside()"
           >
             <app-survey-results-chart
               [surveyResults]="myStructure"
               [totalNumberOfUsers]="totalNumberOfUsers"
             ></app-survey-results-chart>
           </div>
+
         </div>
       </div>
     </div>

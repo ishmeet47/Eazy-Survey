@@ -190,10 +190,10 @@ public class SurveyController : ControllerBase
     [HttpPost("getUsersByGroupIds")]
     public async Task<ActionResult<IEnumerable<OptionCount>>> getUsersByGroupIds([FromBody] List<int> groupIds)
     {
-        if (groupIds == null || groupIds.Count == 0)
-        {
-            return BadRequest("Group IDs are required.");
-        }
+        // if (groupIds == null || groupIds.Count == 0)
+        // {
+        //     return BadRequest("Group IDs are required.");
+        // }
 
         var results = await _repository.getUsersByGroupIds(groupIds);
         return Ok(results);

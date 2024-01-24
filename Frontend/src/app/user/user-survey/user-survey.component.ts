@@ -54,13 +54,15 @@ export class UserSurveyComponent implements OnInit {
     this.currentQuestionNumber++;
   }
 
+  delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
   onSelect(option: number) {
     this.selectedOption = option;
     console.log('Selected option: ' + this.selectedOption);
   }
 
   // implement save draft function
-  onSave(): void {}
+  onSave(): void { }
 
   // getAllUsersToWhichTheSurveyisAssigned(groupIds: number[]): Observable<any> {
   //   return this.http
@@ -78,15 +80,15 @@ export class UserSurveyComponent implements OnInit {
   //     );
   // }
 
-  getAllOptiontoSurveyAnswers(optionIds: number[]): Observable<any>{
+  getAllOptiontoSurveyAnswers(optionIds: number[]): Observable<any> {
     return this.http
       .post(`${this.baseUrl}/survey/getAllOptiontoSurveyAnswers`, optionIds)
       .pipe(
         catchError((error) => {
-            // Handle the error here - perhaps send it to an error logging service, show a user notification, etc.
-            console.error('Error fetching answers by option IDs: ', error);
-            return throwError(error);
-          }),
+          // Handle the error here - perhaps send it to an error logging service, show a user notification, etc.
+          console.error('Error fetching answers by option IDs: ', error);
+          return throwError(error);
+        }),
         map((response) => {
           // Process or transform the response if needed
           return response;
@@ -94,7 +96,7 @@ export class UserSurveyComponent implements OnInit {
       );
   }
 
-  createAnswers(){
+  createAnswers() {
     const optlist = new Array<number>();
     this.SAnsList.forEach(ans => {
       optlist.push(ans.optionId)
@@ -120,9 +122,9 @@ export class UserSurveyComponent implements OnInit {
       }
     );
   }
-  
 
-  onSubmit(): void {
+
+  async onSubmit(): Promise<void> {
     // Submit the last question
     this.updateAnswer(
       this.questionsAndOptions[this.currentQuestionNumber].question.key,
@@ -148,8 +150,8 @@ export class UserSurveyComponent implements OnInit {
     console.log('this.SAnsList is: ');
     console.log(this.SAnsList);
     this.submitSurvey();
-    
-    
+
+    await this.delay(1000);
     this.router.navigate(['/dashboard']).then();
   }
 
@@ -170,9 +172,9 @@ export class UserSurveyComponent implements OnInit {
         ans.optionId = OptId;
         console.log(
           'Updated Answer with QuestionId: ' +
-            QuestionId +
-            ' and OptionId: ' +
-            OptId
+          QuestionId +
+          ' and OptionId: ' +
+          OptId
         );
       }
     });

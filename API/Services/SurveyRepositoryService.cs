@@ -92,9 +92,28 @@ namespace API.Repositories
 
 
 
+        // public async Task<IEnumerable<GroupCount>> getUsersByGroupIds(List<int> groupIds)
+        // {
+        //     // Use EF Core to group and count the UserGroup entries by GroupId
+        //     var groupCounts = _context.UserGroups
+        //         .Where(ug => groupIds.Contains(ug.GroupId))
+        //         .GroupBy(ug => ug.GroupId)
+        //         .Select(g => new GroupCount { GroupId = g.Key, Count = g.Count() });
+
+        //     return await groupCounts.ToListAsync();
+        // }
+
+
         public async Task<IEnumerable<GroupCount>> getUsersByGroupIds(List<int> groupIds)
         {
-            // Use EF Core to group and count the UserGroup entries by GroupId
+            // If no group IDs are provided, return the count of all users from the Users table
+            if (groupIds == null || !groupIds.Any())
+            {
+                var allUsersCount = await _context.Users.CountAsync();
+                return new List<GroupCount> { new GroupCount { GroupId = 0, Count = allUsersCount } };
+            }
+
+            // Otherwise, proceed with the original logic using the UserGroups table
             var groupCounts = _context.UserGroups
                 .Where(ug => groupIds.Contains(ug.GroupId))
                 .GroupBy(ug => ug.GroupId)
@@ -102,6 +121,7 @@ namespace API.Repositories
 
             return await groupCounts.ToListAsync();
         }
+
 
 
         public async Task<bool> DeleteSurveyQuestion(int questionId)
@@ -126,6 +146,17 @@ namespace API.Repositories
         }
 
 
+        // public async Task<IEnumerable<Survey>> GetSurveys()
+        // {
+        //     // Fetch the surveys along with related data.
+        //     var surveys = await _context.Surveys
+        //         .Include(s => s.Questions)
+        //             .ThenInclude(q => q.Options)
+        //         .Include(s => s.GroupSurveys)
+        //                         .ToListAsync();
+        //     return surveys;
+        // }
+
         public async Task<IEnumerable<Survey>> GetSurveys()
         {
             // Fetch the surveys along with related data.
@@ -140,6 +171,55 @@ namespace API.Repositories
 
             return surveys; // As List<T> is an IEnumerable<T>, you can return it directly here.
         }
+
+
+        // public async Task<IEnumerable<Survey>> GetSurveys()
+        // {
+        //     // Using projection to shape the data according to the Survey model.
+        //     var surveys = await _context.Surveys
+        //         .Select(s => new Survey
+        //         {
+        //             // Directly mapped fields
+        //             Id = s.Id,
+        //             IsPublished = s.IsPublished,
+        //             Title = s.Title,
+        //             Description = s.Description,
+        //             DueDate = s.DueDate,
+
+        //             // Navigation properties (with inner projections for related data)
+        //             Questions = s.Questions
+        //                 .Select(q => new SurveyQuestion
+        //                 {
+        //                     Id = q.Id,
+        //                     Heading = q.Heading,
+        //                     SurveyId = q.SurveyId,
+        //                     IsPublished = q.IsPublished,
+        //                     Options = q.Options.ToList()  // Assuming SurveyOption has properties that can be directly mapped.
+        //                 }).ToList(),
+
+        //             GroupSurveys = s.GroupSurveys.ToList(), // If further shaping needed, use Select.
+
+        //             AssignedTo = s.GroupSurveys.Select(gs => gs.Group).ToHashSet(),  // Assuming Group has properties that can be directly mapped.
+
+        //             CompletedBy = s.SurveyUsers.Select(su => new
+        //             {
+        //                 su.UserId,
+        //                 su.User.Username
+        //                 // This is an anonymous type; it doesn't instantiate a User object.
+        //                 // Password and PasswordKey are omitted for security reasons.
+        //             }).ToHashSet(),
+
+        //             SurveyUsers = s.SurveyUsers.ToList()  // If further shaping needed, use Select.
+        //         })
+        //         .AsNoTracking() // Read-only, slight performance boost.
+        //         .ToListAsync();
+
+        //     return surveys;
+        // }
+
+
+
+
 
 
 
@@ -496,35 +576,120 @@ namespace API.Repositories
             return true;
         }
 
+        // public async Task<bool> DeleteSurvey(int id)
+        // {
+        //     // Fetch the survey with all related entities
+        //     var survey = await _context.Surveys.Include(s => s.Questions)
+        //                                        .ThenInclude(q => q.Options)  // Assuming `Options` is the name of the navigation property in SurveyQuestion pointing to SurveyOption entities.
+        //                                        .Include(s => s.GroupSurveys)
+        //                                        .FirstOrDefaultAsync(s => s.Id == id);
+
+        //     if (survey == null) return false;
+
+        //     // Delete related questions and their options
+        //     foreach (var question in survey.Questions)
+        //     {
+        //         // Delete options related to this question
+        //         _context.SurveyOptions.RemoveRange(question.Options);  // If `Options` isn't the correct name of the navigation property, replace it with the correct one.
+
+        //         _context.SurveyQuestions.Remove(question);
+        //     }
+
+        //     // Delete group associations
+        //     _context.GroupSurveys.RemoveRange(survey.GroupSurveys);
+
+        //     // If you need to remove user associations or anything else, do so here.
+
+        //     _context.Surveys.Remove(survey);
+        //     await _context.SaveChangesAsync();
+        //     return true;
+        // }
+
+
+
+
+        // public async Task<bool> DeleteSurvey(int id)
+        // {
+        //     // Fetch the survey with all related entities, including answers.
+        //     var survey = await _context.Surveys
+        //         .Include(s => s.Questions)
+        //             .ThenInclude(q => q.Options)
+        //                 .ThenInclude(o => o.Answers) // Include the answers linked to options.
+        //         .Include(s => s.GroupSurveys)
+        //         .FirstOrDefaultAsync(s => s.Id == id);
+
+        //     if (survey == null) return false;
+
+        //     // Before deleting the options, delete the answers that reference them.
+        //     foreach (var question in survey.Questions)
+        //     {
+        //         foreach (var option in question.Options)
+        //         {
+        //             _context.SurveyAnswers.RemoveRange(option.Answers);
+        //         }
+
+        //         // After deleting the answers, you can delete the options.
+        //         _context.SurveyOptions.RemoveRange(question.Options);
+
+        //         // Then proceed to delete the question itself.
+        //         _context.SurveyQuestions.Remove(question);
+        //     }
+
+        //     // Delete group associations.
+        //     _context.GroupSurveys.RemoveRange(survey.GroupSurveys);
+
+        //     // Finally, delete the survey itself after all referencing records have been deleted.
+        //     _context.Surveys.Remove(survey);
+
+        //     // Save the changes.
+        //     await _context.SaveChangesAsync();
+
+        //     return true;
+        // }
+
         public async Task<bool> DeleteSurvey(int id)
         {
-            // Fetch the survey with all related entities
-            var survey = await _context.Surveys.Include(s => s.Questions)
-                                               .ThenInclude(q => q.Options)  // Assuming `Options` is the name of the navigation property in SurveyQuestion pointing to SurveyOption entities.
-                                               .Include(s => s.GroupSurveys)
-                                               .FirstOrDefaultAsync(s => s.Id == id);
+            // Fetch the survey with all related entities, ensuring the context tracks all of them.
+            var survey = await _context.Surveys
+                .Include(s => s.Questions)
+                    .ThenInclude(q => q.Options)
+                        .ThenInclude(o => o.Answers) // Load answers to ensure they are tracked for deletion.
+                .Include(s => s.GroupSurveys) // If there's a relationship with groups, include it.
+                .FirstOrDefaultAsync(s => s.Id == id);
 
-            if (survey == null) return false;
+            if (survey == null)
+            {
+                // Survey not found, return false.
+                return false;
+            }
 
-            // Delete related questions and their options
+            // Start by handling the most deeply nested entities (answers) first.
             foreach (var question in survey.Questions)
             {
-                // Delete options related to this question
-                _context.SurveyOptions.RemoveRange(question.Options);  // If `Options` isn't the correct name of the navigation property, replace it with the correct one.
+                foreach (var option in question.Options)
+                {
+                    // Remove all answers related to the current option.
+                    _context.SurveyAnswers.RemoveRange(option.Answers);
+                }
 
+                // Now that the answers are removed, we can safely delete the options.
+                _context.SurveyOptions.RemoveRange(question.Options);
+
+                // With the options (and their answers) removed, delete the question itself.
                 _context.SurveyQuestions.Remove(question);
             }
 
-            // Delete group associations
+            // If the survey is linked to groups, handle that relationship before deleting the survey.
             _context.GroupSurveys.RemoveRange(survey.GroupSurveys);
 
-            // If you need to remove user associations or anything else, do so here.
-
+            // Now, all dependencies have been cleared, and the survey can be safely removed.
             _context.Surveys.Remove(survey);
-            await _context.SaveChangesAsync();
-            return true;
-        }
 
+            // Apply the changes to the database.
+            await _context.SaveChangesAsync();
+
+            return true; // Deletion was successful.
+        }
 
 
 

@@ -78,7 +78,7 @@ try
 
         var user = new User("admin", hashedPassword, salt, "Admin");
         context.Users.Add(user);
-
+        
         context.SaveChanges();
     }
 }

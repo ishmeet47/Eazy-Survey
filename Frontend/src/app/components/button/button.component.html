@@ -1,0 +1,11 @@
+<!-- Create button with ngx-bootstrap that can be either solid or outline type -->
+<button
+  type="button"
+  class="button btn"
+  [ngClass]="{
+    'btn-primary': type === 'solid',
+    'btn-outline-primary': type === 'outline'
+  }"
+>
+  <ng-content></ng-content>
+</button>

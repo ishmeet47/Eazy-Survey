@@ -1,0 +1,241 @@
+<app-admin-layout>
+  <div class="d-flex flex-column gap-4">
+    <app-card title="Create New User">
+      <form
+        #loginForm="ngForm"
+        id="form-inputs"
+        (submit)="addUser()"
+        autocomplete="off"
+        class="mt-4"
+      >
+        <div class="d-flex flex-column">
+          <div class="d-flex flex-row gap-4">
+            <div
+              class="login-input rounded-3 input-group mb-3 overflow-hidden border"
+            >
+              <input
+                required
+                type="username"
+                class="form-control hide-focus border-0 py-2 px-4 bg-dark text-white"
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="login-username-icon"
+                name="newUsername"
+                [(ngModel)]="newUsername"
+              />
+              <span
+                class="input-group-text border-0 ps-1 px-4 bg-dark text-white"
+                id="login-username-icon"
+              >
+                <i-bs name="person-fill" width="20" height="20"></i-bs>
+              </span>
+            </div>
+            <div
+              class="login-input rounded-3 input-group mb-3 overflow-hidden border"
+            >
+              <input
+                required
+                [type]="passwordVisibility ? 'text' : 'password'"
+                class="form-control hide-focus border-0 py-2 px-4 bg-dark text-white"
+                placeholder="Password"
+                name="newPassword"
+                aria-label="Password"
+                aria-describedby="login-password-icon"
+                [(ngModel)]="newPassword"
+              />
+              <span
+                class="pointer input-group-text border-0 ps-1 px-4 bg-dark text-white"
+                id="login-password-icon"
+                (click)="togglePasswordVisibility()"
+              >
+                <i-bs
+                  name="eye"
+                  width="20"
+                  height="20"
+                  *ngIf="!passwordVisibility"
+                ></i-bs>
+                <i-bs
+                  name="eye-slash"
+                  width="20"
+                  height="20"
+                  *ngIf="passwordVisibility"
+                ></i-bs>
+              </span>
+            </div>
+          </div>
+          <div class="d-flex flex-row justify-content-between">
+            <!-- Group selection -->
+            <div
+              id="admin-user-group-selection"
+              class="d-flex flex-row gap-4 align-items-center"
+            >
+              <span><b>Select a group: </b></span>
+              <div
+                *ngFor="let group of groups"
+                class="d-flex flex-row align-items-center"
+              >
+                <input
+                  type="checkbox"
+                  [(ngModel)]="group.selected"
+                  name="group-{{ group.id }}"
+                />
+                <span class="ms-2">{{ group.name }}</span>
+              </div>
+            </div>
+            <!-- error message -->
+            <p class="error-message" *ngIf="errorMessage">
+              {{ errorMessage }}
+            </p>
+            <button
+              type="submit"
+              id="create-new-user-submit"
+              class="btn btn-sm btn-primary rounded-3 px-4 py-2"
+              [disabled]="!loginForm.valid"
+            >
+              Create
+            </button>
+          </div>
+        </div>
+      </form>
+      <!-- <app-filterable-dropdown [data]="users"></app-filterable-dropdown> -->
+    </app-card>
+    <app-card title="Users">
+      <div class="container">
+        <!-- <input
+          class="form-control"
+          id="myInput"
+          type="text"
+          placeholder="Search.."
+        />
+        <br /> -->
+        <table class="table table-bordered table-striped text-white mt-4">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <!-- <th>Password</th> -->
+              <!-- <th>Groups</th> -->
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="myTable">
+            <tr *ngFor="let user of users">
+              <td>
+                <span class="text-white">{{ user.username }}</span>
+              </td>
+              <!-- <td>
+                <div
+                  class="row"
+                  *ngIf="
+                    !user.userGroups || user.userGroups.groups.length === 0
+                  "
+                >
+                  <span
+                    class="text-white col"
+                    *ngFor="let group of user.userGroups?.groups"
+                    >{{ group.name }}</span
+                  >
+                </div>
+              </td> -->
+              <td>
+                <button class="btn btn-primary me-2" (click)="editUser(user)">
+                  Edit
+                </button>
+                <button
+                  class="btn btn-danger"
+                  (click)="
+                    selectDeleteUser = user; showDeleteConfirmationModal = true
+                  "
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Edit User Modal -->
+        <div *ngIf="editingUser" class="modal" (click)="closeEditModal()">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <h5>Editing User</h5>
+            <span (click)="closeEditModal()" class="close">&times;</span>
+            <form (submit)="updateUser($event)" class="pt-4">
+              <label for="username" class="mb-2">Username</label>
+              <input
+                type="text"
+                class="form-control hide-focus border-0 py-2 px-4 bg-light-subtle text-black"
+                [(ngModel)]="editingUser.username"
+                name="username"
+              />
+
+              <label for="editNewPassword" class="mb-2 mt-4"
+                >New Password</label
+              >
+              <input
+                type="text"
+                class="form-control hide-focus border-0 py-2 px-4 bg-light-subtle text-black"
+                [(ngModel)]="editingUser.password"
+                name="editNewPassword"
+              />
+              <!-- error message -->
+              <p class="error-message" *ngIf="editModalErrorMessage">
+                {{ editModalErrorMessage }}
+              </p>
+
+              <!-- Checkboxes to select multiple user groups -->
+              <!-- <div *ngFor="let group of groups">
+                  <input type="checkbox" [value]="group.id" [(ngModel)]="group.selected" name="group-{{group.id}}"> {{group.name}}
+              </div> -->
+
+              <label for="groups" class="pt-4 pb-2">Groups</label>
+              <div class="d-flex flex-column gap-2 pb-4">
+                <div *ngFor="let group of editingGroups">
+                  <input
+                    type="checkbox"
+                    [checked]="isGroupSelected(group.id)"
+                    (change)="toggleGroupSelection(group.id)"
+                    name="group-{{ group.id }}"
+                  />
+                  {{ group.name }}
+                </div>
+              </div>
+
+              <div class="d-flex flex-row gap-2">
+                <button class="btn btn-primary" type="submit">Update</button>
+                <button
+                  class="btn btn-secondary"
+                  (click)="closeEditModal(); this.editModalErrorMessage = ''"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</app-admin-layout>
+
+<div *ngIf="showDeleteConfirmationModal" class="delete-confirmation-container">
+  <div class="delete-confirmation">
+    <h5>Are you sure you want to delete {{ selectDeleteUser?.username }}?</h5>
+    <div class="d-flex justify-content-between pt-3">
+      <button
+        class="btn btn-secondary"
+        (click)="
+          showDeleteConfirmationModal = false; selectDeleteUser = undefined
+        "
+      >
+        Cancel
+      </button>
+      <button
+        class="btn btn-danger"
+        (click)="
+          deleteUser(selectDeleteUser!.id); showDeleteConfirmationModal = false
+        "
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

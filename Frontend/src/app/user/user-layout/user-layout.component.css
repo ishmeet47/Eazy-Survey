@@ -1,0 +1,11 @@
+#user-layout {
+  background-color: #1b2627;
+  width: 100%;
+  min-height: 100vh;
+  color: white;
+}
+
+#layout-content {
+  margin-left: 250px;
+  padding: 2rem;
+}

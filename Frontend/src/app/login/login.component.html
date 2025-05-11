@@ -1,0 +1,81 @@
+<div id="login-page" class="vh-100 d-flex flex-column justify-content-center">
+  <body id="login-form" class="bg-transparent">
+    <h6 class="text-uppercase fw-bold text-muted">Start Your Survey</h6>
+    <div class="d-flex flex-row pb-2 text-white">
+      <h1 id="log-in-header">Log in to your</h1>
+      <div class="d-flex">
+        <h1 class="ms-3">account</h1>
+        <h1 class="text-primary">.</h1>
+      </div>
+    </div>
+    <div class="d-flex flex-row">
+      <h6 class="text-secondary">Don't have an account?</h6>
+      <h6 class="ps-1 text-primary">Contact your administrator</h6>
+    </div>
+    <form
+      #loginForm="ngForm"
+      (ngSubmit)="onSubmit()"
+      id="form-inputs"
+      class="w-50 pt-5"
+    >
+      <div class="login-input input-group mb-3 overflow-hidden border">
+        <input
+          name="username"
+          required
+          type="username"
+          [(ngModel)]="username"
+          class="form-control hide-focus border-0 py-3 px-4 bg-dark text-white"
+          placeholder="Username"
+          aria-label="Username"
+          aria-describedby="login-username-icon"
+        />
+        <span
+          class="input-group-text border-0 ps-1 px-4 bg-dark text-white"
+          id="login-username-icon"
+        >
+          <i-bs name="person-fill" width="20" height="20"></i-bs>
+        </span>
+      </div>
+      <div class="login-input input-group mb-3 overflow-hidden border">
+        <input
+          name="password"
+          required
+          [type]="passwordVisibility ? 'text' : 'password'"
+          [(ngModel)]="password"
+          class="form-control hide-focus border-0 py-3 px-4 bg-dark text-white"
+          placeholder="Password"
+          aria-label="Password"
+          aria-describedby="login-password-icon"
+        />
+        <span
+          class="pointer input-group-text border-0 ps-1 px-4 bg-dark text-white"
+          id="login-password-icon"
+          (click)="togglePasswordVisibility()"
+        >
+          <i-bs
+            name="eye"
+            width="20"
+            height="20"
+            *ngIf="!passwordVisibility"
+          ></i-bs>
+          <i-bs
+            name="eye-slash"
+            width="20"
+            height="20"
+            *ngIf="passwordVisibility"
+          ></i-bs>
+        </span>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg w-100 mt-4 btn-primary rounded-pill"
+        [disabled]="!loginForm.valid"
+      >
+        Login
+      </button>
+      <alert type="danger" *ngIf="errorMessage" class="error-message mt-4">
+        <strong>Error: </strong>{{ errorMessage }}
+      </alert>
+    </form>
+  </body>
+</div>

@@ -1,0 +1,7 @@
+.user-survey-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  padding: 1rem;
+  max-width: min-content;
+  min-width: 300px;
+}

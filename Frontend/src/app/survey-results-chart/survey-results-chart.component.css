@@ -1,0 +1,189 @@
+
+/* General Styles for the Chart Popup */
+.chart-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  z-index: 1000;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+  background-color: #f7f9fc;
+  padding: 25px;
+  max-width: 95%;
+  max-height: 95%;
+  width: 800px;
+  height: 600px;
+  overflow: auto;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease-out;
+}
+
+.chart-popup.shown {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  animation: bounce 0.6s;
+}
+
+/* Bounce Animation for the Chart Popup */
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-15px);
+  }
+  50% {
+    transform: translateY(7px);
+  }
+  70% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* X-axis Label Styling */
+.apx-chart .apexcharts-xaxis-label {
+  font-weight: bold;
+  color: #2a2a2a;
+  font-size: 13px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* X-axis Label Hover Effect */
+.apx-chart .apexcharts-xaxis-label:hover {
+  color: #007bff;
+  transform: scale(1.1);
+}
+
+/* Title and Subtitle Styling Inside the Chart */
+.apx-chart .title {
+  color: #333;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.apx-chart .subtitle {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Tooltip Styling */
+.apx-chart .apexcharts-tooltip {
+  background: #333;
+  color: #fff;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  line-height: 1.4;
+}
+
+/* Bar Graph Styling  */
+.apx-chart .apexcharts-bar-series .apexcharts-bar {
+  fill: #007bff; /* Blue color, adjust as per your branding */
+  transition: all 0.3s ease;
+}
+
+.apx-chart .apexcharts-bar-series .apexcharts-bar:hover {
+  fill: #0056b3; /* Darker blue for hover*/
+}
+
+
+.outer-container {
+  display: none;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* background-color: rgba(0, 0, 0, 0.3); */
+    /* Optional: this will give a dimmed background when the chart is shown */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+
+
+/* Style for close-button */
+.close-button {
+  position: absolute;
+  right: 10px; /* Adjust as needed */
+  top: 10px; /* Adjust as needed */
+  background-color: #ff5f5f; /* Red color, adjust as needed */
+  color: white; /* Text color */
+  border: none; /* No border */
+  padding: 0 10px; /* Padding around text */
+  cursor: pointer; /* Cursor style */
+  border-radius: 3px; /* Slightly rounded corners */
+  font-size: 1.2rem; /* Font size */
+}
+
+.close-button:hover {
+  background-color: #ff7f7f; /* Slightly lighter red when hovered over */
+}
+
+
+/* Only show the container when the chart is supposed to be visible */
+.outer-container.visible {
+  display: flex !important;
+}
+
+
+
+
+/* Increase z-index of the menu icon */
+.apexcharts-menu-icon {
+  z-index: 1500 !important;  /* Adjust the value as necessary */
+}
+
+/* Ensure the SVG path within the ApexCharts menu icon has a distinct color and increased opacity */
+.apexcharts-menu-icon svg path {
+  fill: red !important;  /* Changing to red for better visibility. Adjust as needed. */
+  opacity: 1 !important;
+}
+
+/* Increase z-index for the menu to make sure it's on top */
+.apexcharts-menu {
+  z-index: 1501 !important;  /* Should be higher than the icon's z-index */
+}
+
+/* Targeting the SVG path within the ApexCharts menu icon */
+.apexcharts-menu-icon svg path {
+  fill: black !important; /* Changing the color of the SVG path to black */
+}
+
+
+
+
+/* Style for the dropdown menu */
+.apexcharts-menu {
+  background-color: black;
+  color: white;
+}
+
+/* Style for each menu item */
+.apexcharts-menu-item {
+  color: white !important;
+}
+
+
+/* Hover effect for each menu item */
+.apexcharts-menu-item:hover {
+  background-color: #333; /* Dark grey background */
+  color: white; /* White text */
+}
+/* Changing the color of the hamburger icon to black */
+
+
+
+.apexcharts-menu-icon svg {
+  fill: black !important;
+}
+

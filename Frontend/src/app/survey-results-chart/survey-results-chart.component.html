@@ -1,0 +1,56 @@
+<!-- Working html  -->
+
+<!-- <div [class.shown]="chartOptions" class="chart-popup">
+  <div clickOutside (clickOutside)="hideChart()">
+    <apx-chart
+      [chart]="chartOptions?.chart"
+      [xaxis]="chartOptions?.xaxis"
+      [series]="chartOptions?.series"
+      [tooltip]="chartOptions?.tooltip"
+    >
+    </apx-chart>
+  </div>
+</div> -->
+
+<!-- Your component's HTML template -->
+<div class="outer-container" *ngIf="isChartVisible">
+  <!-- Conditional rendering based on isChartVisible -->
+
+  <div [class.shown]="chartOptions" class="chart-popup">
+    <!-- Close Button -->
+    <button
+      (click)="$event.stopPropagation(); hideChart()"
+      class="close-button"
+    >
+      X
+    </button>
+
+    <!-- Previous Question Arrow -->
+    <button
+      class="btn btn-secondary"
+      (click)="navigate('prev')"
+      [disabled]="currentQuestionIndex === 0"
+    >
+      &lt; Previous
+    </button>
+
+    <apx-chart
+      *ngIf="chartOptions && isChartVisible"
+      [chart]="chartOptions?.chart"
+      [xaxis]="chartOptions?.xaxis"
+      [series]="chartOptions?.series"
+      [tooltip]="chartOptions?.tooltip"
+      class="text-black"
+    >
+    </apx-chart>
+
+    <!-- Next Question Arrow -->
+    <button
+      (click)="navigate('next')"
+      class="btn btn-primary"
+      [disabled]="currentQuestionIndex === getQuestions().length - 1"
+    >
+      Next &gt;
+    </button>
+  </div>
+</div>

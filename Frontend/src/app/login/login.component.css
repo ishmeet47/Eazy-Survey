@@ -1,0 +1,41 @@
+#login-page {
+  /* Set background image to login-b */
+  background-image: url("/assets/images/login-background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-color: black; */
+}
+
+#login-form {
+  padding-left: 7rem;
+  padding-right: 10rem;
+  min-width: 30rem;
+}
+
+#log-in-header {
+  min-width: max-content;
+}
+
+#form-inputs {
+  min-width: 30rem;
+}
+
+.login-input {
+  border-radius: 1rem;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 3.5rem;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-weight: 600;
+    font-size: 2.5rem;
+  }
+}
+
+.pointer {
+  cursor: pointer;
+}

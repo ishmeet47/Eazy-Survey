@@ -1,0 +1,73 @@
+<!-- This page is where users will see a list of uncompleted/completed surveys -->
+<app-user-layout class="d-flex flex-column">
+  <app-card title="Your Surveys">
+    <div class="row gap-4 p-2">
+      <div
+        class="user-survey-card col d-flex flex-column"
+        *ngFor="let survey of surveys"
+      >
+        <h5>{{ survey.title }}</h5>
+        <span>
+          <b class="text-primary">Due:</b> {{ survey.dueDate.split("T")[0] }}
+        </span>
+        <button
+          class="btn btn-primary mt-4"
+          type="button"
+          routerLink="/survey/{{ survey.id }}"
+          *ngIf="convertDateString(survey.dueDate) > today"
+          (click)="startAnswerSurvey(survey.id)"
+        >
+          Start
+        </button>
+        <!-- Add check for survey completed by user -->
+        <!-- <button
+          class="btn btn-warning mt-4"
+          type="button"
+          routerLink="/survey/{{ survey.id }}"
+          *ngIf="convertDateString(survey.dueDate) > today"
+          (click)="startAnswerSurvey(survey.id)"
+        >
+          Resubmit
+        </button> -->
+        <button
+          class="btn btn-primary mt-4"
+          type="button"
+          disabled
+          *ngIf="convertDateString(survey.dueDate) <= today"
+        >
+          Expired
+        </button>
+      </div>
+    </div>
+  </app-card>
+  <app-card title="Completed Surveys" class="ms-4">
+    <div class="row gap-4 p-2">
+      <div
+        class="user-survey-card col d-flex flex-column"
+        *ngFor="let survey of completedSurveys"
+      >
+        <h5>{{ survey.title }}</h5>
+        <span>
+          <b class="text-primary">Due:</b> {{ survey.dueDate.split("T")[0] }}
+        </span>
+        <button
+          class="btn btn-primary mt-4"
+          type="button"
+          routerLink="/survey/{{ survey.id }}"
+          *ngIf="convertDateString(survey.dueDate) > today"
+          (click)="startAnswerSurvey(survey.id)"
+        >
+          Resubmit
+        </button>
+        <button
+          class="btn btn-primary mt-4"
+          type="button"
+          disabled
+          *ngIf="convertDateString(survey.dueDate) <= today"
+        >
+          Expired
+        </button>
+      </div>
+    </div>
+  </app-card>
+</app-user-layout>
